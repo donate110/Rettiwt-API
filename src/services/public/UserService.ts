@@ -1,28 +1,25 @@
-import {
-	IUserBookmarksResponse,
-	IUserDetailsResponse,
-	IUserFollowedResponse,
-	IUserFollowersResponse,
-	IUserFollowingResponse,
-	IUserFollowResponse,
-	IUserHighlightsResponse,
-	IUserLikesResponse,
-	IUserMediaResponse,
-	IUserNotificationsResponse,
-	IUserRecommendedResponse,
-	IUserSubscriptionsResponse,
-	IUserTweetsAndRepliesResponse,
-	IUserTweetsResponse,
-	IUserUnfollowResponse,
-} from 'rettiwt-core';
-
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
+import { IUserDetailsResponse } from '../../types/raw/user/Details';
+import { IUserFollowResponse } from '../../types/raw/user/Follow';
+import { IUserFollowedResponse } from '../../types/raw/user/Followed';
+import { IUserFollowersResponse } from '../../types/raw/user/Followers';
+import { IUserFollowingResponse } from '../../types/raw/user/Following';
+import { IUserHighlightsResponse } from '../../types/raw/user/Highlights';
+import { IUserLikesResponse } from '../../types/raw/user/Likes';
+import { IUserMediaResponse } from '../../types/raw/user/Media';
+import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
+import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
+import { IUserSubscriptionsResponse } from '../../types/raw/user/Subscriptions';
+import { IUserTweetsResponse } from '../../types/raw/user/Tweets';
+import { IUserTweetsAndRepliesResponse } from '../../types/raw/user/TweetsAndReplies';
+import { IUserUnfollowResponse } from '../../types/raw/user/Unfollow';
 
 import { FetcherService } from './FetcherService';
 
@@ -37,7 +34,7 @@ export class UserService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: IRettiwtConfig) {
+	public constructor(config: RettiwtConfig) {
 		super(config);
 	}
 
@@ -84,7 +81,7 @@ export class UserService extends FetcherService {
 	/**
 	 * Get the details of a user.
 	 *
-	 * @param id - The username/id of the target user.
+	 * @param id - The username/id(s) of the target user/users.
 	 *
 	 * @returns
 	 * The details of the given user.
@@ -126,25 +123,40 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async details(id: string): Promise<User | undefined> {
+	public async details<T extends string | string[]>(id: T): Promise<T extends string ? User | undefined : User[]> {
 		let resource: EResourceType;
 
-		// If username is given
-		if (isNaN(Number(id))) {
-			resource = EResourceType.USER_DETAILS_BY_USERNAME;
+		// If details of multiple users required
+		if (Array.isArray(id)) {
+			resource = EResourceType.USER_DETAILS_BY_IDS_BULK;
+
+			// Fetching raw details
+			const response = await this.request<IUserDetailsResponse>(resource, { ids: id });
+
+			// Deserializing response
+			const data = extractors[resource](response, id);
+
+			return data as T extends string ? User | undefined : User[];
 		}
-		// If id is given
+		// If details of single user required
 		else {
-			resource = EResourceType.USER_DETAILS_BY_ID;
+			// If username is given
+			if (isNaN(Number(id))) {
+				resource = EResourceType.USER_DETAILS_BY_USERNAME;
+			}
+			// If id is given
+			else {
+				resource = EResourceType.USER_DETAILS_BY_ID;
+			}
+
+			// Fetching raw details
+			const response = await this.request<IUserDetailsResponse>(resource, { id: id });
+
+			// Deserializing response
+			const data = extractors[resource](response);
+
+			return data as T extends string ? User | undefined : User[];
 		}
-
-		// Fetching raw details
-		const response = await this.request<IUserDetailsResponse>(resource, { id: id });
-
-		// Deserializing response
-		const data = extractors[resource](response);
-
-		return data;
 	}
 
 	/**
@@ -381,7 +393,7 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
-			id: this.userId,
+			id: this.config.userId,
 			count: count,
 			cursor: cursor,
 		});
@@ -502,7 +514,7 @@ export class UserService extends FetcherService {
 				first = false;
 			}
 
-			cursor = notifications.next.value;
+			cursor = notifications.next;
 		}
 	}
 

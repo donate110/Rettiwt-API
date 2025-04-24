@@ -1,11 +1,11 @@
-import { IListMembersResponse, IListTweetsResponse } from 'rettiwt-core';
-
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IListMembersResponse } from '../../types/raw/list/Members';
+import { IListTweetsResponse } from '../../types/raw/list/Tweets';
 
 import { FetcherService } from './FetcherService';
 
@@ -15,7 +15,7 @@ export class ListService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: IRettiwtConfig) {
+	public constructor(config: RettiwtConfig) {
 		super(config);
 	}
 

@@ -1,4 +1,4 @@
-import { AuthService } from './services/internal/AuthService';
+import { RettiwtConfig } from './models/RettiwtConfig';
 import { ListService } from './services/public/ListService';
 import { TweetService } from './services/public/TweetService';
 import { UserService } from './services/public/UserService';
@@ -46,8 +46,8 @@ import { IRettiwtConfig } from './types/RettiwtConfig';
  * @public
  */
 export class Rettiwt {
-	/** The instance used to authenticate. */
-	public auth: AuthService;
+	/** The configuration for Rettiwt. */
+	private _config: RettiwtConfig;
 
 	/** The instance used to fetch data related to lists. */
 	public list: ListService;
@@ -64,9 +64,24 @@ export class Rettiwt {
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
 	public constructor(config?: IRettiwtConfig) {
-		this.auth = new AuthService(config);
-		this.list = new ListService(config);
-		this.tweet = new TweetService(config);
-		this.user = new UserService(config);
+		this._config = new RettiwtConfig(config);
+		this.list = new ListService(this._config);
+		this.tweet = new TweetService(this._config);
+		this.user = new UserService(this._config);
+	}
+
+	/** Set the API key for the current instance. */
+	public set apiKey(apiKey: string | undefined) {
+		this._config.apiKey = apiKey;
+	}
+
+	/** Set the custom headers for the current instance. */
+	public set headers(headers: { [key: string]: string }) {
+		this._config.headers = headers;
+	}
+
+	/** Set the proxy URL for the current instance. */
+	public set proxyUrl(proxyUrl: URL) {
+		this._config.proxyUrl = proxyUrl;
 	}
 }

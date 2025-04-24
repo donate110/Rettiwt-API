@@ -1,5 +1,7 @@
 /**
  * The cookie containing the tokens that are used to authenticate against Twitter.
+ *
+ * @public
  */
 export interface IAuthCookie {
 	/* eslint-disable @typescript-eslint/naming-convention */

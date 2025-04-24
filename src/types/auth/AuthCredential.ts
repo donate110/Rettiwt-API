@@ -7,6 +7,8 @@ import { EAuthenticationType } from '../../enums/Authentication';
  * - authToken, guestToken =\> Guest authentication.
  * - authToken, csrfToken, cookie =\> User authentication.
  * - authToken, guestToken, cookie =\> Guest authentication while logging in.
+ *
+ * @public
  */
 export interface IAuthCredential {
 	/** The bearer token from twitter.com. */

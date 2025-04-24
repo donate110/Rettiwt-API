@@ -1,8 +1,9 @@
 import { Command, createCommand } from 'commander';
-import { TweetFilter } from 'rettiwt-core';
 
 import { output } from '../helper/CliUtils';
+import { TweetFilter } from '../models/args/FetchArgs';
 import { Rettiwt } from '../Rettiwt';
+import { ITweetFilter } from '../types/args/FetchArgs';
 
 /**
  * Creates a new 'tweet' command which uses the given Rettiwt instance.
@@ -17,12 +18,23 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 	// Details
 	tweet
 		.command('details')
-		.description('Fetch the details of tweet with the given id')
-		.argument('<id>', 'The id of the tweet whose details are to be fetched')
+		.description('Fetch the details of tweet/tweets with the given id/ids')
+		.argument('<id>', 'The comma-separated list of IDs of tweets whose details are to be fetched')
 		.action(async (id: string) => {
 			try {
-				const details = await rettiwt.tweet.details(id);
-				output(details);
+				// Getting the different IDs
+				const ids: string[] = id.split(',');
+
+				// If single ID given
+				if (ids.length <= 1) {
+					const details = await rettiwt.tweet.details(ids[0]);
+					output(details);
+				}
+				// If multiple IDs give
+				else {
+					const details = await rettiwt.tweet.details(ids);
+					output(details);
+				}
 			} catch (error) {
 				output(error);
 			}
@@ -37,6 +49,22 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			try {
 				const result = await rettiwt.tweet.like(id);
 				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Likers
+	tweet
+		.command('likers')
+		.description('Fetch the list of users who liked the given tweet. Only works for your own tweets')
+		.argument('<id>', 'The id of the tweet')
+		.argument('[count]', 'The number of likers to fetch')
+		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
+		.action(async (id: string, count?: string, cursor?: string) => {
+			try {
+				const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
+				output(tweets);
 			} catch (error) {
 				output(error);
 			}
@@ -331,9 +359,9 @@ class TweetSearchOptions {
 	/**
 	 * Converts the filter options to a format recognizable by rettiwt-api.
 	 *
-	 * @returns The '{@link TweetFilter}' representation of filter options.
+	 * @returns The '{@link ITweetFilter}' representation of filter options.
 	 */
-	public toTweetFilter(): TweetFilter {
+	public toTweetFilter(): ITweetFilter {
 		return new TweetFilter({
 			fromUsers: this.from ? this.from.split(',') : undefined,
 			toUsers: this.to ? this.to.split(',') : undefined,

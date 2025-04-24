@@ -1,4 +1,4 @@
-import { EMediaType } from 'rettiwt-core';
+import { EMediaType } from '../../enums/Media';
 
 import { IUser } from './User';
 
@@ -14,7 +14,7 @@ export interface ITweet {
 	/** The ID of tweet which started the current conversation. */
 	conversationId: string;
 
-	/** The date and time of creation of the tweet, in UTC string format. */
+	/** The creation date of the tweet. */
 	createdAt: string;
 
 	/** Additional tweet entities like urls, mentions, etc. */

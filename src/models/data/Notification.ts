@@ -1,12 +1,9 @@
-import {
-	ENotificationType as ENotificationTypeOriginal,
-	INotification as IRawNotification,
-	IUserNotificationsResponse,
-} from 'rettiwt-core';
-
-import { ENotificationType } from '../../enums/Data';
+import { ENotificationType } from '../../enums/Notification';
+import { ERawNotificationType } from '../../enums/raw/Notification';
 import { findKeyByValue } from '../../helper/JsonUtils';
 import { INotification } from '../../types/data/Notification';
+import { INotification as IRawNotification } from '../../types/raw/base/Notification';
+import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 
 /**
  * The details of a single notification.
@@ -17,7 +14,7 @@ export class Notification implements INotification {
 	public from: string[];
 	public id: string;
 	public message: string;
-	public receivedAt: Date;
+	public receivedAt: string;
 	public target: string[];
 	public type?: ENotificationType;
 
@@ -26,14 +23,14 @@ export class Notification implements INotification {
 	 */
 	public constructor(notification: IRawNotification) {
 		// Getting the original notification type
-		const notificationType: string | undefined = findKeyByValue(ENotificationTypeOriginal, notification.icon.id);
+		const notificationType: string | undefined = findKeyByValue(ERawNotificationType, notification.icon.id);
 
 		this.from = notification.template?.aggregateUserActionsV1?.fromUsers
 			? notification.template.aggregateUserActionsV1.fromUsers.map((item) => item.user.id)
 			: [];
 		this.id = notification.id;
 		this.message = notification.message.text;
-		this.receivedAt = new Date(Number(notification.timestampMs));
+		this.receivedAt = new Date(Number(notification.timestampMs)).toISOString();
 		this.target = notification.template?.aggregateUserActionsV1?.targetObjects
 			? notification.template.aggregateUserActionsV1.targetObjects.map((item) => item.tweet.id)
 			: [];
@@ -48,8 +45,6 @@ export class Notification implements INotification {
 	 * @param response - The raw response data.
 	 *
 	 * @returns The deserialized list of notifications.
-	 *
-	 * @internal
 	 */
 	public static list(response: NonNullable<unknown>): Notification[] {
 		const notifications: Notification[] = [];
@@ -65,5 +60,19 @@ export class Notification implements INotification {
 		}
 
 		return notifications;
+	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): INotification {
+		return {
+			from: this.from,
+			id: this.id,
+			message: this.message,
+			receivedAt: this.receivedAt,
+			target: this.target,
+			type: this.type,
+		};
 	}
 }

@@ -1,18 +1,15 @@
-import {
-	EMediaType,
-	ILimitedVisibilityTweet,
-	IExtendedMedia as IRawExtendedMedia,
-	ITweet as IRawTweet,
-	IEntities as IRawTweetEntities,
-	ITimelineTweet,
-} from 'rettiwt-core';
-
 import { ELogActions } from '../../enums/Logging';
+import { EMediaType } from '../../enums/Media';
+import { ERawMediaType } from '../../enums/raw/Media';
 import { findByFilter } from '../../helper/JsonUtils';
 
 import { LogService } from '../../services/internal/LogService';
 
-import { ITweet } from '../../types/data/Tweet';
+import { ITweet, ITweetEntities, ITweetMedia } from '../../types/data/Tweet';
+import { ILimitedVisibilityTweet } from '../../types/raw/base/LimitedVisibilityTweet';
+import { IExtendedMedia as IRawExtendedMedia } from '../../types/raw/base/Media';
+import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from '../../types/raw/base/Tweet';
+import { ITimelineTweet } from '../../types/raw/composite/TimelineTweet';
 
 import { User } from './User';
 
@@ -47,7 +44,7 @@ export class Tweet implements ITweet {
 	public constructor(tweet: IRawTweet) {
 		this.id = tweet.rest_id;
 		this.conversationId = tweet.legacy.conversation_id_str;
-		this.createdAt = tweet.legacy.created_at;
+		this.createdAt = new Date(tweet.legacy.created_at).toISOString();
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
@@ -118,15 +115,85 @@ export class Tweet implements ITweet {
 	}
 
 	/**
-	 * Extracts and deserializes the list of tweets from the given raw response data.
+	 * Extracts and deserializes multiple target tweets from the given raw response data.
 	 *
 	 * @param response - The raw response data.
+	 * @param ids - The ids of the target tweets.
 	 *
-	 * @returns The deserialized list of tweets.
-	 *
-	 * @internal
+	 * @returns The target deserialized tweets.
 	 */
-	public static list(response: NonNullable<unknown>): Tweet[] {
+	public static multiple(response: NonNullable<unknown>, ids: string[]): Tweet[] {
+		let tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<IRawTweet>(response, '__typename', 'Tweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+
+				tweets.push(new Tweet(item));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet not found, skipping`,
+				});
+			}
+		}
+
+		// Filtering only required tweets, if required
+		if (ids && ids.length) {
+			tweets = tweets.filter((tweet) => ids.includes(tweet.id));
+		}
+
+		return tweets;
+	}
+
+	/**
+	 * Extracts and deserializes a single target tweet from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @param id - The id of the target tweet.
+	 *
+	 * @returns The target deserialized tweet.
+	 */
+	public static single(response: NonNullable<unknown>, id: string): Tweet | undefined {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<IRawTweet>(response, 'rest_id', id);
+
+		// Deserializing valid data
+		for (const item of extract) {
+			if (item.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+
+				tweets.push(new Tweet(item));
+			} else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet not found, skipping`,
+				});
+			}
+		}
+
+		return tweets.length ? tweets[0] : undefined;
+	}
+
+	/**
+	 * Extracts and deserializes the timeline of tweets from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @param ids - The IDs of specific tweets that need to be extracted.
+	 *
+	 * @returns The deserialized timeline of tweets.
+	 */
+	public static timeline(response: NonNullable<unknown>): Tweet[] {
 		const tweets: Tweet[] = [];
 
 		// Extracting the matching data
@@ -163,38 +230,29 @@ export class Tweet implements ITweet {
 	}
 
 	/**
-	 * Extracts and deserializes a single target tweet from the given raw response data.
-	 *
-	 * @param response - The raw response data.
-	 * @param id - The id of the target tweet.
-	 *
-	 * @returns The target deserialized tweet.
-	 *
-	 * @internal
+	 * @returns A serializable JSON representation of `this` object.
 	 */
-	public static single(response: NonNullable<unknown>, id: string): Tweet | undefined {
-		const tweets: Tweet[] = [];
-
-		// Extracting the matching data
-		const extract = findByFilter<IRawTweet>(response, 'rest_id', id);
-
-		// Deserializing valid data
-		for (const item of extract) {
-			if (item.legacy) {
-				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
-
-				tweets.push(new Tweet(item));
-			} else {
-				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
-					message: `Tweet not found, skipping`,
-				});
-			}
-		}
-
-		return tweets.length ? tweets[0] : undefined;
+	public toJSON(): ITweet {
+		return {
+			bookmarkCount: this.bookmarkCount,
+			conversationId: this.conversationId,
+			createdAt: this.createdAt,
+			entities: this.entities.toJSON(),
+			fullText: this.fullText,
+			id: this.id,
+			lang: this.lang,
+			likeCount: this.likeCount,
+			media: this.media?.map((item) => item.toJSON()),
+			quoteCount: this.quoteCount,
+			quoted: this.quoted?.toJSON(),
+			replyCount: this.replyCount,
+			replyTo: this.replyTo,
+			retweetCount: this.retweetCount,
+			retweetedTweet: this.retweetedTweet?.toJSON(),
+			tweetBy: this.tweetBy.toJSON(),
+			url: this.url,
+			viewCount: this.viewCount,
+		};
 	}
 }
 
@@ -238,6 +296,17 @@ export class TweetEntities {
 			}
 		}
 	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): ITweetEntities {
+		return {
+			hashtags: this.hashtags,
+			mentionedUsers: this.mentionedUsers,
+			urls: this.urls,
+		};
+	}
 }
 
 /**
@@ -259,18 +328,19 @@ export class TweetMedia {
 	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
-		this.type = media.type;
-
 		// If the media is a photo
-		if (media.type == EMediaType.PHOTO) {
+		if (media.type == ERawMediaType.PHOTO) {
+			this.type = EMediaType.PHOTO;
 			this.url = media.media_url_https;
 		}
 		// If the media is a gif
-		else if (media.type == EMediaType.GIF) {
+		else if (media.type == ERawMediaType.GIF) {
+			this.type = EMediaType.GIF;
 			this.url = media.video_info?.variants[0].url as string;
 		}
 		// If the media is a video
 		else {
+			this.type = EMediaType.VIDEO;
 			this.thumbnailUrl = media.media_url_https;
 
 			/** The highest bitrate of all variants. */
@@ -286,5 +356,16 @@ export class TweetMedia {
 				}
 			});
 		}
+	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): ITweetMedia {
+		return {
+			thumbnailUrl: this.thumbnailUrl,
+			type: this.type,
+			url: this.url,
+		};
 	}
 }

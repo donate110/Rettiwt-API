@@ -32,8 +32,19 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 		.argument('<id>', 'The username/id of the user whose details are to be fetched')
 		.action(async (id: string) => {
 			try {
-				const details = await rettiwt.user.details(id);
-				output(details);
+				// Getting the different IDs
+				const ids: string[] = id.split(',');
+
+				// If single ID given
+				if (ids.length <= 1) {
+					const details = await rettiwt.user.details(ids[0]);
+					output(details);
+				}
+				// If multiple IDs given
+				else {
+					const details = await rettiwt.user.details(ids);
+					output(details);
+				}
 			} catch (error) {
 				output(error);
 			}

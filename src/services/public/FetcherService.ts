@@ -1,8 +1,5 @@
-import https, { Agent } from 'https';
-
 import axios from 'axios';
 import { Cookie } from 'cookiejar';
-import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
 import { requests } from '../../collections/Requests';
@@ -12,14 +9,17 @@ import { EResourceType } from '../../enums/Resource';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { AuthCredential } from '../../models/auth/AuthCredential';
+import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IFetchArgs } from '../../types/args/FetchArgs';
 import { IPostArgs } from '../../types/args/PostArgs';
+import { ITidHeader } from '../../types/auth/TidHeader';
+import { ITidProvider } from '../../types/auth/TidProvider';
 import { IErrorHandler } from '../../types/ErrorHandler';
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
 import { LogService } from '../internal/LogService';
+import { TidService } from '../internal/TidService';
 
 /**
  * The base service that handles all HTTP requests.
@@ -27,43 +27,35 @@ import { LogService } from '../internal/LogService';
  * @public
  */
 export class FetcherService {
-	/** The api key to use for authenticating against Twitter API as user. */
-	private readonly _apiKey?: string;
+	/** The AuthService instance to use. */
+	private readonly _auth: AuthService;
 
-	/** Custom headers to use for all requests */
-	private readonly _customHeaders?: { [key: string]: string };
+	/** The delay/delay function to use (ms). */
+	private readonly _delay?: number | (() => number | Promise<number>);
 
 	/** The service used to handle HTTP and API errors */
 	private readonly _errorHandler: IErrorHandler;
 
-	/** The guest key to use for authenticating against Twitter API as guest. */
-	private readonly _guestKey?: string;
-
-	/** The URL To the proxy server to use for all others. */
-	private readonly _proxyUrl?: URL;
+	/** Service responsible for generating the `x-client-transaction-id` header. */
+	private readonly _tidProvider: ITidProvider;
 
 	/** The max wait time for a response. */
 	private readonly _timeout: number;
 
-	/** The URL to the proxy server to use only for authentication. */
-	protected readonly authProxyUrl?: URL;
-
-	/** The id of the authenticated user (if any). */
-	protected readonly userId?: string;
+	/** The config object. */
+	protected readonly config: RettiwtConfig;
 
 	/**
 	 * @param config - The config object for configuring the Rettiwt instance.
 	 */
-	public constructor(config?: IRettiwtConfig) {
-		LogService.enabled = config?.logging ?? false;
-		this._apiKey = config?.apiKey;
-		this._guestKey = config?.guestKey;
-		this.userId = config?.apiKey ? AuthService.getUserId(config.apiKey) : undefined;
-		this.authProxyUrl = config?.authProxyUrl ?? config?.proxyUrl;
-		this._proxyUrl = config?.proxyUrl;
-		this._timeout = config?.timeout ?? 0;
-		this._errorHandler = config?.errorHandler ?? new ErrorService();
-		this._customHeaders = config?.headers;
+	public constructor(config: RettiwtConfig) {
+		LogService.enabled = config.logging ?? false;
+		this.config = config;
+		this._delay = config.delay;
+		this._errorHandler = config.errorHandler ?? new ErrorService();
+		this._tidProvider = config.tidProvider ?? new TidService(config.httpsAgent);
+		this._timeout = config.timeout ?? 0;
+		this._auth = new AuthService(config.httpsAgent);
 	}
 
 	/**
@@ -75,10 +67,10 @@ export class FetcherService {
 	 */
 	private checkAuthorization(resource: EResourceType): void {
 		// Logging
-		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.userId != undefined });
+		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.config.userId != undefined });
 
 		// Checking authorization status
-		if (!allowGuestAuthentication.includes(resource) && this.userId == undefined) {
+		if (!allowGuestAuthentication.includes(resource) && this.config.userId == undefined) {
 			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
 		}
 	}
@@ -89,46 +81,46 @@ export class FetcherService {
 	 * @returns The generated AuthCredential
 	 */
 	private async getCredential(): Promise<AuthCredential> {
-		if (this._apiKey) {
+		if (this.config.apiKey) {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
 
 			return new AuthCredential(
-				AuthService.decodeCookie(this._apiKey)
+				AuthService.decodeCookie(this.config.apiKey)
 					.split(';')
 					.map((item) => new Cookie(item)),
 			);
-		} else if (this._guestKey) {
-			// Logging
-			LogService.log(ELogActions.GET, { target: 'GUEST_CREDENTIAL' });
-
-			return new AuthCredential(undefined, this._guestKey);
 		} else {
 			// Logging
 			LogService.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
 
-			return await new AuthService({ proxyUrl: this.authProxyUrl }).guest();
+			return this._auth.guest();
 		}
 	}
 
 	/**
-	 * Gets the https agent based on whether a proxy is used or not.
+	 * Generates the header for the transaction ID.
 	 *
-	 * @param proxyUrl - Optional URL with proxy configuration to use for requests to Twitter API.
+	 * @param method - The target method.
+	 * @param url - The target URL.
 	 *
-	 * @returns The https agent to use.
+	 * @returns The header containing the transaction ID.
 	 */
-	private getHttpsAgent(proxyUrl?: URL): Agent {
-		if (proxyUrl) {
-			// Logging
-			LogService.log(ELogActions.GET, { target: 'HTTPS_PROXY_AGENT' });
+	private async getTransactionHeader(method: string, url: string): Promise<ITidHeader | undefined> {
+		// Getting the URL path excluding all params
+		const path = new URL(url).pathname.split('?')[0].trim();
 
-			return new HttpsProxyAgent(proxyUrl);
+		// Generating the transaction ID
+		const tid = await this._tidProvider.generate(method.toUpperCase(), path);
+
+		if (tid) {
+			return {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				'x-client-transaction-id': tid,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			};
 		} else {
-			// Logging
-			LogService.log(ELogActions.GET, { target: 'HTTPS_AGENT' });
-
-			return new https.Agent();
+			return undefined;
 		}
 	}
 
@@ -152,6 +144,29 @@ export class FetcherService {
 
 			return new PostArgs(resource, args);
 		}
+	}
+
+	/**
+	 * Introduces a delay using the configured delay/delay function.
+	 */
+	private async wait(): Promise<void> {
+		// If no delay is set, skip
+		if (this._delay == undefined) {
+			return;
+		}
+
+		/** The delay (in ms) to use. */
+		let delay = 0;
+
+		// Getting the delay
+		if (this._delay && typeof this._delay == 'number') {
+			delay = this._delay;
+		} else if (this._delay && typeof this._delay == 'function') {
+			delay = await this._delay();
+		}
+
+		// Awaiting for the delay time
+		await new Promise((resolve) => setTimeout(resolve, delay));
 	}
 
 	/**
@@ -182,7 +197,7 @@ export class FetcherService {
 	 * })
 	 * ```
 	 */
-	public async request<T>(resource: EResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+	public async request<T = unknown>(resource: EResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
 		// Logging
 		LogService.log(ELogActions.REQUEST, { resource: resource, args: args });
 
@@ -192,9 +207,6 @@ export class FetcherService {
 		// Validating args
 		args = this.validateArgs(resource, args)!;
 
-		// Getting HTTPS agent
-		const httpsAgent: Agent = this.getHttpsAgent(this._proxyUrl);
-
 		// Getting credentials from key
 		const cred: AuthCredential = await this.getCredential();
 
@@ -202,13 +214,21 @@ export class FetcherService {
 		const config = requests[resource](args);
 
 		// Setting additional request parameters
-		config.headers = { ...config.headers, ...cred.toHeader(), ...(this._customHeaders || {}) };
-		config.httpAgent = httpsAgent;
-		config.httpsAgent = httpsAgent;
+		config.headers = {
+			...config.headers,
+			...cred.toHeader(),
+			...(await this.getTransactionHeader(config.method ?? '', config.url ?? '')),
+			...this.config.headers,
+		};
+		config.httpAgent = this.config.httpsAgent;
+		config.httpsAgent = this.config.httpsAgent;
 		config.timeout = this._timeout;
 
 		// Sending the request
 		try {
+			// Introducing a delay
+			await this.wait();
+
 			// Returning the reponse body
 			return (await axios<T>(config)).data;
 		} catch (error) {

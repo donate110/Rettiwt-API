@@ -4,6 +4,8 @@ import { IAuthCookie } from '../../types/auth/AuthCookie';
 
 /**
  * The cookie containing the tokens that are used to authenticate against Twitter.
+ *
+ * @public
  */
 export class AuthCookie implements IAuthCookie {
 	/* eslint-disable @typescript-eslint/naming-convention */

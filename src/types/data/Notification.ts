@@ -1,4 +1,4 @@
-import { ENotificationType } from '../../enums/Data';
+import { ENotificationType } from '../../enums/Notification';
 
 /**
  * The details of a single notification.
@@ -16,7 +16,7 @@ export interface INotification {
 	message: string;
 
 	/** The date/time at which the notification was received. */
-	receivedAt: Date;
+	receivedAt: string;
 
 	/** The list of id of the target tweet(s) of the notification. */
 	target: string[];
