@@ -1,6 +1,8 @@
 import { AxiosError, isAxiosError } from 'axios';
 
+import { TwitterError } from '../../models/errors/TwitterError';
 import { IErrorHandler } from '../../types/ErrorHandler';
+import { IErrorData as IRawErrorData } from '../../types/raw/base/Error';
 
 /**
  * The base service that handles any errors.
@@ -8,8 +10,8 @@ import { IErrorHandler } from '../../types/ErrorHandler';
  * @public
  */
 export class ErrorService implements IErrorHandler {
-	private handleAxiosError(error: AxiosError): void {
-		throw new Error(error.message);
+	private handleAxiosError(error: AxiosError<IRawErrorData>): void {
+		throw new TwitterError(error);
 	}
 
 	private handleUnknownError(): void {
@@ -23,7 +25,7 @@ export class ErrorService implements IErrorHandler {
 	 */
 	public handle(error: unknown): void {
 		if (isAxiosError(error)) {
-			this.handleAxiosError(error as AxiosError);
+			this.handleAxiosError(error as AxiosError<IRawErrorData>);
 		} else {
 			this.handleUnknownError();
 		}

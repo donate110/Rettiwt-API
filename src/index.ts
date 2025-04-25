@@ -23,10 +23,6 @@ export * from './models/data/List';
 export * from './models/data/Notification';
 export * from './models/data/Tweet';
 export * from './models/data/User';
-export * from './models/errors/ApiError';
-export * from './models/errors/HttpError';
-export * from './models/errors/RettiwtError';
-export * from './models/errors/TimeoutError';
 
 // REQUESTS
 export * from './requests/List';
