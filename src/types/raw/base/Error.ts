@@ -1,20 +1,19 @@
 /* eslint-disable */
 
 /**
- * Represents the raw data of an error response.
+ * Error details for multiple errors.
  *
  * @public
  */
-export interface IError {
-	status: number;
-	statusText: string;
-	data: IErrorData | IErrorDetails;
-}
-
 export interface IErrorData {
 	errors: IErrorDetails[];
 }
 
+/**
+ * Error details of a single error.
+ *
+ * @public
+ */
 export interface IErrorDetails {
 	message: string;
 	extensions?: IErrorExtensions;
