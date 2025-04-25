@@ -8,7 +8,7 @@
 export interface IError {
 	status: number;
 	statusText: string;
-	data: IErrorData;
+	data: IErrorData | IErrorDetails;
 }
 
 export interface IErrorData {
@@ -17,12 +17,12 @@ export interface IErrorData {
 
 export interface IErrorDetails {
 	message: string;
-	extensions: IErrorExtensions;
+	extensions?: IErrorExtensions;
 	code: number;
-	kind: string;
-	name: string;
-	source: string;
-	tracing: IErrorTracing;
+	kind?: string;
+	name?: string;
+	source?: string;
+	tracing?: IErrorTracing;
 }
 
 export interface IErrorExtensions {

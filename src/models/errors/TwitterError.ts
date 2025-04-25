@@ -8,9 +8,11 @@ export class TwitterError extends Error {
 	public name: string;
 	public status: number;
 
-	public constructor(error: AxiosError<IRawErrorData>) {
+	public constructor(error: AxiosError<IRawErrorData | IRawErrorDetails>) {
 		super(error.message);
-		this.details = error.response?.data.errors.map((item) => new TwitterErrorDetails(item)) ?? [];
+		this.details = (error.response?.data as IRawErrorData).errors
+			? (error.response?.data as IRawErrorData).errors.map((item) => new TwitterErrorDetails(item))
+			: [new TwitterErrorDetails(error.response?.data as IRawErrorDetails)];
 		this.message = error.message;
 		this.name = 'TWITTER_ERROR';
 		this.status = error.status ?? 500;
@@ -20,8 +22,8 @@ export class TwitterError extends Error {
 export class TwitterErrorDetails {
 	public code: number;
 	public message: string;
-	public name: string;
-	public type: string;
+	public name?: string;
+	public type?: string;
 
 	public constructor(details: IRawErrorDetails) {
 		this.code = details.code;
