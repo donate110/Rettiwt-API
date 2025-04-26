@@ -9,7 +9,6 @@ export * from './enums/raw/Tweet';
 export * from './enums/Api';
 export * from './enums/Authentication';
 export * from './enums/Data';
-export * from './enums/Http';
 export * from './enums/Logging';
 export * from './enums/Media';
 export * from './enums/Notification';
