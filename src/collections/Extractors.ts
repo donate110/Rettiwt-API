@@ -20,6 +20,7 @@ import { ITweetUnlikeResponse } from '../types/raw/tweet/Unlike';
 import { ITweetUnpostResponse } from '../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
 import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
+import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
@@ -77,6 +78,8 @@ export const extractors = {
 		response?.data?.unretweet?.source_tweet_results?.result ? true : false,
 	TWEET_UNSCHEDULE: (response: ITweetUnscheduleResponse): boolean => response?.data?.scheduledtweet_delete == 'Done',
 
+	USER_AFFILIATES: (response: IUserAffiliatesResponse): CursoredData<User> =>
+		new CursoredData<User>(response, EBaseType.USER),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, EBaseType.TWEET),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),

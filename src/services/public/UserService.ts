@@ -5,6 +5,7 @@ import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IUserAffiliatesResponse } from '../../types/raw/user/Affiliates';
 import { IUserBookmarksResponse } from '../../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../../types/raw/user/DetailsBulk';
@@ -37,6 +38,48 @@ export class UserService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Get the list affiliates of a user.
+	 *
+	 * @param id - The id of the target user.
+	 * @param count - The number of affiliates to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of affiliates to fetch.
+	 *
+	 * @returns The list of users affiliated to the target user.
+	 *
+	 * @example
+	 * ```
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 affiliates of the User with id '1234567890'
+	 * rettiwt.user.affiliates('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async affiliates(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+		const resource = EResourceType.USER_AFFILIATES;
+
+		// Fetching raw list of affiliates
+		const response = await this.request<IUserAffiliatesResponse>(resource, {
+			id: id,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = extractors[resource](response);
+
+		return data;
 	}
 
 	/**
