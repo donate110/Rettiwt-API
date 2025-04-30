@@ -2,6 +2,7 @@ import { statSync } from 'fs';
 
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
+import { ETweetRepliesSortType } from '../../enums/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -334,6 +335,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param id - The id of the target tweet.
 	 * @param cursor - The cursor to the batch of replies to fetch.
+	 * @param sortBy - The sorting order of the replies to fetch. Default is {@link ETweetRepliesSortType.RECENT}.
 	 *
 	 * @returns The list of replies to the given tweet.
 	 *
@@ -354,13 +356,18 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async replies(id: string, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async replies(
+		id: string,
+		cursor?: string,
+		sortBy: ETweetRepliesSortType = ETweetRepliesSortType.LATEST,
+	): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.TWEET_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<ITweetDetailsResponse>(resource, {
 			id: id,
 			cursor: cursor,
+			sortBy: sortBy,
 		});
 
 		// Deserializing response
