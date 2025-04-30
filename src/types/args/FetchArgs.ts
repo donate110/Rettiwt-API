@@ -1,3 +1,5 @@
+import { ETweetRepliesSortType } from '../../enums/Tweet';
+
 /**
  * Options specifying the data that is to be fetched.
  *
@@ -55,6 +57,14 @@ export interface IFetchArgs {
 	 * - Required only for {@link EResourceType.TWEET_DETAILS_BULK} and {@link EResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
+
+	/**
+	 * The sorting to use for tweet results.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.TWEET_REPLIES}.
+	 */
+	sortBy?: ETweetRepliesSortType;
 }
 
 /**

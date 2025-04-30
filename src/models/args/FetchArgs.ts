@@ -1,4 +1,5 @@
 import { EResourceType } from '../../enums/Resource';
+import { ETweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
 /**
@@ -12,6 +13,7 @@ export class FetchArgs implements IFetchArgs {
 	public filter?: TweetFilter;
 	public id?: string;
 	public ids?: string[];
+	public sortBy?: ETweetRepliesSortType;
 
 	/**
 	 * @param resource - The resource to be fetched.
@@ -23,6 +25,7 @@ export class FetchArgs implements IFetchArgs {
 		this.count = args.count;
 		this.cursor = args.cursor;
 		this.filter = args.filter ? new TweetFilter(args.filter) : undefined;
+		this.sortBy = args.sortBy;
 	}
 }
 
