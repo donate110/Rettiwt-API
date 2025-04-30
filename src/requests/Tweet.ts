@@ -275,16 +275,14 @@ export class TweetRequests {
 				variables: JSON.stringify({
 					focalTweetId: id,
 					cursor: cursor,
-					rankingMode: sortBy ?? ERawTweetRepliesSortType.RELEVACE,
 					referrer: 'tweet',
-					controller_data: cursor,
 					with_rux_injections: false,
-					includePromotedContent: false,
+					rankingMode: sortBy ?? ERawTweetRepliesSortType.RELEVACE,
+					includePromotedContent: true,
 					withCommunity: true,
 					withQuickPromoteEligibilityTweetFields: true,
 					withBirdwatchNotes: true,
 					withVoice: true,
-					withV2Timeline: true,
 				}),
 				features: JSON.stringify({
 					rweb_video_screen_enabled: false,
