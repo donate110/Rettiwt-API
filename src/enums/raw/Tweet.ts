@@ -10,6 +10,8 @@ export enum ERawTweetSearchResultType {
 
 /**
  * The different types of sorting options when fetching replies to tweets.
+ *
+ * @public
  */
 export enum ERawTweetRepliesSortType {
 	RELEVACE = 'Relevance',

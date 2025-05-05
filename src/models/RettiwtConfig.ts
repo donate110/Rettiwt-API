@@ -7,6 +7,11 @@ import { ITidProvider } from '../types/auth/TidProvider';
 import { IErrorHandler } from '../types/ErrorHandler';
 import { IRettiwtConfig } from '../types/RettiwtConfig';
 
+/**
+ * The configuration for initializing a new Rettiwt instance.
+ *
+ * @public
+ */
 export class RettiwtConfig implements IRettiwtConfig {
 	// Parameters for internal use
 	private _apiKey?: string;

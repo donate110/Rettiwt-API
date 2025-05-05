@@ -11,7 +11,7 @@ import { IPostArgs } from '../types/args/PostArgs';
 import { rawTweetRepliesSortType } from './Tweet';
 
 /**
- * The collection of requests to various resources.
+ * Collection of requests to various resources.
  *
  * @internal
  */

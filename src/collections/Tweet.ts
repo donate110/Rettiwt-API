@@ -2,7 +2,7 @@ import { ERawTweetRepliesSortType } from '../enums/raw/Tweet';
 import { ETweetRepliesSortType } from '../enums/Tweet';
 
 /**
- * The collection of mapping from parsed reply sort type to raw reply sort type.
+ * Collection of mapping from parsed reply sort type to raw reply sort type.
  *
  * @internal
  */
