@@ -137,12 +137,12 @@ export class FetcherService {
 			// Logging
 			LogService.log(ELogActions.VALIDATE, { target: 'FETCH_ARGS' });
 
-			return new FetchArgs(resource, args);
+			return new FetchArgs(args);
 		} else if (postResources.includes(resource)) {
 			// Logging
 			LogService.log(ELogActions.VALIDATE, { target: 'POST_ARGS' });
 
-			return new PostArgs(resource, args);
+			return new PostArgs(args);
 		}
 	}
 
