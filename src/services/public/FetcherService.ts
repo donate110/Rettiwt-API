@@ -180,8 +180,10 @@ export class FetcherService {
 	 * @returns The raw data response received.
 	 *
 	 * @example
-	 * Fetching the raw details of a user with username 'user1'
-	 * ```
+	 *
+	 * #### Fetching the raw details of a user with username 'user1'
+	 *
+	 * ```ts
 	 * import { FetcherService, EResourceType } from 'rettiwt-api';
 	 *
 	 * // Creating a new FetcherService instance using the given 'API_KEY'
@@ -194,7 +196,7 @@ export class FetcherService {
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
-	 * })
+	 * });
 	 * ```
 	 */
 	public async request<T = unknown>(resource: EResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
