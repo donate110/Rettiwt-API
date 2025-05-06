@@ -19,7 +19,6 @@ import { LogService } from './LogService';
 export class TidService implements ITidProvider {
 	private readonly _cdnUrl: string;
 	private readonly _config: RettiwtConfig;
-	private readonly _requestHeaders: NonNullable<unknown>;
 	private _dynamicArgs?: ITidDynamicArgs;
 
 	/**
@@ -28,20 +27,6 @@ export class TidService implements ITidProvider {
 	public constructor(config: RettiwtConfig) {
 		this._cdnUrl = 'https://abs.twimg.com/responsive-web/client-web';
 		this._config = config;
-		this._requestHeaders = {
-			/* eslint-disable @typescript-eslint/naming-convention */
-
-			Authority: 'x.com',
-			'Accept-Language': 'en-US,en;q=0.9',
-			'Cache-Control': 'no-cache',
-			Referer: 'https://x.com',
-			'User-Agent':
-				'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
-			'X-Twitter-Active-User': 'yes',
-			'X-Twitter-Client-Language': 'en',
-
-			/* eslint-enable @typescript-eslint/naming-convention */
-		};
 	}
 
 	/**
@@ -69,7 +54,7 @@ export class TidService implements ITidProvider {
 	 */
 	private async getHomepageHtml(): Promise<string> {
 		const response = await axios.get<string>('https://x.com', {
-			headers: this._requestHeaders,
+			headers: this._config.headers,
 			httpAgent: this._config.httpsAgent,
 			httpsAgent: this._config.httpsAgent,
 		});
@@ -117,9 +102,7 @@ export class TidService implements ITidProvider {
 	 */
 	public async generate(method: string, path: string): Promise<string | undefined> {
 		try {
-			if (!this._dynamicArgs) {
-				this._dynamicArgs = await this.getDynamicArgs();
-			}
+			this._dynamicArgs = await this.getDynamicArgs();
 
 			const { verificationKey, frames, indices } = this._dynamicArgs;
 
