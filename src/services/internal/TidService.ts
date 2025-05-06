@@ -102,7 +102,13 @@ export class TidService implements ITidProvider {
 	 */
 	public async generate(method: string, path: string): Promise<string | undefined> {
 		try {
-			this._dynamicArgs = await this.getDynamicArgs();
+			// Refreshing dynamic args
+			await this.refreshDynamicArgs();
+
+			// If dynamic args weren't obtained, skip with error
+			if (!this._dynamicArgs) {
+				throw new Error('Dynamic args failed to generate');
+			}
 
 			const { verificationKey, frames, indices } = this._dynamicArgs;
 
@@ -115,7 +121,12 @@ export class TidService implements ITidProvider {
 				indices: indices,
 				extraByte: 3,
 			});
-		} catch {
+		} catch (err) {
+			LogService.log(ELogActions.WARNING, {
+				message: 'Failed to generated transaction token. Request may or may not work',
+				error: err,
+			});
+
 			return;
 		}
 	}
