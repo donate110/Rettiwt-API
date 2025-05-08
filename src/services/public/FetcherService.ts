@@ -181,8 +181,7 @@ export class FetcherService {
 	 *
 	 * @example
 	 *
-	 * #### Fetching the raw details of a user with username 'user1'
-	 *
+	 * #### Fetching the raw details of a single user, using their username
 	 * ```ts
 	 * import { FetcherService, EResourceType } from 'rettiwt-api';
 	 *

@@ -30,8 +30,6 @@ export class ListService extends FetcherService {
 	 *
 	 * @example
 	 *
-	 * #### Fetching the members of a list with ID '1234567890'
-	 *
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -76,8 +74,6 @@ export class ListService extends FetcherService {
 	 * @returns The list tweets in the given list.
 	 *
 	 * @example
-	 *
-	 * #### Fetching the tweets from the list with ID '1234567890'
 	 *
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';

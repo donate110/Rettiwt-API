@@ -46,16 +46,21 @@ export class TweetService extends FetcherService {
 	}
 
 	/**
-	 * Get the details of a tweet.
+	 * Get the details of one or more tweets.
 	 *
-	 * @param id - The id(s) of the target tweet/tweets.
+	 * @param id - The ID/IDs of the target tweet/tweets.
 	 *
 	 * @returns
-	 * The details of the tweet with the given id.
-	 * If no tweet matches the given id, returns `undefined`.
+	 * The details of the tweet with the given ID.
+	 *
+	 * If more than one ID is provided, returns a list.
+	 *
+	 * If no tweet/tweets matches the given ID/IDs, returns `undefined`/`[]`.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * #### Fetching the details of a single tweet
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -64,7 +69,26 @@ export class TweetService extends FetcherService {
 	 * // Fetching the details of the tweet with the id '1234567890'
 	 * rettiwt.tweet.details('1234567890')
 	 * .then(res => {
-	 * 	console.log(res);
+	 * 	console.log(res);	# 'res' is a single tweet
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 *
+	 * @example
+	 *
+	 * #### Fetching the details of multiple tweets
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the tweets with IDs '123', '456', '789'
+	 * rettiwt.tweet.details(['123', '456', '789'])
+	 * .then(res => {
+	 * 	console.log(res);	# 'res' is an array of tweets
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
@@ -115,12 +139,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Like a tweet.
 	 *
-	 * @param id - The id of the tweet to be liked.
+	 * @param id - The ID of the tweet to be liked.
 	 *
 	 * @returns Whether liking was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -153,14 +178,15 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who liked a tweet. Only works for your own tweets.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 * @param count - The number of likers to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of likers to fetch.
 	 *
 	 * @returns The list of users who liked the given tweet.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -195,14 +221,15 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of tweets from a tweet list.
 	 *
-	 * @param id - The id of target list.
+	 * @param id - The ID of target list.
 	 * @param count - The number of tweets to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 *
 	 * @returns The list tweets in the given list.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -244,11 +271,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
 	 *
-	 * @returns The id of the posted tweet.
+	 * @returns The ID of the posted tweet.
 	 *
 	 * @example
-	 * Posting a simple text
-	 * ```
+	 *
+	 * #### Posting a simple text
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -265,14 +293,15 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @example
-	 * Posting a tweet with an image that has been already uploaded
-	 * ```
+	 *
+	 * #### Posting a tweet with an image that has been already uploaded
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
-	 * // Posting a tweet, containing an image called 'mountains.jpg', to twitter
+	 * // Posting a tweet, containing an image with ID '1234567890', to twitter
 	 * rettiwt.tweet.post({ text: 'What a nice view!', media: [{ id: '1234567890' }] })
 	 * .then(res => {
 	 * 	console.log(res);
@@ -283,8 +312,9 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @example
-	 * Posting a reply to a tweet
-	 * ```
+	 *
+	 * #### Posting a reply to a tweet
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -300,9 +330,10 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * * @example
-	 * Posting a tweet that quotes another tweet
-	 * ```
+	 * @example
+	 *
+	 * #### Posting a tweet that quotes another tweet
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -333,14 +364,15 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of replies to a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 * @param sortBy - The sorting order of the replies to fetch. Default is {@link ETweetRepliesSortType.RECENT}.
 	 *
 	 * @returns The list of replies to the given tweet.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -355,6 +387,10 @@ export class TweetService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
+	 *
+	 * @remarks
+	 *
+	 * If the given tweet is the start of/part of a thread, the first batch always contains all the tweets in the thread.
 	 */
 	public async replies(
 		id: string,
@@ -379,12 +415,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Retweet a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 *
 	 * @returns Whether retweeting was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -415,14 +452,15 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of users who retweeted a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 * @param count - The number of retweeters to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of retweeters to fetch.
 	 *
 	 * @returns The list of users who retweeted the given tweet.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -459,11 +497,12 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param options - The options describing the tweet to be posted. Check {@link TweetArgs} for available options.
 	 *
-	 * @returns The id of the schedule.
+	 * @returns The ID of the schedule.
 	 *
 	 * @example
-	 * Scheduling a simple text
-	 * ```
+	 *
+	 * #### Scheduling a simple text
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -480,6 +519,7 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks
+	 *
 	 * Scheduling a tweet is similar to {@link post}ing, except that an extra parameter called `scheduleFor` is used.
 	 */
 	public async schedule(options: INewTweet): Promise<string | undefined> {
@@ -505,7 +545,8 @@ export class TweetService extends FetcherService {
 	 * @returns The list of tweets that match the given filter.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -521,7 +562,9 @@ export class TweetService extends FetcherService {
 	 * });
 	 * ```
 	 *
-	 * @remarks For details about available filters, refer to {@link TweetFilter}
+	 * @remarks
+	 *
+	 * For details about available filters, refer to {@link TweetFilter}
 	 */
 	public async search(filter: ITweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = EResourceType.TWEET_SEARCH;
@@ -551,7 +594,8 @@ export class TweetService extends FetcherService {
 	 * @returns An async generator that yields matching tweets as they are found.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -561,7 +605,7 @@ export class TweetService extends FetcherService {
 	 * async function streamTweets() {
 	 * 	try {
 	 * 		// Awaiting for the tweets returned by the AsyncGenerator returned by the method
-	 * 		for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] }, 1000)) {
+	 * 		for await (const tweet of rettiwt.tweet.stream({ fromUsers: ['user1'] }, 5000)) {
 	 * 			console.log(tweet.fullText);
 	 * 		}
 	 * 	}
@@ -613,12 +657,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Unlike a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 *
 	 * @returns Whether unliking was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -649,12 +694,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Unpost a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 *
 	 * @returns Whether unposting was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -685,12 +731,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Unretweet a tweet.
 	 *
-	 * @param id - The id of the target tweet.
+	 * @param id - The ID of the target tweet.
 	 *
 	 * @returns Whether unretweeting was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -721,12 +768,13 @@ export class TweetService extends FetcherService {
 	/**
 	 * Unschedule a tweet.
 	 *
-	 * @param id - The id of the scheduled tweet.
+	 * @param id - The ID of the scheduled tweet.
 	 *
 	 * @returns Whether unscheduling was successful or not.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -759,10 +807,11 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param media - The path or ArrayBuffer to the media file to upload.
 	 *
-	 * @returns The id of the uploaded media.
+	 * @returns The ID of the uploaded media.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -779,6 +828,7 @@ export class TweetService extends FetcherService {
 	 * ```
 	 *
 	 * @remarks
+	 *
 	 * - The uploaded media exists for 24 hrs within which it can be included in a tweet to be posted.
 	 * If not posted in a tweet within this period, the uploaded media is removed.
 	 * - Instead of a path to the media, an ArrayBuffer containing the media can also be uploaded.
