@@ -70,22 +70,6 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
-	// List
-	tweet
-		.command('list')
-		.description('Fetch the list of tweets in the tweet list with the given id')
-		.argument('<id>', 'The id of the tweet list')
-		.argument('[count]', 'The number of tweets to fetch')
-		.argument('[cursor]', 'The cursor to the batch of tweets to fetch')
-		.action(async (id: string, count?: string, cursor?: string) => {
-			try {
-				const tweets = await rettiwt.tweet.list(id, count ? parseInt(count) : undefined, cursor);
-				output(tweets);
-			} catch (error) {
-				output(error);
-			}
-		});
-
 	// Post
 	tweet
 		.command('post')

@@ -10,7 +10,6 @@ import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { ITweetFilter } from '../../types/args/FetchArgs';
 import { INewTweet } from '../../types/args/PostArgs';
-import { IListTweetsResponse } from '../../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeUpload';
 
 import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
@@ -214,54 +213,6 @@ export class TweetService extends FetcherService {
 
 		// Deserializing response
 		const data = extractors[resource](response);
-
-		return data;
-	}
-
-	/**
-	 * Get the list of tweets from a tweet list.
-	 *
-	 * @param id - The ID of target list.
-	 * @param count - The number of tweets to fetch, must be \<= 100.
-	 * @param cursor - The cursor to the batch of tweets to fetch.
-	 *
-	 * @returns The list tweets in the given list.
-	 *
-	 * @example
-	 *
-	 * ```ts
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching the most recent 100 tweets of the Twitter list with id '1234567890'
-	 * rettiwt.tweet.list('1234567890')
-	 * .then(res => {
-	 * 	console.log(res);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 *
-	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
-	 */
-	public async list(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.LIST_TWEETS;
-
-		// Fetching raw list tweets
-		const response = await this.request<IListTweetsResponse>(resource, {
-			id: id,
-			count: count,
-			cursor: cursor,
-		});
-
-		// Deserializing response
-		const data = extractors[resource](response);
-
-		// Sorting the tweets by date, from recent to oldest
-		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
 
 		return data;
 	}
