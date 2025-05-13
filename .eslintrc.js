@@ -17,9 +17,8 @@ module.exports = {
 		node: true,
 		jest: true,
 	},
-	ignorePatterns: ['.eslintrc.js'],
+	ignorePatterns: ['.eslintrc.js', 'eslint.config.mjs'],
 	rules: {
-		'@typescript-eslint/ban-ts-comment': 'off',
 		'@typescript-eslint/naming-convention': [
 			'warn',
 			{
@@ -136,7 +135,7 @@ module.exports = {
 			},
 		],
 		'@typescript-eslint/no-explicit-any': 'warn',
-		'@typescript-eslint/no-inferrable-types': 'off',
+		'@typescript-eslint/no-inferrable-types': 'warn',
 		'tsdoc/syntax': 'warn',
 		'sort-imports': [
 			'warn',

@@ -1,8 +1,9 @@
-import { ICursor } from 'rettiwt-core';
-
 import { EBaseType } from '../../enums/Data';
 
 import { findByFilter } from '../../helper/JsonUtils';
+
+import { ICursoredData } from '../../types/data/CursoredData';
+import { ICursor as IRawCursor } from '../../types/raw/base/Cursor';
 
 import { Notification } from './Notification';
 import { Tweet } from './Tweet';
@@ -15,44 +16,38 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User> {
-	/** The batch of data of the given type. */
-	public list: T[] = [];
-
-	/** The cursor to the next batch of data. */
-	public next: Cursor = new Cursor('');
+export class CursoredData<T extends Notification | Tweet | User> implements ICursoredData<T> {
+	public list: T[];
+	public next: string;
 
 	/**
 	 * @param response - The raw response.
 	 * @param type - The base type of the data included in the batch.
 	 */
 	public constructor(response: NonNullable<unknown>, type: EBaseType) {
+		// Initializing defaults
+		this.list = [];
+		this.next = '';
+
 		if (type == EBaseType.TWEET) {
-			this.list = Tweet.list(response) as T[];
-			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
+			this.list = Tweet.timeline(response) as T[];
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == EBaseType.USER) {
-			this.list = User.list(response) as T[];
-			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '');
+			this.list = User.timeline(response) as T[];
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
 		} else if (type == EBaseType.NOTIFICATION) {
 			this.list = Notification.list(response) as T[];
-			this.next = new Cursor(findByFilter<ICursor>(response, 'cursorType', 'Top')[0]?.value ?? '');
+			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Top')[0]?.value ?? '';
 		}
 	}
-}
-
-/**
- * The cursor to the batch of data to fetch.
- *
- * @public
- */
-export class Cursor {
-	/** The cursor string. */
-	public value: string;
 
 	/**
-	 * @param cursor - The cursor string.
+	 * @returns A serializable JSON representation of `this` object.
 	 */
-	public constructor(cursor: string) {
-		this.value = cursor;
+	public toJSON(): ICursoredData<T> {
+		return {
+			list: this.list.map((item) => item.toJSON() as T),
+			next: this.next,
+		};
 	}
 }

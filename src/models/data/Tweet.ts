@@ -1,17 +1,15 @@
-import {
-	EMediaType,
-	ILimitedVisibilityTweet,
-	IExtendedMedia as IRawExtendedMedia,
-	ITweet as IRawTweet,
-	IEntities as IRawTweetEntities,
-	ITimelineTweet,
-	ITweet,
-} from 'rettiwt-core';
-
 import { ELogActions } from '../../enums/Logging';
+import { EMediaType } from '../../enums/Media';
+import { ERawMediaType } from '../../enums/raw/Media';
 import { findByFilter } from '../../helper/JsonUtils';
 
 import { LogService } from '../../services/internal/LogService';
+
+import { ITweet, ITweetEntities, ITweetMedia } from '../../types/data/Tweet';
+import { ILimitedVisibilityTweet } from '../../types/raw/base/LimitedVisibilityTweet';
+import { IExtendedMedia as IRawExtendedMedia } from '../../types/raw/base/Media';
+import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from '../../types/raw/base/Tweet';
+import { ITimelineTweet } from '../../types/raw/composite/TimelineTweet';
 
 import { User } from './User';
 
@@ -20,61 +18,37 @@ import { User } from './User';
  *
  * @public
  */
-export class Tweet {
-	/** The number of bookmarks of a tweet. */
+export class Tweet implements ITweet {
+	/** The raw tweet details. */
+	private readonly _raw: IRawTweet;
+
 	public bookmarkCount: number;
-
-	/** The date and time of creation of the tweet, in UTC string format. */
+	public conversationId: string;
 	public createdAt: string;
-
-	/** Additional tweet entities like urls, mentions, etc. */
 	public entities: TweetEntities;
-
-	/** The full text content of the tweet. */
 	public fullText: string;
-
-	/** The rest id of the tweet. */
 	public id: string;
-
-	/** The language in which the tweet is written. */
 	public lang: string;
-
-	/** The number of likes of the tweet. */
 	public likeCount: number;
-
-	/** The urls of the media contents of the tweet (if any). */
 	public media?: TweetMedia[];
-
-	/** The number of quotes of the tweet. */
 	public quoteCount: number;
-
-	/** The tweet which is quoted in the tweet. */
 	public quoted?: Tweet;
-
-	/** The number of replies to the tweet. */
 	public replyCount: number;
-
-	/** The rest id of the tweet to which the tweet is a reply. */
 	public replyTo?: string;
-
-	/** The number of retweets of the tweet. */
 	public retweetCount: number;
-
-	/** The tweet which is retweeted in this tweet (if any). */
 	public retweetedTweet?: Tweet;
-
-	/** The details of the user who made the tweet. */
 	public tweetBy: User;
-
-	/** The number of views of a tweet. */
+	public url: string;
 	public viewCount: number;
 
 	/**
 	 * @param tweet - The raw tweet details.
 	 */
 	public constructor(tweet: IRawTweet) {
+		this._raw = { ...tweet };
 		this.id = tweet.rest_id;
-		this.createdAt = tweet.legacy.created_at;
+		this.conversationId = tweet.legacy.conversation_id_str;
+		this.createdAt = new Date(tweet.legacy.created_at).toISOString();
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
@@ -89,6 +63,12 @@ export class Tweet {
 		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
 		this.retweetedTweet = this.getRetweetedTweet(tweet);
+		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
+	}
+
+	/** The raw tweet details. */
+	public get raw(): IRawTweet {
+		return { ...this._raw };
 	}
 
 	/**
@@ -108,8 +88,8 @@ export class Tweet {
 			return new Tweet((tweet.quoted_status_result.result as ILimitedVisibilityTweet).tweet);
 		}
 		// If normal tweet
-		else if ((tweet.quoted_status_result?.result as ITweet)?.rest_id) {
-			return new Tweet(tweet.quoted_status_result.result as ITweet);
+		else if ((tweet.quoted_status_result?.result as IRawTweet)?.rest_id) {
+			return new Tweet(tweet.quoted_status_result.result as IRawTweet);
 		}
 		// Else, skip
 		else {
@@ -134,8 +114,8 @@ export class Tweet {
 			return new Tweet((tweet.legacy.retweeted_status_result.result as ILimitedVisibilityTweet).tweet);
 		}
 		// If normal tweet
-		else if ((tweet.legacy?.retweeted_status_result?.result as ITweet)?.rest_id) {
-			return new Tweet(tweet.legacy.retweeted_status_result.result as ITweet);
+		else if ((tweet.legacy?.retweeted_status_result?.result as IRawTweet)?.rest_id) {
+			return new Tweet(tweet.legacy.retweeted_status_result.result as IRawTweet);
 		}
 		// Else, skip
 		else {
@@ -144,45 +124,38 @@ export class Tweet {
 	}
 
 	/**
-	 * Extracts and deserializes the list of tweets from the given raw response data.
+	 * Extracts and deserializes multiple target tweets from the given raw response data.
 	 *
 	 * @param response - The raw response data.
+	 * @param ids - The ids of the target tweets.
 	 *
-	 * @returns The deserialized list of tweets.
-	 *
-	 * @internal
+	 * @returns The target deserialized tweets.
 	 */
-	public static list(response: NonNullable<unknown>): Tweet[] {
-		const tweets: Tweet[] = [];
+	public static multiple(response: NonNullable<unknown>, ids: string[]): Tweet[] {
+		let tweets: Tweet[] = [];
 
 		// Extracting the matching data
-		const extract = findByFilter<ITimelineTweet>(response, '__typename', 'TimelineTweet');
+		const extract = findByFilter<IRawTweet>(response, '__typename', 'Tweet');
 
 		// Deserializing valid data
 		for (const item of extract) {
-			// If tweet with limited visibility
-			if (
-				item.tweet_results?.result &&
-				item.tweet_results?.result?.__typename == 'TweetWithVisibilityResults' &&
-				(item.tweet_results?.result as ILimitedVisibilityTweet)?.tweet?.legacy
-			) {
-				tweets.push(new Tweet((item.tweet_results.result as ILimitedVisibilityTweet).tweet));
-			}
-			// If normal tweet
-			else if ((item.tweet_results?.result as ITweet)?.legacy) {
+			if (item.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: (item.tweet_results.result as ITweet).rest_id });
+				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
 
-				tweets.push(new Tweet(item.tweet_results.result as ITweet));
-			}
-			// If invalid/unrecognized tweet
-			else {
+				tweets.push(new Tweet(item));
+			} else {
 				// Logging
 				LogService.log(ELogActions.WARNING, {
 					action: ELogActions.DESERIALIZE,
 					message: `Tweet not found, skipping`,
 				});
 			}
+		}
+
+		// Filtering only required tweets, if required
+		if (ids && ids.length) {
+			tweets = tweets.filter((tweet) => ids.includes(tweet.id));
 		}
 
 		return tweets;
@@ -195,14 +168,12 @@ export class Tweet {
 	 * @param id - The id of the target tweet.
 	 *
 	 * @returns The target deserialized tweet.
-	 *
-	 * @internal
 	 */
 	public static single(response: NonNullable<unknown>, id: string): Tweet | undefined {
 		const tweets: Tweet[] = [];
 
 		// Extracting the matching data
-		const extract = findByFilter<ITweet>(response, 'rest_id', id);
+		const extract = findByFilter<IRawTweet>(response, 'rest_id', id);
 
 		// Deserializing valid data
 		for (const item of extract) {
@@ -221,6 +192,76 @@ export class Tweet {
 		}
 
 		return tweets.length ? tweets[0] : undefined;
+	}
+
+	/**
+	 * Extracts and deserializes the timeline of tweets from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @param ids - The IDs of specific tweets that need to be extracted.
+	 *
+	 * @returns The deserialized timeline of tweets.
+	 */
+	public static timeline(response: NonNullable<unknown>): Tweet[] {
+		const tweets: Tweet[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITimelineTweet>(response, '__typename', 'TimelineTweet');
+
+		// Deserializing valid data
+		for (const item of extract) {
+			// If tweet with limited visibility
+			if (
+				item.tweet_results?.result &&
+				item.tweet_results?.result?.__typename == 'TweetWithVisibilityResults' &&
+				(item.tweet_results?.result as ILimitedVisibilityTweet)?.tweet?.legacy
+			) {
+				tweets.push(new Tweet((item.tweet_results.result as ILimitedVisibilityTweet).tweet));
+			}
+			// If normal tweet
+			else if ((item.tweet_results?.result as IRawTweet)?.legacy) {
+				// Logging
+				LogService.log(ELogActions.DESERIALIZE, { id: (item.tweet_results.result as IRawTweet).rest_id });
+
+				tweets.push(new Tweet(item.tweet_results.result as IRawTweet));
+			}
+			// If invalid/unrecognized tweet
+			else {
+				// Logging
+				LogService.log(ELogActions.WARNING, {
+					action: ELogActions.DESERIALIZE,
+					message: `Tweet not found, skipping`,
+				});
+			}
+		}
+
+		return tweets;
+	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): ITweet {
+		return {
+			bookmarkCount: this.bookmarkCount,
+			conversationId: this.conversationId,
+			createdAt: this.createdAt,
+			entities: this.entities.toJSON(),
+			fullText: this.fullText,
+			id: this.id,
+			lang: this.lang,
+			likeCount: this.likeCount,
+			media: this.media?.map((item) => item.toJSON()),
+			quoteCount: this.quoteCount,
+			quoted: this.quoted?.toJSON(),
+			replyCount: this.replyCount,
+			replyTo: this.replyTo,
+			retweetCount: this.retweetCount,
+			retweetedTweet: this.retweetedTweet?.toJSON(),
+			tweetBy: this.tweetBy.toJSON(),
+			url: this.url,
+			viewCount: this.viewCount,
+		};
 	}
 }
 
@@ -264,6 +305,17 @@ export class TweetEntities {
 			}
 		}
 	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): ITweetEntities {
+		return {
+			hashtags: this.hashtags,
+			mentionedUsers: this.mentionedUsers,
+			urls: this.urls,
+		};
+	}
 }
 
 /**
@@ -279,28 +331,29 @@ export class TweetMedia {
 	public type: EMediaType;
 
 	/** The direct URL to the media. */
-	public url: string = '';
+	public url = '';
 
 	/**
 	 * @param media - The raw media details.
 	 */
 	public constructor(media: IRawExtendedMedia) {
-		this.type = media.type;
-
 		// If the media is a photo
-		if (media.type == EMediaType.PHOTO) {
+		if (media.type == ERawMediaType.PHOTO) {
+			this.type = EMediaType.PHOTO;
 			this.url = media.media_url_https;
 		}
 		// If the media is a gif
-		else if (media.type == EMediaType.GIF) {
+		else if (media.type == ERawMediaType.GIF) {
+			this.type = EMediaType.GIF;
 			this.url = media.video_info?.variants[0].url as string;
 		}
 		// If the media is a video
 		else {
+			this.type = EMediaType.VIDEO;
 			this.thumbnailUrl = media.media_url_https;
 
 			/** The highest bitrate of all variants. */
-			let highestRate: number = 0;
+			let highestRate = 0;
 
 			/**
 			 * Selecting the URL of the video variant with the highest bitrate.
@@ -312,5 +365,16 @@ export class TweetMedia {
 				}
 			});
 		}
+	}
+
+	/**
+	 * @returns A serializable JSON representation of `this` object.
+	 */
+	public toJSON(): ITweetMedia {
+		return {
+			thumbnailUrl: this.thumbnailUrl,
+			type: this.type,
+			url: this.url,
+		};
 	}
 }

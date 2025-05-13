@@ -24,7 +24,7 @@ export function findByFilter<T>(data: NonNullable<unknown>, key: string, value: 
 		 * Therefore, map(item =\> findByFilter(.......)) returns an array of arrays.
 		 * Therefore, using ... operator to spread the 2-D array in 1-D array.
 		 */
-		res = res.concat(...data.map((item) => findByFilter<T>(item as NonNullable<unknown>, key, value)));
+		res = res.concat(...data.map((item: NonNullable<unknown>) => findByFilter<T>(item, key, value)));
 	}
 	// If the data is an object
 	else if (data != null && typeof data == 'object') {

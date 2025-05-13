@@ -1,11 +1,11 @@
-import { IListMembersResponse, IListTweetsResponse } from 'rettiwt-core';
-
 import { extractors } from '../../collections/Extractors';
 import { EResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
-import { IRettiwtConfig } from '../../types/RettiwtConfig';
+import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IListMembersResponse } from '../../types/raw/list/Members';
+import { IListTweetsResponse } from '../../types/raw/list/Tweets';
 
 import { FetcherService } from './FetcherService';
 
@@ -15,21 +15,22 @@ export class ListService extends FetcherService {
 	 *
 	 * @internal
 	 */
-	public constructor(config?: IRettiwtConfig) {
+	public constructor(config: RettiwtConfig) {
 		super(config);
 	}
 
 	/**
 	 * Get the list of members of a tweet list.
 	 *
-	 * @param id - The id of target list.
+	 * @param id - The ID of target list.
 	 * @param count - The number of members to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of members to fetch.
 	 *
 	 * @returns The list tweets in the given list.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
@@ -66,14 +67,15 @@ export class ListService extends FetcherService {
 	/**
 	 * Get the list of tweets from a tweet list.
 	 *
-	 * @param id - The id of target list.
+	 * @param id - The ID of target list.
 	 * @param count - The number of tweets to fetch, must be \<= 100.
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 *
 	 * @returns The list tweets in the given list.
 	 *
 	 * @example
-	 * ```
+	 *
+	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
