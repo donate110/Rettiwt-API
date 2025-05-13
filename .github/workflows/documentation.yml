@@ -4,7 +4,7 @@ run-name: Building the documentation for the release
 on:
     push:
         branches:
-            - main
+            - release
 
 jobs:
     # Builds and packages the documentation
