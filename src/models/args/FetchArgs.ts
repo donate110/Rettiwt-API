@@ -40,16 +40,18 @@ export class TweetFilter implements ITweetFilter {
 	public includePhrase?: string;
 	public includeWords?: string[];
 	public language?: string;
-	public links?: boolean;
 	public list?: string;
 	public maxId?: string;
 	public mentions?: string[];
 	public minLikes?: number;
 	public minReplies?: number;
 	public minRetweets?: number;
+	public onlyLinks?: boolean;
+	public onlyOriginal?: boolean;
+	public onlyReplies?: boolean;
+	public onlyText?: boolean;
 	public optionalWords?: string[];
 	public quoted?: string;
-	public replies?: boolean;
 	public sinceId?: string;
 	public startDate?: Date;
 	public toUsers?: string[];
@@ -65,9 +67,7 @@ export class TweetFilter implements ITweetFilter {
 		this.hashtags = filter.hashtags;
 		this.includePhrase = filter.includePhrase;
 		this.language = filter.language;
-		this.links = filter.links;
 		this.list = filter.list;
-		this.replies = filter.replies;
 		this.mentions = filter.mentions;
 		this.quoted = filter.quoted;
 		this.sinceId = filter.sinceId;
@@ -75,6 +75,10 @@ export class TweetFilter implements ITweetFilter {
 		this.minLikes = filter.minLikes;
 		this.minReplies = filter.minReplies;
 		this.minRetweets = filter.minRetweets;
+		this.onlyLinks = filter.onlyLinks;
+		this.onlyOriginal = filter.onlyOriginal;
+		this.onlyReplies = filter.onlyReplies;
+		this.onlyText = filter.onlyText;
 		this.optionalWords = filter.optionalWords;
 		this.startDate = filter.startDate;
 		this.toUsers = filter.toUsers;
@@ -139,8 +143,10 @@ export class TweetFilter implements ITweetFilter {
 			]
 				.filter((item) => item !== '()' && item !== '')
 				.join(' ') +
-			(this.links == false ? ' -filter:links' : '') +
-			(this.replies == false ? ' -filter:replies' : '')
+			(this.onlyText === true ? ' -filter:links' : '') +
+			(this.onlyOriginal === true ? ' -filter:replies' : '') +
+			(this.onlyLinks === true ? ' filter:links' : '') +
+			(this.onlyReplies === true ? ' filter:replies' : '')
 		);
 	}
 }
