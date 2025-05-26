@@ -1,4 +1,4 @@
-import { ELogActions } from '../../enums/Logging';
+import { LogActions } from '../../enums/Logging';
 import { findByFilter } from '../../helper/JsonUtils';
 import { LogService } from '../../services/internal/LogService';
 import { IUser } from '../../types/data/User';
@@ -73,13 +73,13 @@ export class User implements IUser {
 		for (const item of extract) {
 			if (item.legacy && item.legacy.created_at) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: item.rest_id });
 
 				users.push(new User(item));
 			} else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `User not found, skipping`,
 				});
 			}
@@ -110,13 +110,13 @@ export class User implements IUser {
 		for (const item of extract) {
 			if (item.legacy && item.legacy.created_at) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: item.rest_id });
 
 				users.push(new User(item));
 			} else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `User not found, skipping`,
 				});
 			}
@@ -142,13 +142,13 @@ export class User implements IUser {
 		for (const item of extract) {
 			if (item.user_results?.result?.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.user_results.result.rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: item.user_results.result.rest_id });
 
 				users.push(new User(item.user_results.result));
 			} else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `User not found, skipping`,
 				});
 			}

@@ -3,7 +3,7 @@
  *
  * @internal
  */
-export enum EBaseType {
+export enum BaseType {
 	NOTIFICATION = 'NOTIFICATION',
 	TWEET = 'TWEET',
 	USER = 'USER',

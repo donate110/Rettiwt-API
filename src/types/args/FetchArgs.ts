@@ -1,4 +1,4 @@
-import { ETweetRepliesSortType } from '../../enums/Tweet';
+import { TweetRepliesSortType } from '../../enums/Tweet';
 
 /**
  * Options specifying the data that is to be fetched.
@@ -64,7 +64,7 @@ export interface IFetchArgs {
 	 * @remarks
 	 * - Only works for {@link EResourceType.TWEET_REPLIES}.
 	 */
-	sortBy?: ETweetRepliesSortType;
+	sortBy?: TweetRepliesSortType;
 }
 
 /**

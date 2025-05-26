@@ -3,7 +3,7 @@
  *
  * @internal
  */
-export enum ELogActions {
+export enum LogActions {
 	AUTHORIZATION = 'AUTHORIZATION',
 	DESERIALIZE = 'DESERIALIZE',
 	EXTRACT = 'EXTRACT',

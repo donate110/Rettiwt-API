@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { Cookie } from 'cookiejar';
 
-import { allowGuestAuthentication, fetchResources, postResources } from '../../collections/Groups';
-import { requests } from '../../collections/Requests';
-import { EApiErrors } from '../../enums/Api';
-import { ELogActions } from '../../enums/Logging';
-import { EResourceType } from '../../enums/Resource';
+import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
+import { Requests } from '../../collections/Requests';
+import { ApiErrors } from '../../enums/Api';
+import { LogActions } from '../../enums/Logging';
+import { ResourceType } from '../../enums/Resource';
 import { FetchArgs } from '../../models/args/FetchArgs';
 import { PostArgs } from '../../models/args/PostArgs';
 import { AuthCredential } from '../../models/auth/AuthCredential';
@@ -65,13 +65,13 @@ export class FetcherService {
 	 *
 	 * @throws An error if not authorized to access the requested resource.
 	 */
-	private checkAuthorization(resource: EResourceType): void {
+	private _checkAuthorization(resource: ResourceType): void {
 		// Logging
-		LogService.log(ELogActions.AUTHORIZATION, { authenticated: this.config.userId != undefined });
+		LogService.log(LogActions.AUTHORIZATION, { authenticated: this.config.userId != undefined });
 
 		// Checking authorization status
-		if (!allowGuestAuthentication.includes(resource) && this.config.userId == undefined) {
-			throw new Error(EApiErrors.RESOURCE_NOT_ALLOWED);
+		if (!AllowGuestAuthenticationGroup.includes(resource) && this.config.userId == undefined) {
+			throw new Error(ApiErrors.RESOURCE_NOT_ALLOWED);
 		}
 	}
 
@@ -80,10 +80,10 @@ export class FetcherService {
 	 *
 	 * @returns The generated AuthCredential
 	 */
-	private async getCredential(): Promise<AuthCredential> {
+	private async _getCredential(): Promise<AuthCredential> {
 		if (this.config.apiKey) {
 			// Logging
-			LogService.log(ELogActions.GET, { target: 'USER_CREDENTIAL' });
+			LogService.log(LogActions.GET, { target: 'USER_CREDENTIAL' });
 
 			return new AuthCredential(
 				AuthService.decodeCookie(this.config.apiKey)
@@ -92,7 +92,7 @@ export class FetcherService {
 			);
 		} else {
 			// Logging
-			LogService.log(ELogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
+			LogService.log(LogActions.GET, { target: 'NEW_GUEST_CREDENTIAL' });
 
 			return this._auth.guest();
 		}
@@ -106,7 +106,7 @@ export class FetcherService {
 	 *
 	 * @returns The header containing the transaction ID.
 	 */
-	private async getTransactionHeader(method: string, url: string): Promise<ITidHeader | undefined> {
+	private async _getTransactionHeader(method: string, url: string): Promise<ITidHeader | undefined> {
 		// Getting the URL path excluding all params
 		const path = new URL(url).pathname.split('?')[0].trim();
 
@@ -132,15 +132,15 @@ export class FetcherService {
 	 *
 	 * @returns The validated args.
 	 */
-	private validateArgs(resource: EResourceType, args: IFetchArgs | IPostArgs): FetchArgs | PostArgs | undefined {
-		if (fetchResources.includes(resource)) {
+	private _validateArgs(resource: ResourceType, args: IFetchArgs | IPostArgs): FetchArgs | PostArgs | undefined {
+		if (FetchResourcesGroup.includes(resource)) {
 			// Logging
-			LogService.log(ELogActions.VALIDATE, { target: 'FETCH_ARGS' });
+			LogService.log(LogActions.VALIDATE, { target: 'FETCH_ARGS' });
 
 			return new FetchArgs(args);
-		} else if (postResources.includes(resource)) {
+		} else if (PostResourcesGroup.includes(resource)) {
 			// Logging
-			LogService.log(ELogActions.VALIDATE, { target: 'POST_ARGS' });
+			LogService.log(LogActions.VALIDATE, { target: 'POST_ARGS' });
 
 			return new PostArgs(args);
 		}
@@ -149,7 +149,7 @@ export class FetcherService {
 	/**
 	 * Introduces a delay using the configured delay/delay function.
 	 */
-	private async wait(): Promise<void> {
+	private async _wait(): Promise<void> {
 		// If no delay is set, skip
 		if (this._delay == undefined) {
 			return;
@@ -198,27 +198,27 @@ export class FetcherService {
 	 * });
 	 * ```
 	 */
-	public async request<T = unknown>(resource: EResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
 		// Logging
-		LogService.log(ELogActions.REQUEST, { resource: resource, args: args });
+		LogService.log(LogActions.REQUEST, { resource: resource, args: args });
 
 		// Checking authorization for the requested resource
-		this.checkAuthorization(resource);
+		this._checkAuthorization(resource);
 
 		// Validating args
-		args = this.validateArgs(resource, args)!;
+		args = this._validateArgs(resource, args)!;
 
 		// Getting credentials from key
-		const cred: AuthCredential = await this.getCredential();
+		const cred: AuthCredential = await this._getCredential();
 
 		// Getting request configuration
-		const config = requests[resource](args);
+		const config = Requests[resource](args);
 
 		// Setting additional request parameters
 		config.headers = {
 			...config.headers,
 			...cred.toHeader(),
-			...(await this.getTransactionHeader(config.method ?? '', config.url ?? '')),
+			...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
 			...this.config.headers,
 		};
 		config.httpAgent = this.config.httpsAgent;
@@ -228,7 +228,7 @@ export class FetcherService {
 		// Sending the request
 		try {
 			// Introducing a delay
-			await this.wait();
+			await this._wait();
 
 			// Returning the reponse body
 			return (await axios<T>(config)).data;

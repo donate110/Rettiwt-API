@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum EAuthenticationType {
+export enum AuthenticationType {
 	GUEST = 'GUEST',
 	USER = 'USER',
 	LOGIN = 'LOGIN',

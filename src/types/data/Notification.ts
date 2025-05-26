@@ -1,4 +1,4 @@
-import { ENotificationType } from '../../enums/Notification';
+import { NotificationType } from '../../enums/Notification';
 
 /**
  * The details of a single notification.
@@ -22,5 +22,5 @@ export interface INotification {
 	target: string[];
 
 	/** The type of notification. */
-	type?: ENotificationType;
+	type?: NotificationType;
 }

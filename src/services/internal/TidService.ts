@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as htmlParser from 'node-html-parser';
 
-import { ELogActions } from '../../enums/Logging';
+import { LogActions } from '../../enums/Logging';
 
 import { calculateClientTransactionIdHeader } from '../../helper/TidUtils';
 
@@ -34,16 +34,16 @@ export class TidService implements ITidProvider {
 	 *
 	 * @returns The new dynamic args.
 	 */
-	private async getDynamicArgs(): Promise<ITidDynamicArgs> {
-		const html = await this.getHomepageHtml();
+	private async _getDynamicArgs(): Promise<ITidDynamicArgs> {
+		const html = await this._getHomepageHtml();
 		const root = htmlParser.parse(html);
 		const keyElement = root.querySelector("[name='twitter-site-verification']");
 		const frameElements = root.querySelectorAll("[id^='loading-x-anim']");
 
 		return {
 			verificationKey: keyElement?.getAttribute('content') ?? '',
-			frames: frameElements.map((el) => this.parseFrameElement(el)),
-			indices: await this.getKeyBytesIndices(html),
+			frames: frameElements.map((el) => this._parseFrameElement(el)),
+			indices: await this._getKeyBytesIndices(html),
 		};
 	}
 
@@ -52,7 +52,7 @@ export class TidService implements ITidProvider {
 	 *
 	 * @returns The stringified HTML content of the homepage.
 	 */
-	private async getHomepageHtml(): Promise<string> {
+	private async _getHomepageHtml(): Promise<string> {
 		const response = await axios.get<string>('https://x.com', {
 			headers: this._config.headers,
 			httpAgent: this._config.httpsAgent,
@@ -62,10 +62,10 @@ export class TidService implements ITidProvider {
 		return response.data;
 	}
 
-	private async getKeyBytesIndices(html: string): Promise<number[]> {
+	private async _getKeyBytesIndices(html: string): Promise<number[]> {
 		const ondemandFileMatch = html.match(/ondemand\.s":"([^"]+)"/);
 		if (!ondemandFileMatch || !ondemandFileMatch[1]) {
-			LogService.log(ELogActions.WARNING, { message: 'ondemand.s file not found' });
+			LogService.log(LogActions.WARNING, { message: 'ondemand.s file not found' });
 
 			return [0, 0, 0, 0];
 		}
@@ -80,7 +80,7 @@ export class TidService implements ITidProvider {
 		return Array.from(match).map((m) => Number(m[2]));
 	}
 
-	private parseFrameElement(element: htmlParser.HTMLElement): number[][] {
+	private _parseFrameElement(element: htmlParser.HTMLElement): number[][] {
 		const pathElement = element.children[0].children[1];
 		const value = pathElement.getAttribute('d');
 		if (!value) {
@@ -122,7 +122,7 @@ export class TidService implements ITidProvider {
 				extraByte: 3,
 			});
 		} catch (err) {
-			LogService.log(ELogActions.WARNING, {
+			LogService.log(LogActions.WARNING, {
 				message: 'Failed to generated transaction token. Request may or may not work',
 				error: err,
 			});
@@ -135,6 +135,6 @@ export class TidService implements ITidProvider {
 	 * Refreshes the dynamic args from the homepage.
 	 */
 	public async refreshDynamicArgs(): Promise<void> {
-		this._dynamicArgs = await this.getDynamicArgs();
+		this._dynamicArgs = await this._getDynamicArgs();
 	}
 }

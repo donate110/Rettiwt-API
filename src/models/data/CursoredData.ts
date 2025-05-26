@@ -1,4 +1,4 @@
-import { EBaseType } from '../../enums/Data';
+import { BaseType } from '../../enums/Data';
 
 import { findByFilter } from '../../helper/JsonUtils';
 
@@ -24,18 +24,18 @@ export class CursoredData<T extends Notification | Tweet | User> implements ICur
 	 * @param response - The raw response.
 	 * @param type - The base type of the data included in the batch.
 	 */
-	public constructor(response: NonNullable<unknown>, type: EBaseType) {
+	public constructor(response: NonNullable<unknown>, type: BaseType) {
 		// Initializing defaults
 		this.list = [];
 		this.next = '';
 
-		if (type == EBaseType.TWEET) {
+		if (type == BaseType.TWEET) {
 			this.list = Tweet.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
-		} else if (type == EBaseType.USER) {
+		} else if (type == BaseType.USER) {
 			this.list = User.timeline(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Bottom')[0]?.value ?? '';
-		} else if (type == EBaseType.NOTIFICATION) {
+		} else if (type == BaseType.NOTIFICATION) {
 			this.list = Notification.list(response) as T[];
 			this.next = findByFilter<IRawCursor>(response, 'cursorType', 'Top')[0]?.value ?? '';
 		}

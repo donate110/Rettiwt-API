@@ -12,7 +12,7 @@ import { IRettiwtConfig } from '../types/RettiwtConfig';
  *
  * @public
  */
-const defaultHeaders = {
+const DefaultHeaders = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	Authority: 'x.com',
@@ -60,7 +60,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this.timeout = config?.timeout;
 		this.apiKey = config?.apiKey;
 		this._headers = {
-			...defaultHeaders,
+			...DefaultHeaders,
 			...config?.headers,
 		};
 	}
@@ -90,7 +90,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 
 	public set headers(headers: { [key: string]: string } | undefined) {
 		this._headers = {
-			...defaultHeaders,
+			...DefaultHeaders,
 			...headers,
 		};
 	}
@@ -100,4 +100,4 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 }
 
-export { defaultHeaders as DefaultRettiwtHeaders };
+export { DefaultHeaders as DefaultRettiwtHeaders };

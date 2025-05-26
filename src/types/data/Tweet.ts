@@ -1,4 +1,4 @@
-import { EMediaType } from '../../enums/Media';
+import { MediaType } from '../../enums/Media';
 
 import { IUser } from './User';
 
@@ -89,7 +89,7 @@ export interface ITweetMedia {
 	thumbnailUrl?: string;
 
 	/** The type of media. */
-	type: EMediaType;
+	type: MediaType;
 
 	/** The direct URL to the media. */
 	url: string;
