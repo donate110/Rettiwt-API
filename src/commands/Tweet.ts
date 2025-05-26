@@ -1,5 +1,6 @@
 import { Command, createCommand } from 'commander';
 
+import { TweetRepliesSortType } from '../enums/Tweet';
 import { output } from '../helper/CliUtils';
 import { TweetFilter } from '../models/args/FetchArgs';
 import { Rettiwt } from '../Rettiwt';
@@ -63,8 +64,8 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[cursor]', 'The cursor to the batch of likers to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
 			try {
-				const tweets = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
-				output(tweets);
+				const users = await rettiwt.tweet.likers(id, count ? parseInt(count) : undefined, cursor);
+				output(users);
 			} catch (error) {
 				output(error);
 			}
@@ -95,6 +96,34 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Replies
+	tweet
+		.command('replies')
+		.description(
+			'Fetch the list of replies to a tweet, with the first batch containing the whole thread, if the tweet is/part of a thread',
+		)
+		.argument('<id>', 'The id of the tweet')
+		.argument('[cursor]', 'The cursor to the batch of replies to fetch')
+		.option('-s, --sort-by <string>', 'Sort the tweets by likes, latest or relevance, default is latest')
+		.action(async (id: string, cursor?: string, options?: { sortBy: string }) => {
+			try {
+				// Determining the sort type
+				let sortType: TweetRepliesSortType | undefined = undefined;
+				if (options?.sortBy === 'likes') {
+					sortType = TweetRepliesSortType.LIKES;
+				} else if (options?.sortBy === 'latest') {
+					sortType = TweetRepliesSortType.LATEST;
+				} else if (options?.sortBy === 'relevance') {
+					sortType = TweetRepliesSortType.RELEVANCE;
+				}
+
+				const tweets = await rettiwt.tweet.replies(id, cursor, sortType);
+				output(tweets);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Retweet
 	tweet
 		.command('retweet')
@@ -118,8 +147,8 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 		.argument('[cursor]', 'The cursor to the batch of retweeters to fetch')
 		.action(async (id: string, count?: string, cursor?: string) => {
 			try {
-				const tweets = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
-				output(tweets);
+				const users = await rettiwt.tweet.retweeters(id, count ? parseInt(count) : undefined, cursor);
+				output(users);
 			} catch (error) {
 				output(error);
 			}
