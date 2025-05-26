@@ -1,6 +1,6 @@
-import { ELogActions } from '../../enums/Logging';
-import { EMediaType } from '../../enums/Media';
-import { ERawMediaType } from '../../enums/raw/Media';
+import { LogActions } from '../../enums/Logging';
+import { MediaType } from '../../enums/Media';
+import { RawMediaType } from '../../enums/raw/Media';
 import { findByFilter } from '../../helper/JsonUtils';
 
 import { LogService } from '../../services/internal/LogService';
@@ -52,7 +52,7 @@ export class Tweet implements ITweet {
 		this.tweetBy = new User(tweet.core.user_results.result);
 		this.entities = new TweetEntities(tweet.legacy.entities);
 		this.media = tweet.legacy.extended_entities?.media?.map((media) => new TweetMedia(media));
-		this.quoted = this.getQuotedTweet(tweet);
+		this.quoted = this._getQuotedTweet(tweet);
 		this.fullText = tweet.note_tweet ? tweet.note_tweet.note_tweet_results.result.text : tweet.legacy.full_text;
 		this.replyTo = tweet.legacy.in_reply_to_status_id_str;
 		this.lang = tweet.legacy.lang;
@@ -62,7 +62,7 @@ export class Tweet implements ITweet {
 		this.likeCount = tweet.legacy.favorite_count;
 		this.viewCount = tweet.views.count ? parseInt(tweet.views.count) : 0;
 		this.bookmarkCount = tweet.legacy.bookmark_count;
-		this.retweetedTweet = this.getRetweetedTweet(tweet);
+		this.retweetedTweet = this._getRetweetedTweet(tweet);
 		this.url = `https://x.com/${this.tweetBy.userName}/status/${this.id}`;
 	}
 
@@ -78,7 +78,7 @@ export class Tweet implements ITweet {
 	 *
 	 * @returns - The deserialized original quoted tweet.
 	 */
-	private getQuotedTweet(tweet: IRawTweet): Tweet | undefined {
+	private _getQuotedTweet(tweet: IRawTweet): Tweet | undefined {
 		// If tweet with limited visibility
 		if (
 			tweet.quoted_status_result &&
@@ -104,7 +104,7 @@ export class Tweet implements ITweet {
 	 *
 	 * @returns - The deserialized original retweeted tweet.
 	 */
-	private getRetweetedTweet(tweet: IRawTweet): Tweet | undefined {
+	private _getRetweetedTweet(tweet: IRawTweet): Tweet | undefined {
 		// If retweet with limited visibility
 		if (
 			tweet.legacy?.retweeted_status_result &&
@@ -141,13 +141,13 @@ export class Tweet implements ITweet {
 		for (const item of extract) {
 			if (item.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: item.rest_id });
 
 				tweets.push(new Tweet(item));
 			} else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `Tweet not found, skipping`,
 				});
 			}
@@ -179,13 +179,13 @@ export class Tweet implements ITweet {
 		for (const item of extract) {
 			if (item.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: item.rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: item.rest_id });
 
 				tweets.push(new Tweet(item));
 			} else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `Tweet not found, skipping`,
 				});
 			}
@@ -221,15 +221,15 @@ export class Tweet implements ITweet {
 			// If normal tweet
 			else if ((item.tweet_results?.result as IRawTweet)?.legacy) {
 				// Logging
-				LogService.log(ELogActions.DESERIALIZE, { id: (item.tweet_results.result as IRawTweet).rest_id });
+				LogService.log(LogActions.DESERIALIZE, { id: (item.tweet_results.result as IRawTweet).rest_id });
 
 				tweets.push(new Tweet(item.tweet_results.result as IRawTweet));
 			}
 			// If invalid/unrecognized tweet
 			else {
 				// Logging
-				LogService.log(ELogActions.WARNING, {
-					action: ELogActions.DESERIALIZE,
+				LogService.log(LogActions.WARNING, {
+					action: LogActions.DESERIALIZE,
 					message: `Tweet not found, skipping`,
 				});
 			}
@@ -328,7 +328,7 @@ export class TweetMedia {
 	public thumbnailUrl?: string;
 
 	/** The type of media. */
-	public type: EMediaType;
+	public type: MediaType;
 
 	/** The direct URL to the media. */
 	public url = '';
@@ -338,18 +338,18 @@ export class TweetMedia {
 	 */
 	public constructor(media: IRawExtendedMedia) {
 		// If the media is a photo
-		if (media.type == ERawMediaType.PHOTO) {
-			this.type = EMediaType.PHOTO;
+		if (media.type == RawMediaType.PHOTO) {
+			this.type = MediaType.PHOTO;
 			this.url = media.media_url_https;
 		}
 		// If the media is a gif
-		else if (media.type == ERawMediaType.GIF) {
-			this.type = EMediaType.GIF;
+		else if (media.type == RawMediaType.GIF) {
+			this.type = MediaType.GIF;
 			this.url = media.video_info?.variants[0].url as string;
 		}
 		// If the media is a video
 		else {
-			this.type = EMediaType.VIDEO;
+			this.type = MediaType.VIDEO;
 			this.thumbnailUrl = media.media_url_https;
 
 			/** The highest bitrate of all variants. */

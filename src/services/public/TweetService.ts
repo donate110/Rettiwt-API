@@ -1,8 +1,8 @@
 import { statSync } from 'fs';
 
-import { extractors } from '../../collections/Extractors';
-import { EResourceType } from '../../enums/Resource';
-import { ETweetRepliesSortType } from '../../enums/Tweet';
+import { Extractors } from '../../collections/Extractors';
+import { ResourceType } from '../../enums/Resource';
+import { TweetRepliesSortType } from '../../enums/Tweet';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -95,41 +95,41 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async details<T extends string | string[]>(id: T): Promise<T extends string ? Tweet | undefined : Tweet[]> {
-		let resource: EResourceType;
+		let resource: ResourceType;
 
 		// If user is authenticated and details of single tweet required
 		if (this.config.userId != undefined && typeof id == 'string') {
-			resource = EResourceType.TWEET_DETAILS_ALT;
+			resource = ResourceType.TWEET_DETAILS_ALT;
 
 			// Fetching raw tweet details
 			const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
 			// Deserializing response
-			const data = extractors[resource](response, id);
+			const data = Extractors[resource](response, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
 		// If user is authenticated and details of multiple tweets required
 		else if (this.config.userId != undefined && Array.isArray(id)) {
-			resource = EResourceType.TWEET_DETAILS_BULK;
+			resource = ResourceType.TWEET_DETAILS_BULK;
 
 			// Fetching raw tweet details
 			const response = await this.request<ITweetDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = extractors[resource](response, id);
+			const data = Extractors[resource](response, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
 		// If user is not authenticated
 		else {
-			resource = EResourceType.TWEET_DETAILS;
+			resource = ResourceType.TWEET_DETAILS;
 
 			// Fetching raw tweet details
 			const response = await this.request<ITweetDetailsResponse>(resource, { id: String(id) });
 
 			// Deserializing response
-			const data = extractors[resource](response, String(id));
+			const data = Extractors[resource](response, String(id));
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -161,7 +161,7 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async like(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_LIKE;
+		const resource = ResourceType.TWEET_LIKE;
 
 		// Favoriting the tweet
 		const response = await this.request<ITweetLikeResponse>(resource, {
@@ -169,7 +169,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -202,7 +202,7 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async likers(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.TWEET_LIKERS;
+		const resource = ResourceType.TWEET_LIKERS;
 
 		// Fetching raw likers
 		const response = await this.request<ITweetLikersResponse>(resource, {
@@ -212,7 +212,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -301,13 +301,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async post(options: INewTweet): Promise<string | undefined> {
-		const resource = EResourceType.TWEET_POST;
+		const resource = ResourceType.TWEET_POST;
 
 		// Posting the tweet
 		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -317,7 +317,7 @@ export class TweetService extends FetcherService {
 	 *
 	 * @param id - The ID of the target tweet.
 	 * @param cursor - The cursor to the batch of replies to fetch.
-	 * @param sortBy - The sorting order of the replies to fetch. Default is {@link ETweetRepliesSortType.RECENT}.
+	 * @param sortBy - The sorting order of the replies to fetch. Default is {@link TweetRepliesSortType.RECENT}.
 	 *
 	 * @returns The list of replies to the given tweet.
 	 *
@@ -346,9 +346,9 @@ export class TweetService extends FetcherService {
 	public async replies(
 		id: string,
 		cursor?: string,
-		sortBy: ETweetRepliesSortType = ETweetRepliesSortType.LATEST,
+		sortBy: TweetRepliesSortType = TweetRepliesSortType.LATEST,
 	): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.TWEET_REPLIES;
+		const resource = ResourceType.TWEET_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<ITweetDetailsResponse>(resource, {
@@ -358,7 +358,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -389,13 +389,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async retweet(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_RETWEET;
+		const resource = ResourceType.TWEET_RETWEET;
 
 		// Retweeting the tweet
 		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -428,7 +428,7 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async retweeters(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.TWEET_RETWEETERS;
+		const resource = ResourceType.TWEET_RETWEETERS;
 
 		// Fetching raw list of retweeters
 		const response = await this.request<ITweetRetweetersResponse>(resource, {
@@ -438,7 +438,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -474,13 +474,13 @@ export class TweetService extends FetcherService {
 	 * Scheduling a tweet is similar to {@link post}ing, except that an extra parameter called `scheduleFor` is used.
 	 */
 	public async schedule(options: INewTweet): Promise<string | undefined> {
-		const resource = EResourceType.TWEET_SCHEDULE;
+		const resource = ResourceType.TWEET_SCHEDULE;
 
 		// Scheduling the tweet
 		const response = await this.request<ITweetScheduleResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -518,7 +518,7 @@ export class TweetService extends FetcherService {
 	 * For details about available filters, refer to {@link TweetFilter}
 	 */
 	public async search(filter: ITweetFilter, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.TWEET_SEARCH;
+		const resource = ResourceType.TWEET_SEARCH;
 
 		// Fetching raw list of filtered tweets
 		const response = await this.request<ITweetSearchResponse>(resource, {
@@ -528,7 +528,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
@@ -631,13 +631,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async unlike(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_UNLIKE;
+		const resource = ResourceType.TWEET_UNLIKE;
 
 		// Unliking the tweet
 		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -668,13 +668,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async unpost(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_UNPOST;
+		const resource = ResourceType.TWEET_UNPOST;
 
 		// Unposting the tweet
 		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -705,13 +705,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async unretweet(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_UNRETWEET;
+		const resource = ResourceType.TWEET_UNRETWEET;
 
 		// Unretweeting the tweet
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -742,13 +742,13 @@ export class TweetService extends FetcherService {
 	 * ```
 	 */
 	public async unschedule(id: string): Promise<boolean> {
-		const resource = EResourceType.TWEET_UNSCHEDULE;
+		const resource = ResourceType.TWEET_UNSCHEDULE;
 
 		// Unscheduling the tweet
 		const response = await this.request<ITweetUnscheduleResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -788,16 +788,16 @@ export class TweetService extends FetcherService {
 		// INITIALIZE
 		const size = typeof media == 'string' ? statSync(media).size : media.byteLength;
 		const id: string = (
-			await this.request<IMediaInitializeUploadResponse>(EResourceType.MEDIA_UPLOAD_INITIALIZE, {
+			await this.request<IMediaInitializeUploadResponse>(ResourceType.MEDIA_UPLOAD_INITIALIZE, {
 				upload: { size: size },
 			})
 		).media_id_string;
 
 		// APPEND
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
+		await this.request<unknown>(ResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });
 
 		// FINALIZE
-		await this.request<unknown>(EResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
+		await this.request<unknown>(ResourceType.MEDIA_UPLOAD_FINALIZE, { upload: { id: id } });
 
 		return id;
 	}

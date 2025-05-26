@@ -1,5 +1,5 @@
-import { extractors } from '../../collections/Extractors';
-import { EResourceType } from '../../enums/Resource';
+import { Extractors } from '../../collections/Extractors';
+import { ResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
@@ -68,7 +68,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async affiliates(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.USER_AFFILIATES;
+		const resource = ResourceType.USER_AFFILIATES;
 
 		// Fetching raw list of affiliates
 		const response = await this.request<IUserAffiliatesResponse>(resource, {
@@ -78,7 +78,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -110,7 +110,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async bookmarks(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_BOOKMARKS;
+		const resource = ResourceType.USER_BOOKMARKS;
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserBookmarksResponse>(resource, {
@@ -119,7 +119,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -195,17 +195,17 @@ export class UserService extends FetcherService {
 	public async details<T extends string | string[] | undefined>(
 		id: T,
 	): Promise<T extends string | undefined ? User | undefined : User[]> {
-		let resource: EResourceType;
+		let resource: ResourceType;
 
 		// If details of multiple users required
 		if (Array.isArray(id)) {
-			resource = EResourceType.USER_DETAILS_BY_IDS_BULK;
+			resource = ResourceType.USER_DETAILS_BY_IDS_BULK;
 
 			// Fetching raw details
 			const response = await this.request<IUserDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = extractors[resource](response, id);
+			const data = Extractors[resource](response, id);
 
 			return data as T extends string | undefined ? User | undefined : User[];
 		}
@@ -213,11 +213,11 @@ export class UserService extends FetcherService {
 		else {
 			// If username is given
 			if (id && isNaN(Number(id))) {
-				resource = EResourceType.USER_DETAILS_BY_USERNAME;
+				resource = ResourceType.USER_DETAILS_BY_USERNAME;
 			}
 			// If id is given (or not, for self details)
 			else {
-				resource = EResourceType.USER_DETAILS_BY_ID;
+				resource = ResourceType.USER_DETAILS_BY_ID;
 			}
 
 			// If no ID is given, and not authenticated, skip
@@ -229,7 +229,7 @@ export class UserService extends FetcherService {
 			const response = await this.request<IUserDetailsResponse>(resource, { id: id ?? this.config.userId });
 
 			// Deserializing response
-			const data = extractors[resource](response);
+			const data = Extractors[resource](response);
 
 			return data as T extends string | undefined ? User | undefined : User[];
 		}
@@ -263,13 +263,13 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async follow(id: string): Promise<boolean> {
-		const resource = EResourceType.USER_FOLLOW;
+		const resource = ResourceType.USER_FOLLOW;
 
 		// Following the user
-		const response = await this.request<IUserFollowResponse>(EResourceType.USER_FOLLOW, { id: id });
+		const response = await this.request<IUserFollowResponse>(ResourceType.USER_FOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}
@@ -302,7 +302,7 @@ export class UserService extends FetcherService {
 	 * @remarks Always returns 35 feed items, with no way to customize the count.
 	 */
 	public async followed(cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_FEED_FOLLOWED;
+		const resource = ResourceType.USER_FEED_FOLLOWED;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserFollowedResponse>(resource, {
@@ -310,7 +310,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -343,7 +343,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async followers(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.USER_FOLLOWERS;
+		const resource = ResourceType.USER_FOLLOWERS;
 
 		// Fetching raw list of followers
 		const response = await this.request<IUserFollowersResponse>(resource, {
@@ -353,7 +353,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -386,7 +386,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async following(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.USER_FOLLOWING;
+		const resource = ResourceType.USER_FOLLOWING;
 
 		// Fetching raw list of following
 		const response = await this.request<IUserFollowingResponse>(resource, {
@@ -396,7 +396,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -429,7 +429,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async highlights(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_HIGHLIGHTS;
+		const resource = ResourceType.USER_HIGHLIGHTS;
 
 		// Fetching raw list of highlights
 		const response = await this.request<IUserHighlightsResponse>(resource, {
@@ -439,7 +439,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -471,7 +471,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async likes(count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_LIKES;
+		const resource = ResourceType.USER_LIKES;
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
@@ -481,7 +481,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -514,7 +514,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async media(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_MEDIA;
+		const resource = ResourceType.USER_MEDIA;
 
 		// Fetching raw list of media
 		const response = await this.request<IUserMediaResponse>(resource, {
@@ -524,7 +524,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -562,7 +562,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async *notifications(pollingInterval = 60000): AsyncGenerator<Notification> {
-		const resource = EResourceType.USER_NOTIFICATIONS;
+		const resource = ResourceType.USER_NOTIFICATIONS;
 
 		/** Whether it's the first batch of notifications or not. */
 		let first = true;
@@ -581,7 +581,7 @@ export class UserService extends FetcherService {
 			});
 
 			// Deserializing response
-			const notifications = extractors[resource](response);
+			const notifications = Extractors[resource](response);
 
 			// Sorting the notifications by time, from oldest to recent
 			notifications.list.sort((a, b) => new Date(a.receivedAt).valueOf() - new Date(b.receivedAt).valueOf());
@@ -630,7 +630,7 @@ export class UserService extends FetcherService {
 	 * @remarks Always returns 35 feed items, with no way to customize the count.
 	 */
 	public async recommended(cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_FEED_RECOMMENDED;
+		const resource = ResourceType.USER_FEED_RECOMMENDED;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserRecommendedResponse>(resource, {
@@ -638,7 +638,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -675,7 +675,7 @@ export class UserService extends FetcherService {
 	 * If the target user has a pinned tweet, the returned reply timeline has one item extra and this is always the pinned tweet.
 	 */
 	public async replies(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_TIMELINE_AND_REPLIES;
+		const resource = ResourceType.USER_TIMELINE_AND_REPLIES;
 
 		// Fetching raw list of replies
 		const response = await this.request<IUserTweetsAndRepliesResponse>(resource, {
@@ -685,7 +685,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -720,7 +720,7 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async subscriptions(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource = EResourceType.USER_SUBSCRIPTIONS;
+		const resource = ResourceType.USER_SUBSCRIPTIONS;
 
 		// Fetching raw list of subscriptions
 		const response = await this.request<IUserSubscriptionsResponse>(resource, {
@@ -730,7 +730,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -768,7 +768,7 @@ export class UserService extends FetcherService {
 	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
 	 */
 	public async timeline(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.USER_TIMELINE;
+		const resource = ResourceType.USER_TIMELINE;
 
 		// Fetching raw list of tweets
 		const response = await this.request<IUserTweetsResponse>(resource, {
@@ -778,7 +778,7 @@ export class UserService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -809,13 +809,13 @@ export class UserService extends FetcherService {
 	 * ```
 	 */
 	public async unfollow(id: string): Promise<boolean> {
-		const resource = EResourceType.USER_UNFOLLOW;
+		const resource = ResourceType.USER_UNFOLLOW;
 
 		// Unfollowing the user
-		const response = await this.request<IUserUnfollowResponse>(EResourceType.USER_UNFOLLOW, { id: id });
+		const response = await this.request<IUserUnfollowResponse>(ResourceType.USER_UNFOLLOW, { id: id });
 
 		// Deserializing the response
-		const data = extractors[resource](response) ?? false;
+		const data = Extractors[resource](response) ?? false;
 
 		return data;
 	}

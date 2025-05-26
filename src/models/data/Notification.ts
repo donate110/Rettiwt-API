@@ -1,5 +1,5 @@
-import { ENotificationType } from '../../enums/Notification';
-import { ERawNotificationType } from '../../enums/raw/Notification';
+import { NotificationType } from '../../enums/Notification';
+import { RawNotificationType } from '../../enums/raw/Notification';
 import { findKeyByValue } from '../../helper/JsonUtils';
 import { INotification } from '../../types/data/Notification';
 import { INotification as IRawNotification } from '../../types/raw/base/Notification';
@@ -19,7 +19,7 @@ export class Notification implements INotification {
 	public message: string;
 	public receivedAt: string;
 	public target: string[];
-	public type?: ENotificationType;
+	public type?: NotificationType;
 
 	/**
 	 * @param notification - The raw notification details.
@@ -28,7 +28,7 @@ export class Notification implements INotification {
 		this._raw = { ...notification };
 
 		// Getting the original notification type
-		const notificationType: string | undefined = findKeyByValue(ERawNotificationType, notification.icon.id);
+		const notificationType: string | undefined = findKeyByValue(RawNotificationType, notification.icon.id);
 
 		this.from = notification.template?.aggregateUserActionsV1?.fromUsers
 			? notification.template.aggregateUserActionsV1.fromUsers.map((item) => item.user.id)
@@ -40,8 +40,8 @@ export class Notification implements INotification {
 			? notification.template.aggregateUserActionsV1.targetObjects.map((item) => item.tweet.id)
 			: [];
 		this.type = notificationType
-			? ENotificationType[notificationType as keyof typeof ENotificationType]
-			: ENotificationType.UNDEFINED;
+			? NotificationType[notificationType as keyof typeof NotificationType]
+			: NotificationType.UNDEFINED;
 	}
 
 	/** The raw notification details. */

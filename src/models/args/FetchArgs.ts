@@ -1,4 +1,4 @@
-import { ETweetRepliesSortType } from '../../enums/Tweet';
+import { TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
 /**
@@ -12,7 +12,7 @@ export class FetchArgs implements IFetchArgs {
 	public filter?: TweetFilter;
 	public id?: string;
 	public ids?: string[];
-	public sortBy?: ETweetRepliesSortType;
+	public sortBy?: TweetRepliesSortType;
 
 	/**
 	 * @param args - Additional user-defined arguments for fetching the resource.
@@ -93,7 +93,7 @@ export class TweetFilter implements ITweetFilter {
 	 * @param date - The date object to convert.
 	 * @returns The Twitter string representation of the date.
 	 */
-	private static dateToTwitterString(date: Date): string {
+	private static _dateToTwitterString(date: Date): string {
 		// Converting localized date to UTC date
 		const utc = new Date(
 			Date.UTC(
@@ -135,8 +135,8 @@ export class TweetFilter implements ITweetFilter {
 				this.minLikes ? `min_faves:${this.minLikes}` : '',
 				this.minRetweets ? `min_retweets:${this.minRetweets}` : '',
 				this.language ? `lang:${this.language}` : '',
-				this.startDate ? `since:${TweetFilter.dateToTwitterString(this.startDate)}` : '',
-				this.endDate ? `until:${TweetFilter.dateToTwitterString(this.endDate)}` : '',
+				this.startDate ? `since:${TweetFilter._dateToTwitterString(this.startDate)}` : '',
+				this.endDate ? `until:${TweetFilter._dateToTwitterString(this.endDate)}` : '',
 				this.sinceId ? `since_id:${this.sinceId}` : '',
 				this.maxId ? `max_id:${this.maxId}` : '',
 				this.quoted ? `quoted_tweet_id:${this.quoted}` : '',

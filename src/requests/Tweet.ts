@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { ERawTweetRepliesSortType, ERawTweetSearchResultType } from '../enums/raw/Tweet';
+import { RawTweetRepliesSortType, RawTweetSearchResultType } from '../enums/raw/Tweet';
 import { TweetFilter } from '../models/args/FetchArgs';
 import { NewTweet } from '../models/args/PostArgs';
 import { MediaVariable, ReplyVariable } from '../models/params/Variables';
@@ -266,7 +266,7 @@ export class TweetRequests {
 	 * @param id - The id of the tweet whose replies are to be fetched.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 */
-	public static replies(id: string, cursor?: string, sortBy?: ERawTweetRepliesSortType): AxiosRequestConfig {
+	public static replies(id: string, cursor?: string, sortBy?: RawTweetRepliesSortType): AxiosRequestConfig {
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/_8aYOgEDz35BrBcBal1-_w/TweetDetail',
@@ -277,7 +277,7 @@ export class TweetRequests {
 					cursor: cursor,
 					referrer: 'tweet',
 					with_rux_injections: false,
-					rankingMode: sortBy ?? ERawTweetRepliesSortType.RELEVACE,
+					rankingMode: sortBy ?? RawTweetRepliesSortType.RELEVACE,
 					includePromotedContent: true,
 					withCommunity: true,
 					withQuickPromoteEligibilityTweetFields: true,
@@ -451,7 +451,7 @@ export class TweetRequests {
 					count: count,
 					cursor: cursor,
 					querySource: 'typed_query',
-					product: parsedFilter.top ? ERawTweetSearchResultType.TOP : ERawTweetSearchResultType.LATEST,
+					product: parsedFilter.top ? RawTweetSearchResultType.TOP : RawTweetSearchResultType.LATEST,
 					withAuxiliaryUserLabels: false,
 					withArticleRichContentState: false,
 					withArticlePlainText: false,

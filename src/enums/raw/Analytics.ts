@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum ERawAnalyticsGranularity {
+export enum RawAnalyticsGranularity {
 	DAILY = 'Daily',
 	WEEKLY = 'Weekly',
 	MONTHLY = 'Monthly',
@@ -14,7 +14,7 @@ export enum ERawAnalyticsGranularity {
  *
  * @public
  */
-export enum ERawAnalyticsMetric {
+export enum RawAnalyticsMetric {
 	ENGAGEMENTS = 'Engagements',
 	IMPRESSIONS = 'Impressions',
 	PROFILE_VISITS = 'ProfileVisits',

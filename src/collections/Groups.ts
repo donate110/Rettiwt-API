@@ -1,14 +1,14 @@
-import { EResourceType } from '../enums/Resource';
+import { ResourceType } from '../enums/Resource';
 
 /**
  * Collection of resources that allow guest authentication.
  *
  * @internal
  */
-export const allowGuestAuthentication = [
-	EResourceType.TWEET_DETAILS,
-	EResourceType.USER_DETAILS_BY_USERNAME,
-	EResourceType.USER_TIMELINE,
+export const AllowGuestAuthenticationGroup = [
+	ResourceType.TWEET_DETAILS,
+	ResourceType.USER_DETAILS_BY_USERNAME,
+	ResourceType.USER_TIMELINE,
 ];
 
 /**
@@ -16,32 +16,32 @@ export const allowGuestAuthentication = [
  *
  * @internal
  */
-export const fetchResources = [
-	EResourceType.LIST_MEMBERS,
-	EResourceType.LIST_TWEETS,
-	EResourceType.TWEET_DETAILS,
-	EResourceType.TWEET_DETAILS_ALT,
-	EResourceType.TWEET_DETAILS_BULK,
-	EResourceType.TWEET_LIKERS,
-	EResourceType.TWEET_REPLIES,
-	EResourceType.TWEET_RETWEETERS,
-	EResourceType.TWEET_SEARCH,
-	EResourceType.USER_AFFILIATES,
-	EResourceType.USER_BOOKMARKS,
-	EResourceType.USER_DETAILS_BY_USERNAME,
-	EResourceType.USER_DETAILS_BY_ID,
-	EResourceType.USER_DETAILS_BY_IDS_BULK,
-	EResourceType.USER_FEED_FOLLOWED,
-	EResourceType.USER_FEED_RECOMMENDED,
-	EResourceType.USER_FOLLOWING,
-	EResourceType.USER_FOLLOWERS,
-	EResourceType.USER_HIGHLIGHTS,
-	EResourceType.USER_LIKES,
-	EResourceType.USER_MEDIA,
-	EResourceType.USER_NOTIFICATIONS,
-	EResourceType.USER_SUBSCRIPTIONS,
-	EResourceType.USER_TIMELINE,
-	EResourceType.USER_TIMELINE_AND_REPLIES,
+export const FetchResourcesGroup = [
+	ResourceType.LIST_MEMBERS,
+	ResourceType.LIST_TWEETS,
+	ResourceType.TWEET_DETAILS,
+	ResourceType.TWEET_DETAILS_ALT,
+	ResourceType.TWEET_DETAILS_BULK,
+	ResourceType.TWEET_LIKERS,
+	ResourceType.TWEET_REPLIES,
+	ResourceType.TWEET_RETWEETERS,
+	ResourceType.TWEET_SEARCH,
+	ResourceType.USER_AFFILIATES,
+	ResourceType.USER_BOOKMARKS,
+	ResourceType.USER_DETAILS_BY_USERNAME,
+	ResourceType.USER_DETAILS_BY_ID,
+	ResourceType.USER_DETAILS_BY_IDS_BULK,
+	ResourceType.USER_FEED_FOLLOWED,
+	ResourceType.USER_FEED_RECOMMENDED,
+	ResourceType.USER_FOLLOWING,
+	ResourceType.USER_FOLLOWERS,
+	ResourceType.USER_HIGHLIGHTS,
+	ResourceType.USER_LIKES,
+	ResourceType.USER_MEDIA,
+	ResourceType.USER_NOTIFICATIONS,
+	ResourceType.USER_SUBSCRIPTIONS,
+	ResourceType.USER_TIMELINE,
+	ResourceType.USER_TIMELINE_AND_REPLIES,
 ];
 
 /**
@@ -49,18 +49,18 @@ export const fetchResources = [
  *
  * @internal
  */
-export const postResources = [
-	EResourceType.MEDIA_UPLOAD_APPEND,
-	EResourceType.MEDIA_UPLOAD_FINALIZE,
-	EResourceType.MEDIA_UPLOAD_INITIALIZE,
-	EResourceType.TWEET_LIKE,
-	EResourceType.TWEET_POST,
-	EResourceType.TWEET_RETWEET,
-	EResourceType.TWEET_SCHEDULE,
-	EResourceType.TWEET_UNLIKE,
-	EResourceType.TWEET_UNPOST,
-	EResourceType.TWEET_UNRETWEET,
-	EResourceType.TWEET_UNSCHEDULE,
-	EResourceType.USER_FOLLOW,
-	EResourceType.USER_UNFOLLOW,
+export const PostResourcesGroup = [
+	ResourceType.MEDIA_UPLOAD_APPEND,
+	ResourceType.MEDIA_UPLOAD_FINALIZE,
+	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.TWEET_LIKE,
+	ResourceType.TWEET_POST,
+	ResourceType.TWEET_RETWEET,
+	ResourceType.TWEET_SCHEDULE,
+	ResourceType.TWEET_UNLIKE,
+	ResourceType.TWEET_UNPOST,
+	ResourceType.TWEET_UNRETWEET,
+	ResourceType.TWEET_UNSCHEDULE,
+	ResourceType.USER_FOLLOW,
+	ResourceType.USER_UNFOLLOW,
 ];

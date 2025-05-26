@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum ERawMediaType {
+export enum RawMediaType {
 	PHOTO = 'photo',
 	VIDEO = 'video',
 	GIF = 'animated_gif',

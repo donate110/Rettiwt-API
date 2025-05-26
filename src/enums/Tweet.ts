@@ -1,7 +1,7 @@
 /**
  * The different types of sorting options when fetching replies to tweets.
  */
-export enum ETweetRepliesSortType {
+export enum TweetRepliesSortType {
 	LIKES = 'LIKES',
 	LATEST = 'LATEST',
 	RELEVANCE = 'RELEVANCE',

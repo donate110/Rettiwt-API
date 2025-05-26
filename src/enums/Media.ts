@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum EMediaType {
+export enum MediaType {
 	PHOTO = 'PHOTO',
 	VIDEO = 'VIDEO',
 	GIF = 'GIF',

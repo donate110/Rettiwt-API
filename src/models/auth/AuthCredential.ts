@@ -2,7 +2,7 @@ import { AxiosHeaders, AxiosRequestHeaders } from 'axios';
 
 import { Cookie } from 'cookiejar';
 
-import { EAuthenticationType } from '../../enums/Authentication';
+import { AuthenticationType } from '../../enums/Authentication';
 import { IAuthCredential } from '../../types/auth/AuthCredential';
 
 import { AuthCookie } from './AuthCookie';
@@ -19,7 +19,7 @@ import { AuthCookie } from './AuthCookie';
  */
 export class AuthCredential implements IAuthCredential {
 	public authToken?: string;
-	public authenticationType?: EAuthenticationType;
+	public authenticationType?: AuthenticationType;
 	public cookies?: string;
 	public csrfToken?: string;
 	public guestToken?: string;
@@ -34,7 +34,7 @@ export class AuthCredential implements IAuthCredential {
 		// If guest credentials given
 		if (!cookies && guestToken) {
 			this.guestToken = guestToken;
-			this.authenticationType = EAuthenticationType.GUEST;
+			this.authenticationType = AuthenticationType.GUEST;
 		}
 		// If login credentials given
 		else if (cookies && guestToken) {
@@ -43,7 +43,7 @@ export class AuthCredential implements IAuthCredential {
 
 			this.cookies = parsedCookie.toString();
 			this.guestToken = guestToken;
-			this.authenticationType = EAuthenticationType.LOGIN;
+			this.authenticationType = AuthenticationType.LOGIN;
 		}
 		// If user credentials given
 		else if (cookies && !guestToken) {
@@ -52,7 +52,7 @@ export class AuthCredential implements IAuthCredential {
 
 			this.cookies = parsedCookie.toString();
 			this.csrfToken = parsedCookie.ct0;
-			this.authenticationType = EAuthenticationType.USER;
+			this.authenticationType = AuthenticationType.USER;
 		}
 	}
 
