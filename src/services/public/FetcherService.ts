@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
@@ -199,6 +199,9 @@ export class FetcherService {
 	 * ```
 	 */
 	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+		/** The error, if any. */
+		let error: unknown = undefined;
+
 		// Logging
 		LogService.log(LogActions.REQUEST, { resource: resource, args: args });
 
@@ -225,17 +228,30 @@ export class FetcherService {
 		config.httpsAgent = this.config.httpsAgent;
 		config.timeout = this._timeout;
 
-		// Sending the request
-		try {
-			// Introducing a delay
-			await this._wait();
+		// Using retries for error 404
+		for (let retry = 1; retry <= this.config.maxRetries; retry++) {
+			// Sending the request
+			try {
+				// Introducing a delay
+				await this._wait();
 
-			// Returning the reponse body
-			return (await axios<T>(config)).data;
-		} catch (error) {
-			// If error, delegate handling to error handler
-			this._errorHandler.handle(error);
-			throw error;
+				// Returning the reponse body
+				return (await axios<T>(config)).data;
+			} catch (err) {
+				// If it's an error 404, retry
+				if (isAxiosError(err) && err.status === 404) {
+					error = err;
+					continue;
+				}
+				// Else, delegate error handling
+				else {
+					this._errorHandler.handle(err);
+					throw err;
+				}
+			}
 		}
+
+		/** If request not successful even after retries, throw the error */
+		throw error;
 	}
 }
