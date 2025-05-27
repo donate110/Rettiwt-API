@@ -42,4 +42,7 @@ export interface IRettiwtConfig {
 	 * Can either be a number or a function that returns a number synchronously or asynchronously.
 	 */
 	delay?: number | (() => number | Promise<number>);
+
+	/** The maximum number of retries to use. */
+	maxRetries?: number;
 }
