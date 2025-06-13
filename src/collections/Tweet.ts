@@ -1,17 +1,17 @@
-import { ERawTweetRepliesSortType } from '../enums/raw/Tweet';
-import { ETweetRepliesSortType } from '../enums/Tweet';
+import { RawTweetRepliesSortType } from '../enums/raw/Tweet';
+import { TweetRepliesSortType } from '../enums/Tweet';
 
 /**
  * Collection of mapping from parsed reply sort type to raw reply sort type.
  *
  * @internal
  */
-export const rawTweetRepliesSortType: { [key in keyof typeof ETweetRepliesSortType]: ERawTweetRepliesSortType } = {
+export const TweetRepliesSortTypeMap: { [key in keyof typeof TweetRepliesSortType]: RawTweetRepliesSortType } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
-	LATEST: ERawTweetRepliesSortType.LATEST,
-	LIKES: ERawTweetRepliesSortType.LIKES,
-	RELEVANCE: ERawTweetRepliesSortType.RELEVACE,
+	LATEST: RawTweetRepliesSortType.LATEST,
+	LIKES: RawTweetRepliesSortType.LIKES,
+	RELEVANCE: RawTweetRepliesSortType.RELEVACE,
 
 	/* eslint-enable @typescript-eslint/naming-convention */
 };

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { EApiErrors } from '../../enums/Api';
+import { ApiErrors } from '../../enums/Api';
 import { AuthCredential } from '../../models/auth/AuthCredential';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 
@@ -67,7 +67,7 @@ export class AuthService {
 		}
 		// If user id was not found
 		else {
-			throw new Error(EApiErrors.BAD_AUTHENTICATION);
+			throw new Error(ApiErrors.BAD_AUTHENTICATION);
 		}
 	}
 

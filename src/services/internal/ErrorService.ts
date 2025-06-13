@@ -15,14 +15,14 @@ export class ErrorService implements IErrorHandler {
 	 *
 	 * @param error - The error response received from Twitter.
 	 */
-	private handleAxiosError(error: AxiosError<IRawErrorData | IRawErrorDetails>): void {
+	private _handleAxiosError(error: AxiosError<IRawErrorData | IRawErrorDetails>): void {
 		throw new TwitterError(error);
 	}
 
 	/**
 	 * Handle unknown error.
 	 */
-	private handleUnknownError(): void {
+	private _handleUnknownError(): void {
 		throw new Error('Unknown error');
 	}
 
@@ -33,9 +33,9 @@ export class ErrorService implements IErrorHandler {
 	 */
 	public handle(error: unknown): void {
 		if (isAxiosError(error)) {
-			this.handleAxiosError(error as AxiosError<IRawErrorData | IRawErrorDetails>);
+			this._handleAxiosError(error as AxiosError<IRawErrorData | IRawErrorDetails>);
 		} else {
-			this.handleUnknownError();
+			this._handleUnknownError();
 		}
 	}
 }

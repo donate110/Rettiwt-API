@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum ERawNotificationType {
+export enum RawNotificationType {
 	RECOMMENDATION = 'recommendation_icon',
 	INFORMATION = 'bird_icon',
 	LIVE = 'live_icon',

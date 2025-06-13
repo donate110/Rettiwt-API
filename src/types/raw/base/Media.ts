@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { ERawMediaType } from '../../../enums/raw/Media';
+import { RawMediaType } from '../../../enums/raw/Media';
 
 /**
  * Represents the raw data of a single Media.
@@ -12,7 +12,7 @@ export interface IMedia {
 	expanded_url: string;
 	id_str: string;
 	media_url_https: string;
-	type: ERawMediaType;
+	type: RawMediaType;
 	url: string;
 }
 

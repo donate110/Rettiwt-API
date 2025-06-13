@@ -22,37 +22,42 @@ module.exports = {
 		'@typescript-eslint/naming-convention': [
 			'warn',
 			{
-				selector: ['class'],
+				selector: ['class', 'enum'],
 				format: ['PascalCase'],
 			},
 			{
-				selector: 'interface',
+				selector: ['interface'],
 				format: ['PascalCase'],
 				prefix: ['I'],
 			},
 			{
-				selector: 'enum',
+				selector: ['typeAlias'],
 				format: ['PascalCase'],
-				prefix: ['E'],
 			},
 			{
-				selector: ['variableLike', 'memberLike'],
+				selector: ['memberLike', 'variableLike'],
 				format: ['camelCase'],
+				leadingUnderscore: 'allow',
 			},
 			{
-				selector: ['variableLike', 'property'],
+				selector: ['memberLike'],
 				modifiers: ['private'],
 				format: ['camelCase'],
 				leadingUnderscore: 'require',
 			},
 			{
-				selector: ['variableLike', 'memberLike'],
+				selector: ['memberLike'],
 				modifiers: ['static', 'readonly'],
 				format: ['UPPER_CASE'],
 			},
 			{
-				selector: 'enumMember',
+				selector: ['enumMember'],
 				format: ['UPPER_CASE'],
+			},
+			{
+				selector: ['variable'],
+				modifiers: ['global'],
+				format: ['PascalCase'],
 			},
 		],
 		'@typescript-eslint/explicit-function-return-type': 'error',

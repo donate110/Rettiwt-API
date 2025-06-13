@@ -1,4 +1,4 @@
-import { EAuthenticationType } from '../../enums/Authentication';
+import { AuthenticationType } from '../../enums/Authentication';
 
 /**
  * The credentials for authenticating against Twitter.
@@ -15,7 +15,7 @@ export interface IAuthCredential {
 	authToken?: string;
 
 	/** The type of authentication. */
-	authenticationType?: EAuthenticationType;
+	authenticationType?: AuthenticationType;
 
 	/** The cookie of the twitter account, which is used to authenticate against twitter. */
 	cookies?: string;

@@ -1,4 +1,4 @@
-import { ETweetRepliesSortType } from '../../enums/Tweet';
+import { TweetRepliesSortType } from '../../enums/Tweet';
 import { IFetchArgs, ITweetFilter } from '../../types/args/FetchArgs';
 
 /**
@@ -12,7 +12,7 @@ export class FetchArgs implements IFetchArgs {
 	public filter?: TweetFilter;
 	public id?: string;
 	public ids?: string[];
-	public sortBy?: ETweetRepliesSortType;
+	public sortBy?: TweetRepliesSortType;
 
 	/**
 	 * @param args - Additional user-defined arguments for fetching the resource.
@@ -40,16 +40,18 @@ export class TweetFilter implements ITweetFilter {
 	public includePhrase?: string;
 	public includeWords?: string[];
 	public language?: string;
-	public links?: boolean;
 	public list?: string;
 	public maxId?: string;
 	public mentions?: string[];
 	public minLikes?: number;
 	public minReplies?: number;
 	public minRetweets?: number;
+	public onlyLinks?: boolean;
+	public onlyOriginal?: boolean;
+	public onlyReplies?: boolean;
+	public onlyText?: boolean;
 	public optionalWords?: string[];
 	public quoted?: string;
-	public replies?: boolean;
 	public sinceId?: string;
 	public startDate?: Date;
 	public toUsers?: string[];
@@ -65,9 +67,7 @@ export class TweetFilter implements ITweetFilter {
 		this.hashtags = filter.hashtags;
 		this.includePhrase = filter.includePhrase;
 		this.language = filter.language;
-		this.links = filter.links;
 		this.list = filter.list;
-		this.replies = filter.replies;
 		this.mentions = filter.mentions;
 		this.quoted = filter.quoted;
 		this.sinceId = filter.sinceId;
@@ -75,6 +75,10 @@ export class TweetFilter implements ITweetFilter {
 		this.minLikes = filter.minLikes;
 		this.minReplies = filter.minReplies;
 		this.minRetweets = filter.minRetweets;
+		this.onlyLinks = filter.onlyLinks;
+		this.onlyOriginal = filter.onlyOriginal;
+		this.onlyReplies = filter.onlyReplies;
+		this.onlyText = filter.onlyText;
 		this.optionalWords = filter.optionalWords;
 		this.startDate = filter.startDate;
 		this.toUsers = filter.toUsers;
@@ -89,7 +93,7 @@ export class TweetFilter implements ITweetFilter {
 	 * @param date - The date object to convert.
 	 * @returns The Twitter string representation of the date.
 	 */
-	private static dateToTwitterString(date: Date): string {
+	private static _dateToTwitterString(date: Date): string {
 		// Converting localized date to UTC date
 		const utc = new Date(
 			Date.UTC(
@@ -131,16 +135,18 @@ export class TweetFilter implements ITweetFilter {
 				this.minLikes ? `min_faves:${this.minLikes}` : '',
 				this.minRetweets ? `min_retweets:${this.minRetweets}` : '',
 				this.language ? `lang:${this.language}` : '',
-				this.startDate ? `since:${TweetFilter.dateToTwitterString(this.startDate)}` : '',
-				this.endDate ? `until:${TweetFilter.dateToTwitterString(this.endDate)}` : '',
+				this.startDate ? `since:${TweetFilter._dateToTwitterString(this.startDate)}` : '',
+				this.endDate ? `until:${TweetFilter._dateToTwitterString(this.endDate)}` : '',
 				this.sinceId ? `since_id:${this.sinceId}` : '',
 				this.maxId ? `max_id:${this.maxId}` : '',
 				this.quoted ? `quoted_tweet_id:${this.quoted}` : '',
 			]
 				.filter((item) => item !== '()' && item !== '')
 				.join(' ') +
-			(this.links == false ? ' -filter:links' : '') +
-			(this.replies == false ? ' -filter:replies' : '')
+			(this.onlyText === true ? ' -filter:links' : '') +
+			(this.onlyOriginal === true ? ' -filter:replies' : '') +
+			(this.onlyLinks === true ? ' filter:links' : '') +
+			(this.onlyReplies === true ? ' filter:replies' : '')
 		);
 	}
 }

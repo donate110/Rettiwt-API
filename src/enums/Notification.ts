@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum ENotificationType {
+export enum NotificationType {
 	RECOMMENDATION = 'RECOMMENDATION',
 	INFORMATION = 'INFORMATION',
 	LIVE = 'LIVE',

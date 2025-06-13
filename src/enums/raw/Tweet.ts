@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum ERawTweetSearchResultType {
+export enum RawTweetSearchResultType {
 	LATEST = 'Latest',
 	TOP = 'Top',
 }
@@ -13,7 +13,7 @@ export enum ERawTweetSearchResultType {
  *
  * @public
  */
-export enum ERawTweetRepliesSortType {
+export enum RawTweetRepliesSortType {
 	RELEVACE = 'Relevance',
 	LATEST = 'Recency',
 	LIKES = 'Likes',

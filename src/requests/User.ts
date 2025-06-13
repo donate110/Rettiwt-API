@@ -2,7 +2,7 @@ import qs from 'querystring';
 
 import { AxiosRequestConfig } from 'axios';
 
-import { ERawAnalyticsGranularity, ERawAnalyticsMetric } from '../enums/raw/Analytics';
+import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../enums/raw/Analytics';
 
 /**
  * Collection of requests related to users.
@@ -77,8 +77,8 @@ export class UserRequests {
 	public static analytics(
 		fromTime: Date,
 		toTime: Date,
-		granularity: ERawAnalyticsGranularity,
-		requestedMetrics: ERawAnalyticsMetric[],
+		granularity: RawAnalyticsGranularity,
+		requestedMetrics: RawAnalyticsMetric[],
 	): AxiosRequestConfig {
 		return {
 			method: 'get',

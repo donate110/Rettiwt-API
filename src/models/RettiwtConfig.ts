@@ -12,7 +12,7 @@ import { IRettiwtConfig } from '../types/RettiwtConfig';
  *
  * @public
  */
-const defaultHeaders = {
+const DefaultHeaders = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	Authority: 'x.com',
@@ -43,6 +43,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly delay?: number | (() => number | Promise<number>);
 	public readonly errorHandler?: IErrorHandler;
 	public readonly logging?: boolean;
+	public readonly maxRetries: number;
 	public readonly tidProvider?: ITidProvider;
 	public readonly timeout?: number;
 
@@ -53,14 +54,15 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
-		this.delay = config?.delay;
+		this.delay = config?.delay ?? 1000;
+		this.maxRetries = config?.maxRetries ?? 5;
 		this.errorHandler = config?.errorHandler;
 		this.logging = config?.logging;
 		this.tidProvider = config?.tidProvider;
 		this.timeout = config?.timeout;
 		this.apiKey = config?.apiKey;
 		this._headers = {
-			...defaultHeaders,
+			...DefaultHeaders,
 			...config?.headers,
 		};
 	}
@@ -90,7 +92,7 @@ export class RettiwtConfig implements IRettiwtConfig {
 
 	public set headers(headers: { [key: string]: string } | undefined) {
 		this._headers = {
-			...defaultHeaders,
+			...DefaultHeaders,
 			...headers,
 		};
 	}
@@ -100,4 +102,4 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 }
 
-export { defaultHeaders as DefaultRettiwtHeaders };
+export { DefaultHeaders as DefaultRettiwtHeaders };

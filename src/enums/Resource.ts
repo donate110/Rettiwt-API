@@ -3,7 +3,7 @@
  *
  * @public
  */
-export enum EResourceType {
+export enum ResourceType {
 	// LIST
 	LIST_MEMBERS = 'LIST_MEMBERS',
 	LIST_TWEETS = 'LIST_TWEETS',

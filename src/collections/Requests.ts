@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 
-import { EResourceType } from '../enums/Resource';
+import { ResourceType } from '../enums/Resource';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
 import { TweetRequests } from '../requests/Tweet';
@@ -8,14 +8,14 @@ import { UserRequests } from '../requests/User';
 import { IFetchArgs } from '../types/args/FetchArgs';
 import { IPostArgs } from '../types/args/PostArgs';
 
-import { rawTweetRepliesSortType } from './Tweet';
+import { TweetRepliesSortTypeMap } from './Tweet';
 
 /**
  * Collection of requests to various resources.
  *
  * @internal
  */
-export const requests: { [key in keyof typeof EResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
+export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs | IPostArgs) => AxiosRequestConfig } = {
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
@@ -32,7 +32,7 @@ export const requests: { [key in keyof typeof EResourceType]: (args: IFetchArgs 
 	TWEET_LIKERS: (args: IFetchArgs) => TweetRequests.likers(args.id!, args.count, args.cursor),
 	TWEET_POST: (args: IPostArgs) => TweetRequests.post(args.tweet!),
 	TWEET_REPLIES: (args: IFetchArgs) =>
-		TweetRequests.replies(args.id!, args.cursor, args.sortBy ? rawTweetRepliesSortType[args.sortBy] : undefined),
+		TweetRequests.replies(args.id!, args.cursor, args.sortBy ? TweetRepliesSortTypeMap[args.sortBy] : undefined),
 	TWEET_RETWEET: (args: IPostArgs) => TweetRequests.retweet(args.id!),
 	TWEET_RETWEETERS: (args: IFetchArgs) => TweetRequests.retweeters(args.id!, args.count, args.cursor),
 	TWEET_SCHEDULE: (args: IPostArgs) => TweetRequests.schedule(args.tweet!),

@@ -1,5 +1,5 @@
-import { extractors } from '../../collections/Extractors';
-import { EResourceType } from '../../enums/Resource';
+import { Extractors } from '../../collections/Extractors';
+import { ResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -49,7 +49,7 @@ export class ListService extends FetcherService {
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	public async members(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
-		const resource: EResourceType = EResourceType.LIST_MEMBERS;
+		const resource: ResourceType = ResourceType.LIST_MEMBERS;
 
 		// Fetching the raw list of members
 		const response = await this.request<IListMembersResponse>(resource, {
@@ -59,7 +59,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		return data;
 	}
@@ -94,7 +94,7 @@ export class ListService extends FetcherService {
 	 * @remarks Due a bug in Twitter API, the count is ignored when no cursor is provided and defaults to 100.
 	 */
 	public async tweets(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
-		const resource = EResourceType.LIST_TWEETS;
+		const resource = ResourceType.LIST_TWEETS;
 
 		// Fetching raw list tweets
 		const response = await this.request<IListTweetsResponse>(resource, {
@@ -104,7 +104,7 @@ export class ListService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = extractors[resource](response);
+		const data = Extractors[resource](response);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());

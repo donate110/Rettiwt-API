@@ -1,4 +1,4 @@
-import { ELogActions } from '../../enums/Logging';
+import { LogActions } from '../../enums/Logging';
 
 /**
  * Handles logging of data for debug purpose.
@@ -16,7 +16,7 @@ export class LogService {
 	 *
 	 * @param data - The data to be logged.
 	 */
-	public static log(action: ELogActions, data: NonNullable<unknown>): void {
+	public static log(action: LogActions, data: NonNullable<unknown>): void {
 		// Proceed to log only if logging is enabled
 		if (this.enabled) {
 			// Preparing the log message
