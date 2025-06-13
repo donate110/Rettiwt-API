@@ -143,7 +143,8 @@ When initializing a new Rettiwt instance, it can be configures using various par
 - `errorHandler` (interface) - The custom error handler to use.
 - `tidProvider` (interface) - The custom TID provider to use for generating transaction token.
 - `headers` (object) - Custom HTTP headers to append to the default headers.
-- `delay` (number/function) - The delay to use between concurrent requests, can either be a number in milliseconds, or a function that returns the number.
+- `delay` (number/function) - The delay to use between concurrent requests, can either be a number in milliseconds, or a function that returns the number. Default is 1000.
+- `maxRetries` (number) - The maximum number of retries to use in case when a random error 404 is encountered. Default is 5.
 
 Of these parameters, the following are hot-swappable, using their respective setters:
 
@@ -422,6 +423,12 @@ As demonstrated by the example, the raw data can be accessed by using the `reque
 #### Notes:
 
 - For for hot-swapping in case of using `FetcherService`, the setters are accessed from the `config` object as `config.apiKey = ...`, `config.proxyUrl = ...`, etc.
+
+## Data serialization
+
+The data returned by all functions of `Rettiwt` are complex objects, containing non-serialized fields like `raw`. In order to get JSON-serializable data, all data objects returned by `Rettiwt` provide a function `toJSON()` which converts the data into a serializable JSON, whose type is described by their respective interfaces i.e, `ITweet` for `Tweet`, `IUser` for `User` and so on.
+
+For handling and processing of data returned by the functions, it's always advisable to serialize them using the `toJSON()` function.
 
 ## Features
 
