@@ -40,7 +40,6 @@ export * from './services/public/UserService';
 // TYPES
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
-export * from './types/auth/TidProvider';
 export * from './types/data/CursoredData';
 export * from './types/data/List';
 export * from './types/data/Notification';
