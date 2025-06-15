@@ -197,6 +197,9 @@ export class FetcherService {
 	 * ```
 	 */
 	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+		/** The current retry number. */
+		let retry = 0;
+
 		/** The error, if any. */
 		let error: unknown = undefined;
 
@@ -226,7 +229,7 @@ export class FetcherService {
 		config.timeout = this._timeout;
 
 		// Using retries for error 404
-		for (let retry = 1; retry <= this.config.maxRetries; retry++) {
+		do {
 			// Sending the request
 			try {
 				// Getting and appending transaction information
@@ -251,8 +254,11 @@ export class FetcherService {
 					this._errorHandler.handle(err);
 					throw err;
 				}
+			} finally {
+				// Incrementing the number of retries done
+				retry++;
 			}
-		}
+		} while (retry < this.config.maxRetries);
 
 		/** If request not successful even after retries, throw the error */
 		throw error;
