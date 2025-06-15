@@ -1,7 +1,6 @@
-/* eslint-disable import/no-unresolved */
-import { ClientTransaction, handleXMigration } from '@lami/x-client-transaction-id';
 import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
+import { ClientTransaction, handleXMigration } from 'x-client-transaction-id';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
