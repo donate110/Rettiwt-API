@@ -219,7 +219,6 @@ export class FetcherService {
 		config.headers = {
 			...config.headers,
 			...cred.toHeader(),
-			...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
 			...this.config.headers,
 		};
 		config.httpAgent = this.config.httpsAgent;
@@ -230,6 +229,12 @@ export class FetcherService {
 		for (let retry = 1; retry <= this.config.maxRetries; retry++) {
 			// Sending the request
 			try {
+				// Getting and appending transaction information
+				config.headers = {
+					...config.headers,
+					...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
+				};
+
 				// Introducing a delay
 				await this._wait();
 
