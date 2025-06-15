@@ -1,3 +1,5 @@
+/* eslint-disable import/no-unresolved */
+import { ClientTransaction, handleXMigration } from '@lami/x-client-transaction-id';
 import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
 
@@ -12,14 +14,12 @@ import { AuthCredential } from '../../models/auth/AuthCredential';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IFetchArgs } from '../../types/args/FetchArgs';
 import { IPostArgs } from '../../types/args/PostArgs';
-import { ITidHeader } from '../../types/auth/TidHeader';
-import { ITidProvider } from '../../types/auth/TidProvider';
+import { ITransactionHeader } from '../../types/auth/TransactionHeader';
 import { IErrorHandler } from '../../types/ErrorHandler';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
 import { LogService } from '../internal/LogService';
-import { TidService } from '../internal/TidService';
 
 /**
  * The base service that handles all HTTP requests.
@@ -36,9 +36,6 @@ export class FetcherService {
 	/** The service used to handle HTTP and API errors */
 	private readonly _errorHandler: IErrorHandler;
 
-	/** Service responsible for generating the `x-client-transaction-id` header. */
-	private readonly _tidProvider: ITidProvider;
-
 	/** The max wait time for a response. */
 	private readonly _timeout: number;
 
@@ -53,7 +50,6 @@ export class FetcherService {
 		this.config = config;
 		this._delay = config.delay;
 		this._errorHandler = config.errorHandler ?? new ErrorService();
-		this._tidProvider = config.tidProvider ?? new TidService(config);
 		this._timeout = config.timeout ?? 0;
 		this._auth = new AuthService(config);
 	}
@@ -106,22 +102,24 @@ export class FetcherService {
 	 *
 	 * @returns The header containing the transaction ID.
 	 */
-	private async _getTransactionHeader(method: string, url: string): Promise<ITidHeader | undefined> {
+	private async _getTransactionHeader(method: string, url: string): Promise<ITransactionHeader> {
+		// Get the X homepage HTML document (using utility function)
+		const document = await handleXMigration();
+
+		// Create and initialize ClientTransaction instance
+		const transaction = await ClientTransaction.create(document);
+
 		// Getting the URL path excluding all params
 		const path = new URL(url).pathname.split('?')[0].trim();
 
 		// Generating the transaction ID
-		const tid = await this._tidProvider.generate(method.toUpperCase(), path);
+		const tid = await transaction.generateTransactionId(method.toUpperCase(), path);
 
-		if (tid) {
-			return {
-				/* eslint-disable @typescript-eslint/naming-convention */
-				'x-client-transaction-id': tid,
-				/* eslint-enable @typescript-eslint/naming-convention */
-			};
-		} else {
-			return undefined;
-		}
+		return {
+			/* eslint-disable @typescript-eslint/naming-convention */
+			'x-client-transaction-id': tid,
+			/* eslint-enable @typescript-eslint/naming-convention */
+		};
 	}
 
 	/**
@@ -199,6 +197,9 @@ export class FetcherService {
 	 * ```
 	 */
 	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+		/** The current retry number. */
+		let retry = 0;
+
 		/** The error, if any. */
 		let error: unknown = undefined;
 
@@ -221,7 +222,6 @@ export class FetcherService {
 		config.headers = {
 			...config.headers,
 			...cred.toHeader(),
-			...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
 			...this.config.headers,
 		};
 		config.httpAgent = this.config.httpsAgent;
@@ -229,9 +229,15 @@ export class FetcherService {
 		config.timeout = this._timeout;
 
 		// Using retries for error 404
-		for (let retry = 1; retry <= this.config.maxRetries; retry++) {
+		do {
 			// Sending the request
 			try {
+				// Getting and appending transaction information
+				config.headers = {
+					...config.headers,
+					...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
+				};
+
 				// Introducing a delay
 				await this._wait();
 
@@ -248,8 +254,11 @@ export class FetcherService {
 					this._errorHandler.handle(err);
 					throw err;
 				}
+			} finally {
+				// Incrementing the number of retries done
+				retry++;
 			}
-		}
+		} while (retry < this.config.maxRetries);
 
 		/** If request not successful even after retries, throw the error */
 		throw error;

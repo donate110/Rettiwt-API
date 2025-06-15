@@ -143,8 +143,8 @@ When initializing a new Rettiwt instance, it can be configures using various par
 - `errorHandler` (interface) - The custom error handler to use.
 - `tidProvider` (interface) - The custom TID provider to use for generating transaction token.
 - `headers` (object) - Custom HTTP headers to append to the default headers.
-- `delay` (number/function) - The delay to use between concurrent requests, can either be a number in milliseconds, or a function that returns the number. Default is 1000.
-- `maxRetries` (number) - The maximum number of retries to use in case when a random error 404 is encountered. Default is 5.
+- `delay` (number/function) - The delay to use between concurrent requests, can either be a number in milliseconds, or a function that returns the number. Default is 0 (no delay).
+- `maxRetries` (number) - The maximum number of retries to use in case when a random error 404 is encountered. Default is 0 (no retries).
 
 Of these parameters, the following are hot-swappable, using their respective setters:
 

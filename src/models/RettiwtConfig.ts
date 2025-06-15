@@ -3,7 +3,6 @@ import { Agent } from 'https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 
 import { AuthService } from '../services/internal/AuthService';
-import { ITidProvider } from '../types/auth/TidProvider';
 import { IErrorHandler } from '../types/ErrorHandler';
 import { IRettiwtConfig } from '../types/RettiwtConfig';
 
@@ -44,7 +43,6 @@ export class RettiwtConfig implements IRettiwtConfig {
 	public readonly errorHandler?: IErrorHandler;
 	public readonly logging?: boolean;
 	public readonly maxRetries: number;
-	public readonly tidProvider?: ITidProvider;
 	public readonly timeout?: number;
 
 	/**
@@ -54,11 +52,10 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
-		this.delay = config?.delay ?? 1000;
-		this.maxRetries = config?.maxRetries ?? 5;
+		this.delay = config?.delay ?? 0;
+		this.maxRetries = config?.maxRetries ?? 0;
 		this.errorHandler = config?.errorHandler;
 		this.logging = config?.logging;
-		this.tidProvider = config?.tidProvider;
 		this.timeout = config?.timeout;
 		this.apiKey = config?.apiKey;
 		this._headers = {

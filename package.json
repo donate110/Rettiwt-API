@@ -1,6 +1,6 @@
 {
 	"name": "rettiwt-api",
-	"version": "6.0.0",
+	"version": "6.0.1",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
@@ -45,6 +45,7 @@
 		"typescript": "^5.7.3"
 	},
 	"dependencies": {
+		"@lami/x-client-transaction-id": "npm:@jsr/lami__x-client-transaction-id@^0.1.7",
 		"axios": "^1.8.4",
 		"chalk": "^5.4.1",
 		"commander": "^11.1.0",
