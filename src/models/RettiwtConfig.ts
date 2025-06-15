@@ -52,8 +52,8 @@ export class RettiwtConfig implements IRettiwtConfig {
 		this._apiKey = config?.apiKey;
 		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
-		this.delay = config?.delay ?? 1000;
-		this.maxRetries = config?.maxRetries ?? 5;
+		this.delay = config?.delay ?? 0;
+		this.maxRetries = config?.maxRetries ?? 0;
 		this.errorHandler = config?.errorHandler;
 		this.logging = config?.logging;
 		this.timeout = config?.timeout;
