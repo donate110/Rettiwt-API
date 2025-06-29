@@ -1,3 +1,4 @@
+import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 
 /**
@@ -65,6 +66,47 @@ export interface IFetchArgs {
 	 * - Only works for {@link EResourceType.TWEET_REPLIES}.
 	 */
 	sortBy?: TweetRepliesSortType;
+
+	/**
+	 * The date to start fetching data from.
+	 * 
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	fromTime?: Date;
+
+	/**
+	 * The date to end fetching data at.
+	 * 
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	toTime?: Date;
+
+	/**
+	 * The granularity of the data to fetch.
+	 * 
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	granularity?: RawAnalyticsGranularity;
+
+	/**
+	 * The metrics to fetch.
+	 * 
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	metrics?: RawAnalyticsMetric[];
+
+	/**
+	 * Show the verified follower count and relationship counts in the response.
+	 * 
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	showVerifiedFollowers?: boolean;
+	
 }
 
 /**
