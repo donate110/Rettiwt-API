@@ -1,6 +1,7 @@
 import { Extractors } from '../../collections/Extractors';
 import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { ResourceType } from '../../enums/Resource';
+import { Analytics } from '../../models/data/Analytics';
 import { CursoredData } from '../../models/data/CursoredData';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
@@ -87,33 +88,39 @@ export class UserService extends FetcherService {
 
 	/**
 	 * Get the analytics overview of the logged in user.
-	 * 
+	 *
 	 * @param fromTime - The start time of the analytics period. Defaults to 7 days ago.
 	 * @param toTime - The end time of the analytics period. Defaults to now.
 	 * @param granularity - The granularity of the analytics data. Defaults to daily.
 	 * @param metrics - The metrics to include in the analytics data. Defaults to all available metrics available.
 	 * @param showVerifiedFollowers - Whether to include verified follower count and relationship counts in the response. Defaults to true.
-	 * 
+	 *
 	 * @returns The raw analytics data of the user.
-	 * 
+	 *
 	 * @example
-	 * 
+	 *
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
-	 * 
+	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 * 
+	 *
 	 * // Fetching the analytics overview of the logged in user
 	 * rettiwt.user.analytics().then(res => {
-	 *  console.log(res);	
+	 *  console.log(res);
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
 	 * });
 	 * ```
 	 */
-	public async analytics(fromTime?: Date, toTime?: Date, granularity?: RawAnalyticsGranularity, metrics?: RawAnalyticsMetric[], showVerifiedFollowers?: boolean): Promise<IUserAnalyticsResponse> {
+	public async analytics(
+		fromTime?: Date,
+		toTime?: Date,
+		granularity?: RawAnalyticsGranularity,
+		metrics?: RawAnalyticsMetric[],
+		showVerifiedFollowers?: boolean,
+	): Promise<Analytics> {
 		const resource = ResourceType.USER_ANALYTICS;
 
 		// Define default values if not provided
@@ -132,7 +139,9 @@ export class UserService extends FetcherService {
 			showVerifiedFollowers: showVerifiedFollowers,
 		});
 
-		return response;
+		const data = Extractors[resource](response);
+
+		return data;
 	}
 
 	/**

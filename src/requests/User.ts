@@ -80,7 +80,7 @@ export class UserRequests {
 		toTime: Date,
 		granularity: RawAnalyticsGranularity,
 		requestedMetrics: RawAnalyticsMetric[],
-		showVerifiedFollowers: boolean
+		showVerifiedFollowers: boolean,
 	): AxiosRequestConfig {
 		return {
 			method: 'get',

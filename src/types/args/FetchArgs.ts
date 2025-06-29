@@ -69,7 +69,7 @@ export interface IFetchArgs {
 
 	/**
 	 * The date to start fetching data from.
-	 * 
+	 *
 	 * @remarks
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
@@ -77,7 +77,7 @@ export interface IFetchArgs {
 
 	/**
 	 * The date to end fetching data at.
-	 * 
+	 *
 	 * @remarks
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
@@ -85,7 +85,7 @@ export interface IFetchArgs {
 
 	/**
 	 * The granularity of the data to fetch.
-	 * 
+	 *
 	 * @remarks
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
@@ -93,7 +93,7 @@ export interface IFetchArgs {
 
 	/**
 	 * The metrics to fetch.
-	 * 
+	 *
 	 * @remarks
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
@@ -101,12 +101,11 @@ export interface IFetchArgs {
 
 	/**
 	 * Show the verified follower count and relationship counts in the response.
-	 * 
+	 *
 	 * @remarks
 	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
 	 */
 	showVerifiedFollowers?: boolean;
-	
 }
 
 /**

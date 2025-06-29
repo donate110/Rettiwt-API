@@ -43,7 +43,14 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_UNSCHEDULE: (args: IPostArgs) => TweetRequests.unschedule(args.id!),
 
 	USER_AFFILIATES: (args: IFetchArgs) => UserRequests.affiliates(args.id!, args.count, args.cursor),
-	USER_ANALYTICS: (args: IFetchArgs) => UserRequests.analytics(args.fromTime!, args.toTime!, args.granularity!, args.metrics!, args.showVerifiedFollowers!),
+	USER_ANALYTICS: (args: IFetchArgs) =>
+		UserRequests.analytics(
+			args.fromTime!,
+			args.toTime!,
+			args.granularity!,
+			args.metrics!,
+			args.showVerifiedFollowers!,
+		),
 	USER_BOOKMARKS: (args: IFetchArgs) => UserRequests.bookmarks(args.count, args.cursor),
 	USER_DETAILS_BY_USERNAME: (args: IFetchArgs) => UserRequests.detailsByUsername(args.id!),
 	USER_DETAILS_BY_ID: (args: IFetchArgs) => UserRequests.detailsById(args.id!),

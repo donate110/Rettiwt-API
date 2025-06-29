@@ -1,4 +1,5 @@
 import { BaseType } from '../enums/Data';
+import { Analytics } from '../models/data/Analytics';
 import { CursoredData } from '../models/data/CursoredData';
 import { Notification } from '../models/data/Notification';
 import { Tweet } from '../models/data/Tweet';
@@ -21,6 +22,7 @@ import { ITweetUnpostResponse } from '../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
 import { ITweetUnscheduleResponse } from '../types/raw/tweet/Unschedule';
 import { IUserAffiliatesResponse } from '../types/raw/user/Affiliates';
+import { IUserAnalyticsResponse } from '../types/raw/user/Analytics';
 import { IUserBookmarksResponse } from '../types/raw/user/Bookmarks';
 import { IUserDetailsResponse } from '../types/raw/user/Details';
 import { IUserDetailsBulkResponse } from '../types/raw/user/DetailsBulk';
@@ -80,6 +82,8 @@ export const Extractors = {
 
 	USER_AFFILIATES: (response: IUserAffiliatesResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
+	USER_ANALYTICS: (response: IUserAnalyticsResponse): Analytics =>
+		new Analytics(response.data.viewer_v2.user_results.result),
 	USER_BOOKMARKS: (response: IUserBookmarksResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_DETAILS_BY_USERNAME: (response: IUserDetailsResponse): User | undefined => User.single(response),
