@@ -10,18 +10,29 @@ export interface IUserAnalyticsResponse {
 }
 
 interface Data {
+	viewer_v2: ViewerV2;
+}
+
+interface ViewerV2 {
+	user_results: UserResults;
+}
+
+interface UserResults {
+	id: string;
 	result: Result;
 }
 
+
 interface Result {
-	result: Result2;
+	__typename: string;
+	organic_metrics_time_series: Series[];
+	verified_follower_count: string;
+	relationship_counts: Relationships;
 	id: string;
 }
 
-interface Result2 {
-	__typename: string;
-	organic_metrics_time_series: Series[];
-	id: string;
+interface Relationships {
+	followers: number;
 }
 
 interface Series {

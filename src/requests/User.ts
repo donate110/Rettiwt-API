@@ -73,22 +73,25 @@ export class UserRequests {
 	 * @param toTime - The end time of the analytic data to be fetched.
 	 * @param granularity - The granularity of the analytic data to be fetched.
 	 * @param requestedMetrics - The metrics to be fetched.
+	 * @param showVerifiedFollowers - Whether to show verified followers in the analytics.
 	 */
 	public static analytics(
 		fromTime: Date,
 		toTime: Date,
 		granularity: RawAnalyticsGranularity,
 		requestedMetrics: RawAnalyticsMetric[],
+		showVerifiedFollowers: boolean
 	): AxiosRequestConfig {
 		return {
 			method: 'get',
-			url: 'https://x.com/i/api/graphql/NlJ6RM-hgHxt-iu9cPQz7A/overviewDataUserQuery',
+			url: 'https://x.com/i/api/graphql/LwtiA7urqM6eDeBheAFi5w/AccountOverviewQuery',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				from_time: fromTime,
 				to_time: toTime,
 				granularity: granularity,
 				requested_metrics: requestedMetrics,
+				show_verified_followers: showVerifiedFollowers,
 				/* eslint-enable @typescript-eslint/naming-convention */
 			},
 			paramsSerializer: { encode: encodeURIComponent },
