@@ -82,17 +82,20 @@ export class UserRequests {
 		requestedMetrics: RawAnalyticsMetric[],
 		showVerifiedFollowers: boolean,
 	): AxiosRequestConfig {
+		console.log(`Fetching analytics from ${fromTime?.toString()} to ${toTime?.toString()} with granularity ${granularity} and metrics ${requestedMetrics.join(', ')}`);
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/LwtiA7urqM6eDeBheAFi5w/AccountOverviewQuery',
 			params: {
-				/* eslint-disable @typescript-eslint/naming-convention */
-				from_time: fromTime,
-				to_time: toTime,
-				granularity: granularity,
-				requested_metrics: requestedMetrics,
-				show_verified_followers: showVerifiedFollowers,
-				/* eslint-enable @typescript-eslint/naming-convention */
+				variables: JSON.stringify({
+					/* eslint-disable @typescript-eslint/naming-convention */
+					from_time: fromTime,
+					to_time: toTime,
+					granularity: granularity,
+					requested_metrics: requestedMetrics,
+					show_verified_followers: showVerifiedFollowers,
+					/* eslint-enable @typescript-eslint/naming-convention */
+				}),
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
