@@ -47,6 +47,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Unretweet
     - Tweet Unschedule
     - User Affiliates
+    - User Analytics (**Only for Premium accounts**)
     - User Bookmarks
     - User Details - Single (by ID and Username) and Bulk (by ID only)
     - User Follow
