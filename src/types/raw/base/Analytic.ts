@@ -18,7 +18,7 @@ export interface IAnalyticsRelationships {
 }
 
 export interface IAnalyticsMetric {
-	metric_value: IAnalyticsMetricValue[];
+	metric_values: IAnalyticsMetricValue[];
 	timestamp: IAnalyticsTimeStamp;
 }
 

@@ -33,6 +33,7 @@ export class Analytics implements IAnalytics {
 
 	public constructor(analytics: IRawAnalytics) {
 		this._raw = { ...analytics };
+		this.organicMetricsTimeSeries = analytics.organic_metrics_time_series;
 		this.createdAt = new Date().toISOString();
 		this.followers = analytics.relationship_counts.followers;
 		this.verifiedFollowers = parseInt(analytics.verified_follower_count, 10);
@@ -49,12 +50,12 @@ export class Analytics implements IAnalytics {
 		this.createQuote = this._reduceMetrics(RawAnalyticsMetric.CREATE_QUOTE);
 		this.createReply = this._reduceMetrics(RawAnalyticsMetric.CREATE_REPLY);
 		this.unfollows = this._reduceMetrics(RawAnalyticsMetric.UNFOLLOWS);
-		this.organicMetricsTimeSeries = analytics.organic_metrics_time_series;
+		
 	}
 
   private _reduceMetrics(metricType: RawAnalyticsMetric): number {
-		return this._raw.organic_metrics_time_series.reduce((acc, metric) => {
-			const metricValue = metric.metric_value.find((m) => m.metric_type === (metricType as string));
+		return this.organicMetricsTimeSeries.reduce((acc, metric) => {
+			const metricValue = metric.metric_values.find((m) => m.metric_type === (metricType as string));
 			return acc + (metricValue ? metricValue.metric_value : 0);
 		}, 0);
 	}
