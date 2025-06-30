@@ -428,7 +428,7 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async highlights(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async highlights(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = ResourceType.USER_HIGHLIGHTS;
 
 		// Fetching raw list of highlights
@@ -719,7 +719,7 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async subscriptions(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async subscriptions(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = ResourceType.USER_SUBSCRIPTIONS;
 
 		// Fetching raw list of subscriptions
@@ -767,7 +767,7 @@ export class UserService extends FetcherService {
 	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
 	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
 	 */
-	public async timeline(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async timeline(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = ResourceType.USER_TIMELINE;
 
 		// Fetching raw list of tweets
