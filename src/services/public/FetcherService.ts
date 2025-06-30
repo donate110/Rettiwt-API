@@ -1,6 +1,6 @@
 import axios, { isAxiosError } from 'axios';
 import { Cookie } from 'cookiejar';
-import { ClientTransaction, handleXMigration } from 'x-client-transaction-id';
+import { ClientTransaction, handleXMigration } from 'x-client-transaction-id-glacier';
 
 import { AllowGuestAuthenticationGroup, FetchResourcesGroup, PostResourcesGroup } from '../../collections/Groups';
 import { Requests } from '../../collections/Requests';
