@@ -132,11 +132,11 @@ export class UserService extends FetcherService {
 
 		// Fetching raw analytics
 		const response = await this.request<IUserAnalyticsResponse>(resource, {
-			fromTime: fromTime,
-			toTime: toTime,
-			granularity: granularity,
-			metrics: metrics,
-			showVerifiedFollowers: showVerifiedFollowers,
+			fromTime,
+			toTime,
+			granularity,
+			metrics,
+			showVerifiedFollowers,
 		});
 
 		const data = Extractors[resource](response);
