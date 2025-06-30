@@ -186,16 +186,36 @@ export class UserService extends FetcherService {
 	}
 
 	/**
+	 * Get the details of the logged in user.
+	 *
+	 * @returns The details of the user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the User
+	 * rettiwt.user.details()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async details(): Promise<User | undefined>;
+
+	/**
 	 * Get the details of a user.
 	 *
-	 * @param id - The username/ID/IDs of the target user/users. If no ID is provided, the logged-in user's ID is used.
+	 * @param id - The ID/username of the target user.
 	 *
-	 * @returns
-	 * The details of the given user.
-	 *
-	 * If more than one ID is provided, returns a list.
-	 *
-	 * If no user matches the given id, returns `undefined`.
+	 * @returns The details of the user.
 	 *
 	 * @example
 	 *
@@ -234,9 +254,18 @@ export class UserService extends FetcherService {
 	 * 	console.log(err);
 	 * });
 	 * ```
-	 * * @example
+	 */
+	public async details(id: string): Promise<User | undefined>;
+
+	/**
+	 * Get the details of multiple users in bulk.
 	 *
-	 * #### Fetching the details of multiple users
+	 * @param id - The list of IDs of the target users.
+	 *
+	 * @returns The details of the users.
+	 *
+	 * @example
+	 *
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
 	 *
@@ -253,9 +282,9 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async details<T extends string | string[] | undefined>(
-		id: T,
-	): Promise<T extends string | undefined ? User | undefined : User[]> {
+	public async details(id: string[]): Promise<User[]>;
+
+	public async details(id?: string | string[]): Promise<User | User[] | undefined> {
 		let resource: ResourceType;
 
 		// If details of multiple users required
@@ -268,7 +297,7 @@ export class UserService extends FetcherService {
 			// Deserializing response
 			const data = Extractors[resource](response, id);
 
-			return data as T extends string | undefined ? User | undefined : User[];
+			return data;
 		}
 		// If details of single user required
 		else {
@@ -283,7 +312,7 @@ export class UserService extends FetcherService {
 
 			// If no ID is given, and not authenticated, skip
 			if (!id && !this.config.userId) {
-				return undefined as T extends string | undefined ? User | undefined : User[];
+				return undefined;
 			}
 
 			// Fetching raw details
@@ -292,7 +321,7 @@ export class UserService extends FetcherService {
 			// Deserializing response
 			const data = Extractors[resource](response);
 
-			return data as T extends string | undefined ? User | undefined : User[];
+			return data;
 		}
 	}
 
@@ -489,7 +518,7 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async highlights(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async highlights(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = ResourceType.USER_HIGHLIGHTS;
 
 		// Fetching raw list of highlights
@@ -780,7 +809,7 @@ export class UserService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async subscriptions(id: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
+	public async subscriptions(id?: string, count?: number, cursor?: string): Promise<CursoredData<User>> {
 		const resource = ResourceType.USER_SUBSCRIPTIONS;
 
 		// Fetching raw list of subscriptions
@@ -828,7 +857,7 @@ export class UserService extends FetcherService {
 	 * - If the target user has a pinned tweet, the returned timeline has one item extra and this is always the pinned tweet.
 	 * - If timeline is fetched without authenticating, then the most popular tweets of the target user are returned instead.
 	 */
-	public async timeline(id: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
+	public async timeline(id?: string, count?: number, cursor?: string): Promise<CursoredData<Tweet>> {
 		const resource = ResourceType.USER_TIMELINE;
 
 		// Fetching raw list of tweets
