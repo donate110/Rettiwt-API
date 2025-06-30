@@ -87,8 +87,8 @@ export class UserRequests {
 			url: 'https://x.com/i/api/graphql/LwtiA7urqM6eDeBheAFi5w/AccountOverviewQuery',
 			params: {
 				/* eslint-disable @typescript-eslint/naming-convention */
-				from_time: fromTime.toISOString(),
-				to_time: toTime.toISOString(),
+				from_time: fromTime,
+				to_time: toTime,
 				granularity: granularity,
 				requested_metrics: requestedMetrics,
 				show_verified_followers: showVerifiedFollowers,
