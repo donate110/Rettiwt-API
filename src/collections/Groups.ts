@@ -27,6 +27,7 @@ export const FetchResourcesGroup = [
 	ResourceType.TWEET_RETWEETERS,
 	ResourceType.TWEET_SEARCH,
 	ResourceType.USER_AFFILIATES,
+	ResourceType.USER_ANALYTICS,
 	ResourceType.USER_BOOKMARKS,
 	ResourceType.USER_DETAILS_BY_USERNAME,
 	ResourceType.USER_DETAILS_BY_ID,
