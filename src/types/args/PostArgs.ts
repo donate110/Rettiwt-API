@@ -12,6 +12,7 @@ export interface IPostArgs {
 	 * - {@link ResourceType.TWEET_BOOKMARK}
 	 * - {@link ResourceType.TWEET_LIKE}
 	 * - {@link ResourceType.TWEET_RETWEET}
+	 * - {@link ResourceType.TWEET_UNBOOKMARK}
 	 * - {@link ResourceType.TWEET_UNLIKE}
 	 * - {@link ResourceType.TWEET_UNPOST}
 	 * - {@link ResourceType.TWEET_UNRETWEET}

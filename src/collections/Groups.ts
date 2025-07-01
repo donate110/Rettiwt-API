@@ -58,6 +58,7 @@ export const PostResourcesGroup = [
 	ResourceType.TWEET_POST,
 	ResourceType.TWEET_RETWEET,
 	ResourceType.TWEET_SCHEDULE,
+	ResourceType.TWEET_UNBOOKMARK,
 	ResourceType.TWEET_UNLIKE,
 	ResourceType.TWEET_UNPOST,
 	ResourceType.TWEET_UNRETWEET,

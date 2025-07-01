@@ -38,6 +38,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	TWEET_RETWEETERS: (args: IFetchArgs) => TweetRequests.retweeters(args.id!, args.count, args.cursor),
 	TWEET_SCHEDULE: (args: IPostArgs) => TweetRequests.schedule(args.tweet!),
 	TWEET_SEARCH: (args: IFetchArgs) => TweetRequests.search(args.filter!, args.count, args.cursor),
+	TWEET_UNBOOKMARK: (args: IPostArgs) => TweetRequests.unbookmark(args.id!),
 	TWEET_UNLIKE: (args: IPostArgs) => TweetRequests.unlike(args.id!),
 	TWEET_UNPOST: (args: IPostArgs) => TweetRequests.unpost(args.id!),
 	TWEET_UNRETWEET: (args: IPostArgs) => TweetRequests.unretweet(args.id!),

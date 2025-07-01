@@ -23,6 +23,7 @@ import { ITweetRetweetResponse } from '../../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../../types/raw/tweet/Retweeters';
 import { ITweetScheduleResponse } from '../../types/raw/tweet/Schedule';
 import { ITweetSearchResponse } from '../../types/raw/tweet/Search';
+import { ITweetUnbookmarkResponse } from '../../types/raw/tweet/Unbookmark';
 import { ITweetUnlikeResponse } from '../../types/raw/tweet/Unlike';
 import { ITweetUnpostResponse } from '../../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../../types/raw/tweet/Unretweet';
@@ -643,6 +644,43 @@ export class TweetService extends FetcherService {
 				cursor = undefined;
 			}
 		}
+	}
+
+	/**
+	 * Unbookmark a tweet.
+	 *
+	 * @param id - The ID of the target tweet.
+	 *
+	 * @returns Whether unbookmarking was successful or not.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Unbookmarking the tweet with id '1234567890'
+	 * rettiwt.tweet.unbookmark('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async unbookmark(id: string): Promise<boolean> {
+		const resource = ResourceType.TWEET_UNBOOKMARK;
+
+		// Unliking the tweet
+		const response = await this.request<ITweetUnbookmarkResponse>(resource, { id: id });
+
+		// Deserializing the response
+		const data = Extractors[resource](response) ?? false;
+
+		return data;
 	}
 
 	/**

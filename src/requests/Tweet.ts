@@ -517,6 +517,23 @@ export class TweetRequests {
 	}
 
 	/**
+	 * @param id - The id of the tweet to be unbookmarked.
+	 */
+	public static unbookmark(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/Wlmlj2-xzyS1GN3a6cj-mQ/DeleteBookmark',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: {
+					tweet_id: id,
+				},
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
 	 * @param id - The id of the tweet to be unliked.
 	 */
 	public static unlike(id: string): AxiosRequestConfig {

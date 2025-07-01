@@ -257,6 +257,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Unbookmark
+	tweet
+		.command('unbookmark')
+		.description('Unbookmark a tweet')
+		.argument('<id>', 'The id of the tweet')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.unbookmark(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Unlike
 	tweet
 		.command('unlike')
