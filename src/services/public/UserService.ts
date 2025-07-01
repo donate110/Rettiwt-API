@@ -124,11 +124,11 @@ export class UserService extends FetcherService {
 		const resource = ResourceType.USER_ANALYTICS;
 
 		// Define default values if not provided
-		fromTime = fromTime || new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); // Default to 7 days ago
-		toTime = toTime || new Date(); // Default to now
-		granularity = granularity || RawAnalyticsGranularity.DAILY; // Default to daily granularity
-		metrics = metrics || Object.values(RawAnalyticsMetric); // Default to all metrics
-		showVerifiedFollowers = showVerifiedFollowers || true; // Default to true
+		fromTime = fromTime ?? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+		toTime = toTime ?? new Date();
+		granularity = granularity ?? RawAnalyticsGranularity.DAILY;
+		metrics = metrics ?? Object.values(RawAnalyticsMetric);
+		showVerifiedFollowers = showVerifiedFollowers ?? true;
 
 		// Fetching raw analytics
 		const response = await this.request<IUserAnalyticsResponse>(resource, {
