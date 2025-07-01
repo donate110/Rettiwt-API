@@ -60,7 +60,7 @@ export class Analytics implements IAnalytics {
 	/**
 	 * Reduces the organic metrics time series to a total value for a specific metric type.
 	 *
-	 * @param metricType The type of metric to reduce.
+	 * @param metricType - metricType The type of metric to reduce.
 	 * @returns the total value of the specified metric type across all time series.
 	 */
 	private _reduceMetrics(metricType: RawAnalyticsMetric): number {
