@@ -20,7 +20,6 @@ export class FetchArgs implements IFetchArgs {
 	public sortBy?: TweetRepliesSortType;
 	public toTime?: Date;
 
-
 	/**
 	 * @param args - Additional user-defined arguments for fetching the resource.
 	 */

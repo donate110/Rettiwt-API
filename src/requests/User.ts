@@ -82,7 +82,9 @@ export class UserRequests {
 		requestedMetrics: RawAnalyticsMetric[],
 		showVerifiedFollowers: boolean,
 	): AxiosRequestConfig {
-		console.log(`Fetching analytics from ${fromTime?.toString()} to ${toTime?.toString()} with granularity ${granularity} and metrics ${requestedMetrics.join(', ')}`);
+		console.log(
+			`Fetching analytics from ${fromTime?.toString()} to ${toTime?.toString()} with granularity ${granularity} and metrics ${requestedMetrics.join(', ')}`,
+		);
 		return {
 			method: 'get',
 			url: 'https://x.com/i/api/graphql/LwtiA7urqM6eDeBheAFi5w/AccountOverviewQuery',

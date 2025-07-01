@@ -50,38 +50,48 @@ export class Analytics implements IAnalytics {
 		this.createQuote = this._reduceMetrics(RawAnalyticsMetric.CREATE_QUOTE);
 		this.createReply = this._reduceMetrics(RawAnalyticsMetric.CREATE_REPLY);
 		this.unfollows = this._reduceMetrics(RawAnalyticsMetric.UNFOLLOWS);
-		
 	}
 
-  private _reduceMetrics(metricType: RawAnalyticsMetric): number {
+	/** The raw analytic details. */
+	public get raw(): IRawAnalytics {
+		return { ...this._raw };
+	}
+
+	/**
+	 * Reduces the organic metrics time series to a total value for a specific metric type.
+	 *
+	 * @param metricType The type of metric to reduce.
+	 * @returns the total value of the specified metric type across all time series.
+	 */
+	private _reduceMetrics(metricType: RawAnalyticsMetric): number {
 		return this.organicMetricsTimeSeries.reduce((acc, metric) => {
 			const metricValue = metric.metric_values.find((m) => m.metric_type === (metricType as string));
 			return acc + (metricValue ? metricValue.metric_value : 0);
 		}, 0);
 	}
 
-  /**
+	/**
 	 * @returns A serializable JSON representation of `this` object.
 	 */
 	public toJSON(): IAnalytics {
-    return {
-      createdAt: this.createdAt,
-      followers: this.followers,
-      verifiedFollowers: this.verifiedFollowers,
-      impressions: this.impressions,
-      profileVisits: this.profileVisits,
-      engagements: this.engagements,
-      follows: this.follows,
-      replies: this.replies,
-      likes: this.likes,
-      retweets: this.retweets,
-      bookmarks: this.bookmarks,
-      shares: this.shares,
-      createTweets: this.createTweets,
-      createQuote: this.createQuote,
-      unfollows: this.unfollows,
-      createReply: this.createReply,
-      organicMetricsTimeSeries: this.organicMetricsTimeSeries
-    };
-  }
+		return {
+			createdAt: this.createdAt,
+			followers: this.followers,
+			verifiedFollowers: this.verifiedFollowers,
+			impressions: this.impressions,
+			profileVisits: this.profileVisits,
+			engagements: this.engagements,
+			follows: this.follows,
+			replies: this.replies,
+			likes: this.likes,
+			retweets: this.retweets,
+			bookmarks: this.bookmarks,
+			shares: this.shares,
+			createTweets: this.createTweets,
+			createQuote: this.createQuote,
+			unfollows: this.unfollows,
+			createReply: this.createReply,
+			organicMetricsTimeSeries: this.organicMetricsTimeSeries,
+		};
+	}
 }
