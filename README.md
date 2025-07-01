@@ -32,6 +32,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Members
     - List Tweets
     - Tweet Details - Single and Bulk
+    - Tweet Bookmark
     - Tweet Like
     - Tweet Likers
     - Tweet Media Upload
@@ -42,6 +43,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Schedule
     - Tweet Search
     - Tweet Stream
+    - Tweet Unbookmark
     - Tweet Unlike
     - Tweet Unpost
     - Tweet Unretweet
@@ -400,7 +402,7 @@ rettiwt.user.details('<username>')
 However, if further control over the raw response is required, Rettiwt-API provides the [`FetcherService`](https://rishikant181.github.io/Rettiwt-API/classes/FetcherService.html) class which provides direct access to the raw response, but keep in mind, this delegates the task of parsing and filtering the results to the consumer of the library. The following example demonstrates using the `FetcherService` class:
 
 ```ts
-import { RettiwtConfig, FetcherService, EResourceType, IUserDetailsResponse } from 'rettiwt-api';
+import { RettiwtConfig, FetcherService, ResourceType, IUserDetailsResponse } from 'rettiwt-api';
 
 // Creating the configuration for Rettiwt
 const config = new RettiwtConfig({ apiKey: '<API_KEY>' });
@@ -410,7 +412,7 @@ const fetcher = new FetcherService(config);
 
 // Fetching the details of the given user
 fetcher
-	.request<IUserDetailsResponse>(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	.request<IUserDetailsResponse>(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
 	.then((res) => {
 		console.log(res);
 	})
@@ -419,7 +421,7 @@ fetcher
 	});
 ```
 
-As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#EResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
+As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#ResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
 
 #### Notes:
 
@@ -442,6 +444,7 @@ So far, the following operations are supported:
 
 ### Tweets
 
+- [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
 - [Getting the details of a tweet/multiple tweets](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
 - [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
 - [Getting the list of users who liked your tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
@@ -452,6 +455,7 @@ So far, the following operations are supported:
 - [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
 - [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 - [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
+- [Unbookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unbookmark)
 - [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
 - [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
 - [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)

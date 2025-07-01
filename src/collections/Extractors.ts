@@ -7,6 +7,7 @@ import { User } from '../models/data/User';
 import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
+import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
@@ -17,6 +18,7 @@ import { ITweetRetweetResponse } from '../types/raw/tweet/Retweet';
 import { ITweetRetweetersResponse } from '../types/raw/tweet/Retweeters';
 import { ITweetScheduleResponse } from '../types/raw/tweet/Schedule';
 import { ITweetSearchResponse } from '../types/raw/tweet/Search';
+import { ITweetUnbookmarkResponse } from '../types/raw/tweet/Unbookmark';
 import { ITweetUnlikeResponse } from '../types/raw/tweet/Unlike';
 import { ITweetUnpostResponse } from '../types/raw/tweet/Unpost';
 import { ITweetUnretweetResponse } from '../types/raw/tweet/Unretweet';
@@ -58,6 +60,7 @@ export const Extractors = {
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
 
+	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),
@@ -74,6 +77,7 @@ export const Extractors = {
 	TWEET_SCHEDULE: (response: ITweetScheduleResponse): string => response?.data?.tweet?.rest_id ?? undefined,
 	TWEET_SEARCH: (response: ITweetSearchResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	TWEET_UNBOOKMARK: (response: ITweetUnbookmarkResponse): boolean => response?.data?.tweet_bookmark_delete === 'Done',
 	TWEET_UNLIKE: (response: ITweetUnlikeResponse): boolean => (response?.data?.unfavorite_tweet ? true : false),
 	TWEET_UNPOST: (response: ITweetUnpostResponse): boolean => (response?.data?.delete_tweet ? true : false),
 	TWEET_UNRETWEET: (response: ITweetUnretweetResponse): boolean =>
