@@ -28,7 +28,7 @@ const DM_BASE_PARAMS = {
 	supports_edit: true,
 	include_ext_edit_control: true,
 	include_ext_business_affiliations_label: true,
-	ext: 'mediaColor%2CaltText%2CbusinessAffiliationsLabel%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle'
+	ext: 'mediaColor%2CaltText%2CbusinessAffiliationsLabel%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle',
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
@@ -46,7 +46,7 @@ const DM_USER_INCLUDE_PARAMS = {
 	include_ext_is_blue_verified: 1,
 	include_ext_verified_type: 1,
 	include_ext_profile_image_shape: 1,
-	skip_status: 1
+	skip_status: 1,
 	/* eslint-enable @typescript-eslint/naming-convention */
 };
 
@@ -56,31 +56,31 @@ const DM_USER_INCLUDE_PARAMS = {
  * @public
  */
 export class DMRequests {
-  /**
-     * Get a specific DM conversation
-     * @param conversationId - The conversation ID (e.g., "394028042-1712730991884689408")
-     * @param maxId - Maximum ID for pagination (optional)
-     */
-  public static conversation(conversationId: string, maxId?: string): AxiosRequestConfig {
-    const context = maxId ? 'FETCH_DM_CONVERSATION_HISTORY' : 'FETCH_DM_CONVERSATION';
-    
-    return {
-      method: 'get',
-      url: `https://x.com/i/api/1.1/dm/conversation/${conversationId}.json`,
-      params: {
-        ...DM_BASE_PARAMS,
-        ...DM_USER_INCLUDE_PARAMS,
-        /* eslint-disable @typescript-eslint/naming-convention */
-        max_id: maxId,
-        context: context,
-        dm_users: false,
-        include_conversation_info: true
-        /* eslint-enable @typescript-eslint/naming-convention */
-      },
-      paramsSerializer: { encode: encodeURIComponent },
-    };
-  }
-  
+	/**
+	 * Get a specific DM conversation
+	 * @param conversationId - The conversation ID (e.g., "394028042-1712730991884689408")
+	 * @param maxId - Maximum ID for pagination (optional)
+	 */
+	public static conversation(conversationId: string, maxId?: string): AxiosRequestConfig {
+		const context = maxId ? 'FETCH_DM_CONVERSATION_HISTORY' : 'FETCH_DM_CONVERSATION';
+
+		return {
+			method: 'get',
+			url: `https://x.com/i/api/1.1/dm/conversation/${conversationId}.json`,
+			params: {
+				...DM_BASE_PARAMS,
+				...DM_USER_INCLUDE_PARAMS,
+				/* eslint-disable @typescript-eslint/naming-convention */
+				max_id: maxId,
+				context: context,
+				dm_users: false,
+				include_conversation_info: true,
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+			paramsSerializer: { encode: encodeURIComponent },
+		};
+	}
+
 	/**
 	 * Get the initial state of the DM inbox
 	 */
@@ -94,13 +94,13 @@ export class DMRequests {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				dm_users: true,
 				include_ext_parody_commentary_fan_label: true,
-				ext: 'mediaColor%2CaltText%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle'
+				ext: 'mediaColor%2CaltText%2CmediaStats%2ChighlightedLabel%2CparodyCommentaryFanLabel%2CvoiceInfo%2CbirdwatchPivot%2CsuperFollowMetadata%2CunmentionInfo%2CeditControl%2Carticle',
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
 	}
 
-  /**
+	/**
 	 * Get inbox timeline (pagination of conversations)
 	 * @param maxId - Maximum ID for pagination
 	 */
@@ -113,13 +113,13 @@ export class DMRequests {
 				...DM_USER_INCLUDE_PARAMS,
 				/* eslint-disable @typescript-eslint/naming-convention */
 				max_id: maxId,
-				dm_users: false
+				dm_users: false,
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
 	}
 
-  /**
+	/**
 	 * Create a new DM or get DM creation interface
 	 */
 	public static new(): AxiosRequestConfig {
@@ -138,7 +138,7 @@ export class DMRequests {
 				include_inbox_timelines: true,
 				include_ext_media_color: true,
 				supports_reactions: true,
-				supports_edit: true
+				supports_edit: true,
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
@@ -161,7 +161,7 @@ export class DMRequests {
 		};
 	}
 
-  /**
+	/**
 	 * Update the last seen event ID for a conversation
 	 * @param lastSeenEventId - The ID of the last seen event
 	 * @param trustedLastSeenEventId - The trusted last seen event ID (usually same as lastSeenEventId)
@@ -173,12 +173,12 @@ export class DMRequests {
 			data: qs.stringify({
 				/* eslint-disable @typescript-eslint/naming-convention */
 				last_seen_event_id: lastSeenEventId,
-				trusted_last_seen_event_id: trustedLastSeenEventId ?? lastSeenEventId
+				trusted_last_seen_event_id: trustedLastSeenEventId ?? lastSeenEventId,
 			}),
 		};
 	}
 
-  /**
+	/**
 	 * Get user updates for DMs (polling for new messages)
 	 * @param cursor - Cursor for pagination
 	 * @param activeConversationId - ID of the currently active conversation
@@ -192,7 +192,7 @@ export class DMRequests {
 				/* eslint-disable @typescript-eslint/naming-convention */
 				cursor: cursor,
 				active_conversation_id: activeConversationId,
-				dm_users: false
+				dm_users: false,
 			},
 			paramsSerializer: { encode: encodeURIComponent },
 		};
