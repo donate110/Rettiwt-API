@@ -25,6 +25,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
 
+	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),
 	TWEET_DETAILS_ALT: (args: IFetchArgs) => TweetRequests.replies(args.id!),
 	TWEET_DETAILS_BULK: (args: IFetchArgs) => TweetRequests.bulkDetails(args.ids!),

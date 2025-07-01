@@ -12,6 +12,7 @@ import { ITweetFilter } from '../../types/args/FetchArgs';
 import { INewTweet } from '../../types/args/PostArgs';
 import { IMediaInitializeUploadResponse } from '../../types/raw/media/InitalizeUpload';
 
+import { ITweetBookmarkResponse } from '../../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../../types/raw/tweet/Like';
@@ -42,6 +43,45 @@ export class TweetService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Bookmark a tweet.
+	 *
+	 * @param id - The ID of the tweet to be bookmarked.
+	 *
+	 * @returns Whether bookmarking was successful or not.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Bookmarking the Tweet with id '1234567890'
+	 * rettiwt.tweet.bookmark('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async bookmark(id: string): Promise<boolean> {
+		const resource = ResourceType.TWEET_BOOKMARK;
+
+		// Favoriting the tweet
+		const response = await this.request<ITweetBookmarkResponse>(resource, {
+			id: id,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response) ?? false;
+
+		return data;
 	}
 
 	/**

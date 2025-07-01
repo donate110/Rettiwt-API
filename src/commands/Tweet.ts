@@ -16,6 +16,20 @@ function createTweetCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'tweet' command
 	const tweet = createCommand('tweet').description('Access resources releated to tweets');
 
+	// Bookmark
+	tweet
+		.command('bookmark')
+		.description('Bookmark a tweet')
+		.argument('<id>', 'The tweet to bookmark')
+		.action(async (id: string) => {
+			try {
+				const result = await rettiwt.tweet.bookmark(id);
+				output(result);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Details
 	tweet
 		.command('details')

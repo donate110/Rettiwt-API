@@ -14,6 +14,21 @@ import { INewTweet } from '../types/args/PostArgs';
  */
 export class TweetRequests {
 	/**
+	 * @param id - The ID of the tweet to bookmark
+	 */
+	public static bookmark(id: string): AxiosRequestConfig {
+		return {
+			method: 'post',
+			url: 'https://x.com/i/api/graphql/aoDbu3RHznuiSkQ9aNM67Q/CreateBookmark',
+			data: {
+				/* eslint-disable @typescript-eslint/naming-convention */
+				variables: JSON.stringify({ tweet_id: id }),
+				/* eslint-enable @typescript-eslint/naming-convention */
+			},
+		};
+	}
+
+	/**
 	 * @param ids - The IDs of the tweets whose details are to be fetched.
 	 */
 	public static bulkDetails(ids: string[]): AxiosRequestConfig {

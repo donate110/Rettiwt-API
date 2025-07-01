@@ -6,6 +6,7 @@ import { User } from '../models/data/User';
 import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
+import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
 import { ITweetDetailsResponse } from '../types/raw/tweet/Details';
 import { ITweetDetailsBulkResponse } from '../types/raw/tweet/DetailsBulk';
 import { ITweetLikeResponse } from '../types/raw/tweet/Like';
@@ -56,6 +57,8 @@ export const Extractors = {
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
 
+	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean =>
+		response?.data?.tweet_bookmark_put === 'Done' ? true : false,
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_ALT: (response: ITweetRepliesResponse, id: string): Tweet | undefined => Tweet.single(response, id),
 	TWEET_DETAILS_BULK: (response: ITweetDetailsBulkResponse, ids: string[]): Tweet[] => Tweet.multiple(response, ids),

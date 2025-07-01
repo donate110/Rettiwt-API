@@ -9,13 +9,14 @@ export interface IPostArgs {
 	 *
 	 * @remarks
 	 * Required only when posting using the following resources:
-	 * - {@link EResourceType.TWEET_LIKE}
-	 * - {@link EResourceType.TWEET_RETWEET}
-	 * - {@link EResourceType.TWEET_UNLIKE}
-	 * - {@link EResourceType.TWEET_UNPOST}
-	 * - {@link EResourceType.TWEET_UNRETWEET}
-	 * - {@link EResourceType.USER_FOLLOW}
-	 * - {@link EResourceType.USER_UNFOLLOW}
+	 * - {@link ResourceType.TWEET_BOOKMARK}
+	 * - {@link ResourceType.TWEET_LIKE}
+	 * - {@link ResourceType.TWEET_RETWEET}
+	 * - {@link ResourceType.TWEET_UNLIKE}
+	 * - {@link ResourceType.TWEET_UNPOST}
+	 * - {@link ResourceType.TWEET_UNRETWEET}
+	 * - {@link ResourceType.USER_FOLLOW}
+	 * - {@link ResourceType.USER_UNFOLLOW}
 	 */
 	id?: string;
 
@@ -23,7 +24,7 @@ export interface IPostArgs {
 	 * The tweet that is to be posted.
 	 *
 	 * @remarks
-	 * Required only when posting a tweet using {@link EResourceType.TWEET_POST}
+	 * Required only when posting a tweet using {@link ResourceType.TWEET_POST}
 	 */
 	tweet?: INewTweet;
 
@@ -32,9 +33,9 @@ export interface IPostArgs {
 	 *
 	 * @remarks
 	 * Required only when uploading a media using the following resources:
-	 * - {@link EResourceType.MEDIA_UPLOAD_APPEND}
-	 * - {@link EResourceType.MEDIA_UPLOAD_FINALIZE}
-	 * - {@link EResourceType.MEDIA_UPLOAD_INITIALIZE}
+	 * - {@link ResourceType.MEDIA_UPLOAD_APPEND}
+	 * - {@link ResourceType.MEDIA_UPLOAD_FINALIZE}
+	 * - {@link ResourceType.MEDIA_UPLOAD_INITIALIZE}
 	 */
 	upload?: IUploadArgs;
 }

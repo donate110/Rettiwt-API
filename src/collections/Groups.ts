@@ -53,6 +53,7 @@ export const PostResourcesGroup = [
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,
 	ResourceType.TWEET_POST,
 	ResourceType.TWEET_RETWEET,

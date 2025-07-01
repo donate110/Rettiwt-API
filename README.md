@@ -399,7 +399,7 @@ rettiwt.user.details('<username>')
 However, if further control over the raw response is required, Rettiwt-API provides the [`FetcherService`](https://rishikant181.github.io/Rettiwt-API/classes/FetcherService.html) class which provides direct access to the raw response, but keep in mind, this delegates the task of parsing and filtering the results to the consumer of the library. The following example demonstrates using the `FetcherService` class:
 
 ```ts
-import { RettiwtConfig, FetcherService, EResourceType, IUserDetailsResponse } from 'rettiwt-api';
+import { RettiwtConfig, FetcherService, ResourceType, IUserDetailsResponse } from 'rettiwt-api';
 
 // Creating the configuration for Rettiwt
 const config = new RettiwtConfig({ apiKey: '<API_KEY>' });
@@ -409,7 +409,7 @@ const fetcher = new FetcherService(config);
 
 // Fetching the details of the given user
 fetcher
-	.request<IUserDetailsResponse>(EResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
+	.request<IUserDetailsResponse>(ResourceType.USER_DETAILS_BY_USERNAME, { id: 'user1' })
 	.then((res) => {
 		console.log(res);
 	})
@@ -418,7 +418,7 @@ fetcher
 	});
 ```
 
-As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#EResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
+As demonstrated by the example, the raw data can be accessed by using the `request` method of the `FetcherService` class, which takes two parameters. The first parameter is the name of the requested resource, while the second is an object specifying the associated arguments required for the given resource. The complete list of resource type can be checked [here](https://rishikant181.github.io/Rettiwt-API/enums/AuthService.html#ResourceType). As for the resource specific argurments, they are the same as that of the methods of `Rettiwt` class' methods for the respective resources, but structured as an object. Notice how the `FetcherService` class takes the same arguments as the `Rettiwt` class, and the arguments have the same effects as they have in case of `Rettiwt` class.
 
 #### Notes:
 
