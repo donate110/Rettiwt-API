@@ -1,5 +1,6 @@
 import { Command, createCommand } from 'commander';
 
+import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../enums/raw/Analytics';
 import { output } from '../helper/CliUtils';
 import { Rettiwt } from '../Rettiwt';
 
@@ -23,6 +24,44 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			try {
 				const users = await rettiwt.user.affiliates(id, count ? parseInt(count) : undefined, cursor);
 				output(users);
+			} catch (error) {
+				output(error);
+			}
+		});
+
+	// Analytics
+	user.command('analytics')
+		.description('Fetch the analytics of the logged-in user (premium accounts only)')
+		.option('-f, --from-time <string>', 'The start time for fetching analytics')
+		.option('-t, --to-time <string>', 'The end time for fetching analytics')
+		.option(
+			'-g, --granularity <string>',
+			'The granularity of the analytics data. Defaults to daily. Check https://rishikant181.github.io/Rettiwt-API/enums/RawAnalyticsGranularity.html for granularity options',
+		)
+		.option(
+			'-m, --metrics <string>',
+			'Comma-separated list of metrics required. Check https://rishikant181.github.io/Rettiwt-API/enums/RawAnalyticsMetric.html for available metrics',
+		)
+		.option(
+			'-v, --verified-followers',
+			'Whether to include verified follower count and relationship counts in the response. Defaults to true',
+		)
+		.action(async (options?: UserAnalyticsOptions) => {
+			try {
+				const analytics = await rettiwt.user.analytics(
+					options?.fromTime ? new Date(options.fromTime) : undefined,
+					options?.toTime ? new Date(options.toTime) : undefined,
+					options?.granularity
+						? RawAnalyticsGranularity[options.granularity as keyof typeof RawAnalyticsGranularity]
+						: undefined,
+					options?.metrics
+						? options.metrics
+								.split(',')
+								.map((item) => RawAnalyticsMetric[item as keyof typeof RawAnalyticsMetric])
+						: undefined,
+					options?.verifiedFollowers,
+				);
+				output(analytics);
 			} catch (error) {
 				output(error);
 			}
@@ -223,5 +262,16 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 
 	return user;
 }
+
+/**
+ * The options for fetching user analytics.
+ */
+type UserAnalyticsOptions = {
+	fromTime?: string;
+	toTime?: string;
+	granularity?: string;
+	metrics?: string;
+	verifiedFollowers?: boolean;
+};
 
 export default createUserCommand;
