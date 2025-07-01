@@ -1,3 +1,4 @@
+import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Analytics';
 import { TweetRepliesSortType } from '../../enums/Tweet';
 
 /**
@@ -11,16 +12,16 @@ export interface IFetchArgs {
 	 *
 	 * @remarks
 	 * - Works only for cursored resources.
-	 * - Does not work for {@link EResourceType.TWEET_REPLIES}.
+	 * - Does not work for {@link ResourceType.TWEET_REPLIES}.
 	 * - Must be \<= 20 for:
-	 * 	- {@link EResourceType.USER_TIMELINE}
-	 * 	- {@link EResourceType.USER_TIMELINE}
-	 * 	- {@link EResourceType.USER_TIMELINE_AND_REPLIES}
+	 * 	- {@link ResourceType.USER_TIMELINE}
+	 * 	- {@link ResourceType.USER_TIMELINE}
+	 * 	- {@link ResourceType.USER_TIMELINE_AND_REPLIES}
 	 * - Must be \<= 100 for all other cursored resources.
-	 * - Due a bug on Twitter's end, count does not work for {@link EResourceType.USER_FOLLOWERS} and {@link EResourceType.USER_FOLLOWING}.
+	 * - Due a bug on Twitter's end, count does not work for {@link ResourceType.USER_FOLLOWERS} and {@link ResourceType.USER_FOLLOWING}.
 	 * - Has not effect for:
-	 * 	- {@link EResourceType.USER_FEED_FOLLOWED}
-	 * 	- {@link EResourceType.USER_FEED_RECOMMENDED}
+	 * 	- {@link ResourceType.USER_FEED_FOLLOWED}
+	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
 	 */
 	count?: number;
 
@@ -37,7 +38,7 @@ export interface IFetchArgs {
 	 * The filter for searching tweets.
 	 *
 	 * @remarks
-	 * Required when searching for tweets using {@link EResourceType.TWEET_SEARCH}.
+	 * Required when searching for tweets using {@link ResourceType.TWEET_SEARCH}.
 	 */
 	filter?: ITweetFilter;
 
@@ -45,8 +46,8 @@ export interface IFetchArgs {
 	 * The id of the target resource.
 	 *
 	 * @remarks
-	 * - Required for all resources except {@link EResourceType.TWEET_SEARCH} and {@link EResourceType.USER_TIMELINE_RECOMMENDED}.
-	 * - For {@link EResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
+	 * - Required for all resources except {@link ResourceType.TWEET_SEARCH} and {@link ResourceType.USER_TIMELINE_RECOMMENDED}.
+	 * - For {@link ResourceType.USER_DETAILS_BY_USERNAME}, can be alphanumeric, while for others, is strictly numeric.
 	 */
 	id?: string;
 
@@ -54,7 +55,7 @@ export interface IFetchArgs {
 	 * The IDs of the target resources.
 	 *
 	 * @remarks
-	 * - Required only for {@link EResourceType.TWEET_DETAILS_BULK} and {@link EResourceType.USER_DETAILS_BY_IDS_BULK}.
+	 * - Required only for {@link ResourceType.TWEET_DETAILS_BULK} and {@link ResourceType.USER_DETAILS_BY_IDS_BULK}.
 	 */
 	ids?: string[];
 
@@ -62,9 +63,49 @@ export interface IFetchArgs {
 	 * The sorting to use for tweet results.
 	 *
 	 * @remarks
-	 * - Only works for {@link EResourceType.TWEET_REPLIES}.
+	 * - Only works for {@link ResourceType.TWEET_REPLIES}.
 	 */
 	sortBy?: TweetRepliesSortType;
+
+	/**
+	 * The date to start fetching data from.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	fromTime?: Date;
+
+	/**
+	 * The date to end fetching data at.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	toTime?: Date;
+
+	/**
+	 * The granularity of the data to fetch.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	granularity?: RawAnalyticsGranularity;
+
+	/**
+	 * The metrics to fetch.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	metrics?: RawAnalyticsMetric[];
+
+	/**
+	 * Show the verified follower count and relationship counts in the response.
+	 *
+	 * @remarks
+	 * - Only works for {@link EResourceType.USER_ANALYTICS}.
+	 */
+	showVerifiedFollowers?: boolean;
 }
 
 /**
