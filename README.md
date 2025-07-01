@@ -32,6 +32,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - List Members
     - List Tweets
     - Tweet Details - Single and Bulk
+    - Tweet Bookmark
     - Tweet Like
     - Tweet Likers
     - Tweet Media Upload
@@ -42,6 +43,7 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
     - Tweet Schedule
     - Tweet Search
     - Tweet Stream
+    - Tweet Unbookmark
     - Tweet Unlike
     - Tweet Unpost
     - Tweet Unretweet
@@ -441,6 +443,7 @@ So far, the following operations are supported:
 
 ### Tweets
 
+- [Bookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#bookmark)
 - [Getting the details of a tweet/multiple tweets](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#details)
 - [Liking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#like)
 - [Getting the list of users who liked your tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#likers)
@@ -451,6 +454,7 @@ So far, the following operations are supported:
 - [Scheduling a new tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#schedule)
 - [Searching for the list of tweets that match a given filter](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#search)
 - [Streaming filtered tweets in pseudo-realtime](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#stream)
+- [Unbookmarking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unbookmark)
 - [Unliking a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unlike)
 - [Unposting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unpost)
 - [Unretweeting a tweet](https://rishikant181.github.io/Rettiwt-API/classes/TweetService.html#unretweet)
