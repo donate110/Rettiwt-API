@@ -7,6 +7,31 @@ import { TweetRepliesSortType } from '../../enums/Tweet';
  * @public
  */
 export interface IFetchArgs {
+
+	/**
+	 * The id of the active conversation.
+	 * 
+	 * @remarks
+	 * - Required only for {@link ResourceType.DM_USER_UPDATES}.
+	 */
+	activeConversationId?: string;
+
+	/**
+	 * The maximum id of the data to fetch.
+	 *
+	 * @remarks
+	 * - May be used for {@link ResourceType.DM_INBOX_TIMELINE} and {@link ResourceType.DM_CONVERSATION}.
+	 */
+	maxId?: string;
+
+	/**
+	 * The id of the conversation to fetch.
+	 *
+	 * @remarks
+	 * - Required only for {@link ResourceType.DM_CONVERSATION}.
+	 */
+	conversationId?: string;
+
 	/**
 	 * The number of data items to fetch.
 	 *
@@ -24,6 +49,8 @@ export interface IFetchArgs {
 	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
 	 */
 	count?: number;
+
+	
 
 	/**
 	 * The cursor to the batch of data to fetch.
