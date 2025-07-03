@@ -210,7 +210,7 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
  */
 rettiwt.tweet.search({
 	fromUsers: ['<username>'],
-	words: ['<word1>', '<word2>']
+	includeWords: ['<word1>', '<word2>']
 })
 .then(data => {
 	...
@@ -243,7 +243,7 @@ const rettiwt = new Rettiwt({ apiKey: API_KEY });
  */
 rettiwt.tweet.search({
 	fromUsers: ['<username>'],
-	words: ['<word1>', '<word2>']
+	includeWords: ['<word1>', '<word2>']
 }, count, data.next.value)
 .then(data => {
 	...
