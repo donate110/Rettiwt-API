@@ -1,9 +1,14 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
 import { CursoredData } from '../models/data/CursoredData';
+import { DirectMessage } from '../models/data/DirectMessage';
 import { Notification } from '../models/data/Notification';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
+import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
+import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
+import { IUserUpdatesResponse } from '../types/raw/dm/UserUpdates';
 import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
@@ -59,6 +64,15 @@ export const Extractors = {
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
+
+	DM_CONVERSATION: (response: IConversationTimelineResponse): CursoredData<DirectMessage> =>
+		new CursoredData<DirectMessage>(response, BaseType.DIRECT_MESSAGE),
+	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): CursoredData<DirectMessage> =>
+		new CursoredData<DirectMessage>(response, BaseType.DIRECT_MESSAGE),
+	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): CursoredData<DirectMessage> =>
+		new CursoredData<DirectMessage>(response, BaseType.DIRECT_MESSAGE),
+	DM_USER_UPDATES: (response: IUserUpdatesResponse): CursoredData<DirectMessage> =>
+		new CursoredData<DirectMessage>(response, BaseType.DIRECT_MESSAGE),
 
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),

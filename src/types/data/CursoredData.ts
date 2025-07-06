@@ -1,3 +1,5 @@
+import { IConversation } from './Conversation';
+import { IDirectMessage } from './DirectMessage';
 import { INotification } from './Notification';
 import { ITweet } from './Tweet';
 import { IUser } from './User';
@@ -9,7 +11,7 @@ import { IUser } from './User';
  *
  * @public
  */
-export interface ICursoredData<T extends INotification | ITweet | IUser> {
+export interface ICursoredData<T extends IDirectMessage | IConversation | INotification | ITweet | IUser> {
 	/** The batch of data of the given type. */
 	list: T[];
 
