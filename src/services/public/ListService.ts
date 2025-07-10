@@ -4,7 +4,9 @@ import { CursoredData } from '../../models/data/CursoredData';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
+import { IListMemberAddResponse } from '../../types/raw/list/AddMember';
 import { IListMembersResponse } from '../../types/raw/list/Members';
+import { IListMemberRemoveResponse } from '../../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../../types/raw/list/Tweets';
 
 import { FetcherService } from './FetcherService';
@@ -17,6 +19,47 @@ export class ListService extends FetcherService {
 	 */
 	public constructor(config: RettiwtConfig) {
 		super(config);
+	}
+
+	/**
+	 * Add a user as a member of a list.
+	 *
+	 * @param listId - The ID of the target list.
+	 * @param userId - The ID of the target user to be added as a member.
+	 *
+	 * @returns The new member count of the list. If adding was unsuccessful, return `undefined`.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Adding a user with ID '123456789' as a member to the list with ID '987654321'
+	 * rettiwt.list.addMember('987654321', '123456789')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async addMember(listId: string, userId: string): Promise<number | undefined> {
+		const resource: ResourceType = ResourceType.LIST_MEMBER_ADD;
+
+		// Adding the user as a member
+		const response = await this.request<IListMemberAddResponse>(resource, {
+			id: listId,
+			userId: userId,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
 	}
 
 	/**
@@ -56,6 +99,47 @@ export class ListService extends FetcherService {
 			id: id,
 			count: count,
 			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Remove a member from a list.
+	 *
+	 * @param listId - The ID of the target list.
+	 * @param userId - The ID of the target user to removed from the members.
+	 *
+	 * @returns The new member count of the list. If removal was unsuccessful, return `undefined`.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Removing a user with ID '123456789' from the member of the list with ID '987654321'
+	 * rettiwt.list.removeMember('987654321', '123456789')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async removeMember(listId: string, userId: string): Promise<number | undefined> {
+		const resource: ResourceType = ResourceType.LIST_MEMBER_REMOVE;
+
+		// Removing the member
+		const response = await this.request<IListMemberRemoveResponse>(resource, {
+			id: listId,
+			userId: userId,
 		});
 
 		// Deserializing response

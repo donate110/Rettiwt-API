@@ -19,6 +19,8 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	/* eslint-disable @typescript-eslint/naming-convention */
 
 	LIST_MEMBERS: (args: IFetchArgs) => ListRequests.members(args.id!, args.count, args.cursor),
+	LIST_MEMBER_ADD: (args: IPostArgs) => ListRequests.addMember(args.id!, args.userId!),
+	LIST_MEMBER_REMOVE: (args: IPostArgs) => ListRequests.removeMember(args.id!, args.userId!),
 	LIST_TWEETS: (args: IFetchArgs) => ListRequests.tweets(args.id!, args.count, args.cursor),
 
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
