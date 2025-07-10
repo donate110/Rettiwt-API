@@ -4,7 +4,9 @@ import { CursoredData } from '../models/data/CursoredData';
 import { Notification } from '../models/data/Notification';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+import { IListMemberAddResponse } from '../types/raw/list/AddMember';
 import { IListMembersResponse } from '../types/raw/list/Members';
+import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../types/raw/list/Tweets';
 import { IMediaInitializeUploadResponse } from '../types/raw/media/InitalizeUpload';
 import { ITweetBookmarkResponse } from '../types/raw/tweet/Bookmark';
@@ -52,6 +54,10 @@ export const Extractors = {
 
 	LIST_MEMBERS: (response: IListMembersResponse): CursoredData<User> =>
 		new CursoredData<User>(response, BaseType.USER),
+	LIST_MEMBER_ADD: (response: IListMemberAddResponse): number | undefined =>
+		response.data?.list?.member_count ?? undefined,
+	LIST_MEMBER_REMOVE: (response: IListMemberRemoveResponse): number | undefined =>
+		response.data?.list?.member_count ?? undefined,
 	LIST_TWEETS: (response: IListTweetsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 
