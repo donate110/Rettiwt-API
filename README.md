@@ -29,7 +29,9 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
+    - List Add Member
     - List Members
+    - List Remove Member
     - List Tweets
     - Tweet Details - Single and Bulk
     - Tweet Bookmark
@@ -439,7 +441,9 @@ So far, the following operations are supported:
 
 ### List
 
+- [Adding a member to a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#addMember)
 - [Getting the members of a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#members)
+- [Removing a member from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#removeMember)
 - [Getting the list of tweets from a given Twitter list](https://rishikant181.github.io/Rettiwt-API/classes/ListService.html#tweets)
 
 ### Tweets
