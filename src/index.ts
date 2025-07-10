@@ -61,6 +61,8 @@ export { IDataResult as IRawDataResult } from './types/raw/composite/DataResult'
 export { ITimelineTweet as IRawTimelineTweet } from './types/raw/composite/TimelineTweet';
 export { ITimelineUser as IRawTimelineUser } from './types/raw/composite/TimelineUser';
 export { IResponse as IRawResponse } from './types/raw/generic/Response';
+export { IListMemberAddResponse as IRawListMemberAddResponse } from './types/raw/list/AddMember';
+export { IListMemberRemoveResponse as IRawListMemberRemoveResponse } from './types/raw/list/RemoveMember';
 export { IListDetailsResponse as IRawListDetailsResponse } from './types/raw/list/Details';
 export { IListMembersResponse as IRawListMembersResponse } from './types/raw/list/Members';
 export { IListTweetsResponse as IRawListTweetsResponse } from './types/raw/list/Tweets';
