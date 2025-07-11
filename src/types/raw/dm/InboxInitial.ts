@@ -105,7 +105,7 @@ export interface Conversations {
 	[conversationId: string]: Conversation;
 }
 
-interface Conversation {
+export interface Conversation {
 	conversation_id: string;
 	type: 'GROUP_DM' | 'ONE_TO_ONE';
 	sort_event_id: string;
@@ -148,7 +148,7 @@ interface Participant {
 	is_admin?: boolean; // Only for GROUP_DM
 }
 
-interface SocialProof {
+export interface SocialProof {
 	proof_type: string; // e.g., "mutual_friends"
 	users: any[]; // Array of users (structure depends on proof_type)
 	total: number;

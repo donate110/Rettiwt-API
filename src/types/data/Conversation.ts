@@ -1,3 +1,5 @@
+import { IDirectMessage } from './DirectMessage';
+
 /**
  * The details of a single conversation.
  *
@@ -36,4 +38,7 @@ export interface IConversation {
 
 	/** Whether there are more messages to load. */
 	hasMore: boolean;
+
+	/** Array of messages in this conversation. */
+	messages: IDirectMessage[];
 }

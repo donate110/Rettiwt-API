@@ -19,6 +19,9 @@ export const AllowGuestAuthenticationGroup = [
 export const FetchResourcesGroup = [
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
+	ResourceType.DM_CONVERSATION,
+	ResourceType.DM_INBOX_INITIAL_STATE,
+	ResourceType.DM_INBOX_TIMELINE,
 	ResourceType.TWEET_DETAILS,
 	ResourceType.TWEET_DETAILS_ALT,
 	ResourceType.TWEET_DETAILS_BULK,
@@ -54,6 +57,7 @@ export const PostResourcesGroup = [
 	ResourceType.MEDIA_UPLOAD_APPEND,
 	ResourceType.MEDIA_UPLOAD_FINALIZE,
 	ResourceType.MEDIA_UPLOAD_INITIALIZE,
+	ResourceType.DM_DELETE_CONVERSATION,
 	ResourceType.TWEET_BOOKMARK,
 	ResourceType.TWEET_LIKE,
 	ResourceType.TWEET_POST,

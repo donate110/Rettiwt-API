@@ -7,10 +7,9 @@ import { TweetRepliesSortType } from '../../enums/Tweet';
  * @public
  */
 export interface IFetchArgs {
-
 	/**
 	 * The id of the active conversation.
-	 * 
+	 *
 	 * @remarks
 	 * - Required only for {@link ResourceType.DM_USER_UPDATES}.
 	 */
@@ -28,7 +27,7 @@ export interface IFetchArgs {
 	 * The id of the conversation to fetch.
 	 *
 	 * @remarks
-	 * - Required only for {@link ResourceType.DM_CONVERSATION}.
+	 * - Required only for {@link ResourceType.DM_CONVERSATION} and {@link ResourceType.DM_DELETE_CONVERSATION}.
 	 */
 	conversationId?: string;
 
@@ -49,8 +48,6 @@ export interface IFetchArgs {
 	 * 	- {@link ResourceType.USER_FEED_RECOMMENDED}
 	 */
 	count?: number;
-
-	
 
 	/**
 	 * The cursor to the batch of data to fetch.
