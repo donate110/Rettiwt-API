@@ -41,6 +41,16 @@ export interface IPostArgs {
 	upload?: IUploadArgs;
 
 	/**
+	 * The id of the target user.
+	 *
+	 * @remarks
+	 * Required only for the following resources:
+	 * - {@link ResourceType.LIST_MEMBER_ADD}
+	 * - {@link ResourceType.LIST_MEMBER_REMOVE}
+	 */
+	userId?: string;
+
+	/**
 	 * The id of the conversation to delete.
 	 * 
 	 * @remarks
