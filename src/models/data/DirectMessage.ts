@@ -31,19 +31,6 @@ function isInboxTimelineResponse(
 }
 
 /**
- * Interface for parsed message data from various response types
- */
-interface IParsedMessageData {
-	id: string;
-	conversationId: string;
-	senderId: string;
-	recipientId?: string;
-	text: string;
-	time: string;
-	editCount?: number;
-}
-
-/**
  * Base interface for raw message data structure
  */
 interface IRawMessageBase {
@@ -102,7 +89,7 @@ export class DirectMessage implements IDirectMessage {
 		this.senderId = parsedData.senderId;
 		this.recipientId = parsedData.recipientId;
 		this.text = parsedData.text;
-		this.createdAt = this._parseTimestamp(parsedData.time);
+		this.createdAt = parsedData.createdAt;
 		this.editCount = parsedData.editCount ?? 0;
 		this.mediaUrls = this._extractMediaUrls(message);
 		this.read = true; // Default to true, can be enhanced later
@@ -233,29 +220,16 @@ export class DirectMessage implements IDirectMessage {
 	/**
 	 * Parse message data with proper type safety
 	 */
-	private _parseMessageData(message: unknown): IParsedMessageData {
+	private _parseMessageData(message: unknown): IDirectMessage {
 		const msg = message as Record<string, unknown>;
 		const messageData = msg.message_data as Record<string, unknown> | undefined;
 
-		// Extract ID
 		const id = this._extractStringValue(messageData?.id, msg.id) ?? '';
-
-		// Extract conversation ID
 		const conversationId = this._extractStringValue(msg.conversation_id, messageData?.conversation_id) ?? '';
-
-		// Extract sender ID
 		const senderId = this._extractStringValue(messageData?.sender_id, msg.sender_id) ?? '';
-
-		// Extract recipient ID (optional)
 		const recipientId = this._extractStringValue(messageData?.recipient_id, msg.recipient_id);
-
-		// Extract text
 		const text = this._extractStringValue(messageData?.text, msg.text) ?? '';
-
-		// Extract time
-		const time = this._extractStringValue(msg.time, messageData?.time) ?? new Date().getTime().toString();
-
-		// Extract edit count
+		const createdAt = this._parseTimestamp(this._extractStringValue(messageData?.time, msg.time) ?? '');
 		const editCount = this._extractNumberValue(messageData?.edit_count);
 
 		return {
@@ -263,8 +237,8 @@ export class DirectMessage implements IDirectMessage {
 			conversationId,
 			senderId,
 			recipientId,
+			createdAt,
 			text,
-			time,
 			editCount,
 		};
 	}
