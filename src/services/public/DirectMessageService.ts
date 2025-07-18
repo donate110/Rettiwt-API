@@ -72,15 +72,15 @@ export class DirectMessageService extends FetcherService {
 	/**
 	 * Delete a conversation.
 	 * You will leave the conversation and it will be removed from your inbox.
-	 * 
+	 *
 	 * @param conversationId - The ID of the conversation to delete.
-	 * 
+	 *
 	 * @returns A promise that resolves when the conversation is deleted.
-	 * 
+	 *
 	 * @example
 	 * ```ts
 	 * import { Rettiwt } from 'rettiwt-api';
-	 * 
+	 *
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 * // Deleting a conversation

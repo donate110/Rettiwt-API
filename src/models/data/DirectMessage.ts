@@ -1,5 +1,5 @@
 import { IDirectMessage } from '../../types/data/DirectMessage';
-import { IConversationTimelineResponse} from '../../types/raw/dm/Conversation';
+import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
 import { IRawMessageBase } from '../../types/raw/dm/Message';

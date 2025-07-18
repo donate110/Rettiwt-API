@@ -12,11 +12,11 @@ type UnifiedMessageData = InboxMessageData & Partial<ConversationMessageData> & 
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export interface IRawMessageBase {
-  id: string;
-  time: string;
-  affects_sort?: boolean;
-  request_id: string;
-  conversation_id: string;
-  message_data: UnifiedMessageData;
+	id: string;
+	time: string;
+	affects_sort?: boolean;
+	request_id: string;
+	conversation_id: string;
+	message_data: UnifiedMessageData;
 }
 /* eslint-enable @typescript-eslint/naming-convention */
