@@ -29,6 +29,9 @@ Rettiwt-API can be used with or without logging in to Twitter. As such, the two 
 
 - 'User' authentication (logging in) grants access to the following resources/actions:
 
+    - Direct Message Inbox
+    - Direct Message Conversations
+    - Direct Message Delete Conversation
     - List Add Member
     - List Members
     - List Remove Member
@@ -129,8 +132,9 @@ A new Rettiwt instance can be initialized using the following code snippets:
 - `const rettiwt = new Rettiwt()` (for 'guest' authentication)
 - `const rettiwt = new Rettiwt({ apiKey: API_KEY })` (for 'user' authentication)
 
-The Rettiwt class has three members:
+The Rettiwt class has four members:
 
+- `dm` member, for accessing resources related to direct messages.
 - `list` memeber, for accessing resources related to lists.
 - `tweet` member, for accessing resources related to tweets.
 - `user` member, for accessing resources related to users.
@@ -438,6 +442,13 @@ For handling and processing of data returned by the functions, it's always advis
 ## Features
 
 So far, the following operations are supported:
+
+### Direct Messages
+
+- [Getting the initial DM inbox state](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inbox)
+- [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
+- [Getting more conversations from inbox timeline (pagination)](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inboxTimeline)
+- [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
 ### List
 
