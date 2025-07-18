@@ -1,7 +1,8 @@
 import { IDirectMessage } from '../../types/data/DirectMessage';
-import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
+import { IConversationTimelineResponse} from '../../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
+import { IRawMessageBase } from '../../types/raw/dm/Message';
 
 /**
  * Type guard to check if the response is an IInboxInitialResponse
@@ -28,33 +29,6 @@ function isInboxTimelineResponse(
 	response: IInboxInitialResponse | IConversationTimelineResponse | IInboxTimelineResponse,
 ): response is IInboxTimelineResponse {
 	return 'inbox_timeline' in response;
-}
-
-/**
- * Base interface for raw message data structure
- */
-interface IRawMessageBase {
-	id: string;
-	time: string;
-	/* eslint-disable @typescript-eslint/naming-convention */
-	conversation_id: string;
-	message_data?: {
-		id: string;
-		time: string;
-		sender_id: string;
-		recipient_id?: string;
-		text: string;
-		edit_count?: number;
-		attachment?: unknown;
-		entities?: unknown;
-	};
-	// Additional properties that may exist in different message types
-	affects_sort?: boolean;
-	request_id?: string;
-	sender_id?: string;
-	recipient_id?: string;
-	/* eslint-enable @typescript-eslint/naming-convention */
-	text?: string;
 }
 
 /**

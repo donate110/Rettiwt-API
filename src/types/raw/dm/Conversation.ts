@@ -22,7 +22,7 @@ interface ConversationTimeline {
 
 type ConversationEntry = { message: ConversationMessage } | { trust_conversation: TrustConversation };
 
-interface ConversationMessage {
+export interface ConversationMessage {
 	id: string;
 	time: string;
 	request_id: string;

@@ -35,7 +35,7 @@ interface Entry {
 	message: Message;
 }
 
-interface Message {
+export interface Message {
 	id: string;
 	time: string;
 	affects_sort: boolean;

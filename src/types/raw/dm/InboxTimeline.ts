@@ -33,7 +33,7 @@ interface TrustConversation {
 	reason: string; // e.g., "accept"
 }
 
-interface TimelineMessage {
+export interface TimelineMessage {
 	id: string;
 	time: string;
 	affects_sort: boolean;
