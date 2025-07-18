@@ -42,7 +42,7 @@ export class DirectMessageService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Fetching a specific conversation
-	 * rettiwt.directMessage.conversation('394028042-1712730991884689408')
+	 * rettiwt.dm.conversation('394028042-1712730991884689408')
 	 * .then(conversation => {
 	 * 	if (conversation) {
 	 * 		console.log(`Conversation with ${conversation.participants.length} participants`);
@@ -84,7 +84,7 @@ export class DirectMessageService extends FetcherService {
 	 * // Creating a new Rettiwt instance using the given 'API_KEY'
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 * // Deleting a conversation
-	 * rettiwt.directMessage.deleteConversation('394028042-1712730991884689408')
+	 * rettiwt.dm.deleteConversation('394028042-1712730991884689408')
 	 * .then(() => {
 	 * 	console.log('Conversation deleted successfully');
 	 * })
@@ -117,7 +117,7 @@ export class DirectMessageService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Fetching the initial DM inbox state
-	 * rettiwt.directMessage.inbox()
+	 * rettiwt.dm.inbox()
 	 * .then(inbox => {
 	 * 	console.log(`Found ${inbox.conversations.length} conversations`);
 	 * 	console.log('First conversation:', inbox.conversations[0]);
@@ -156,7 +156,7 @@ export class DirectMessageService extends FetcherService {
 	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
 	 *
 	 * // Fetching older conversations using pagination
-	 * rettiwt.directMessage.inboxTimeline('1803853649426133349')
+	 * rettiwt.dm.inboxTimeline('1803853649426133349')
 	 * .then(inbox => {
 	 * 	console.log(`Found ${inbox.conversations.length} additional conversations`);
 	 * })
