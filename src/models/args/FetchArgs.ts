@@ -8,6 +8,8 @@ import type { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/ra
  * @public
  */
 export class FetchArgs implements IFetchArgs {
+	public activeConversationId?: string;
+	public conversationId?: string;
 	public count?: number;
 	public cursor?: string;
 	public filter?: TweetFilter;
@@ -15,6 +17,7 @@ export class FetchArgs implements IFetchArgs {
 	public granularity?: RawAnalyticsGranularity;
 	public id?: string;
 	public ids?: string[];
+	public maxId?: string;
 	public metrics?: RawAnalyticsMetric[];
 	public showVerifiedFollowers?: boolean;
 	public sortBy?: TweetRepliesSortType;
@@ -35,6 +38,9 @@ export class FetchArgs implements IFetchArgs {
 		this.granularity = args.granularity;
 		this.metrics = args.metrics;
 		this.showVerifiedFollowers = args.showVerifiedFollowers;
+		this.activeConversationId = args.activeConversationId;
+		this.conversationId = args.conversationId;
+		this.maxId = args.maxId;
 	}
 }
 

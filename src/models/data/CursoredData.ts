@@ -16,7 +16,9 @@ import { User } from './User';
  *
  * @public
  */
-export class CursoredData<T extends Notification | Tweet | User> implements ICursoredData<T> {
+export class CursoredData<T extends Notification | Tweet | User>
+	implements ICursoredData<T>
+{
 	public list: T[];
 	public next: string;
 

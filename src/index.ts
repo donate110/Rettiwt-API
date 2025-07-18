@@ -18,7 +18,10 @@ export * from './enums/Tweet';
 // MODELS
 export * from './models/args/FetchArgs';
 export * from './models/args/PostArgs';
+export * from './models/data/Conversation';
 export * from './models/data/CursoredData';
+export * from './models/data/DirectMessage';
+export * from './models/data/Inbox';
 export * from './models/data/List';
 export * from './models/data/Notification';
 export * from './models/data/Tweet';
@@ -26,12 +29,14 @@ export * from './models/data/User';
 export * from './models/errors/TwitterError';
 
 // REQUESTS
+export * from './requests/DirectMessage';
 export * from './requests/List';
 export * from './requests/Media';
 export * from './requests/Tweet';
 export * from './requests/User';
 
 // SERVICES
+export * from './services/public/DirectMessageService';
 export * from './services/public/FetcherService';
 export * from './services/public/ListService';
 export * from './services/public/TweetService';
@@ -40,7 +45,10 @@ export * from './services/public/UserService';
 // TYPES
 export * from './types/args/FetchArgs';
 export * from './types/args/PostArgs';
+export * from './types/data/Conversation';
 export * from './types/data/CursoredData';
+export * from './types/data/DirectMessage';
+export * from './types/data/Inbox';
 export * from './types/data/List';
 export * from './types/data/Notification';
 export * from './types/data/Tweet';
@@ -104,3 +112,7 @@ export { IUserTweetsAndRepliesResponse as IRawUserTweetsAndRepliesResponse } fro
 export { IUserUnfollowResponse as IRawUserUnfollowResponse } from './types/raw/user/Unfollow';
 export * from './types/ErrorHandler';
 export * from './types/RettiwtConfig';
+export { IConversationTimelineResponse as IRawConversationTimelineResponse } from './types/raw/dm/Conversation';
+export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
+export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
+export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';

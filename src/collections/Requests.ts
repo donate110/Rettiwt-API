@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 
 import { ResourceType } from '../enums/Resource';
+import { DMRequests } from '../requests/DirectMessage';
 import { ListRequests } from '../requests/List';
 import { MediaRequests } from '../requests/Media';
 import { TweetRequests } from '../requests/Tweet';
@@ -26,6 +27,11 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	MEDIA_UPLOAD_APPEND: (args: IPostArgs) => MediaRequests.appendUpload(args.upload!.id!, args.upload!.media!),
 	MEDIA_UPLOAD_FINALIZE: (args: IPostArgs) => MediaRequests.finalizeUpload(args.upload!.id!),
 	MEDIA_UPLOAD_INITIALIZE: (args: IPostArgs) => MediaRequests.initializeUpload(args.upload!.size!),
+
+	DM_CONVERSATION: (args: IFetchArgs) => DMRequests.conversation(args.conversationId!, args.maxId),
+	DM_INBOX_INITIAL_STATE: () => DMRequests.inboxInitial(),
+	DM_INBOX_TIMELINE: (args: IFetchArgs) => DMRequests.inboxTimeline(args.maxId),
+	DM_DELETE_CONVERSATION: (args: IPostArgs) => DMRequests.deleteConversation(args.conversationId!),
 
 	TWEET_BOOKMARK: (args: IPostArgs) => TweetRequests.bookmark(args.id!),
 	TWEET_DETAILS: (args: IFetchArgs) => TweetRequests.details(args.id!),

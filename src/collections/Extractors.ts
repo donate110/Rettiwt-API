@@ -1,9 +1,14 @@
 import { BaseType } from '../enums/Data';
 import { Analytics } from '../models/data/Analytics';
+import { Conversation } from '../models/data/Conversation';
 import { CursoredData } from '../models/data/CursoredData';
+import { Inbox } from '../models/data/Inbox';
 import { Notification } from '../models/data/Notification';
 import { Tweet } from '../models/data/Tweet';
 import { User } from '../models/data/User';
+import { IConversationTimelineResponse } from '../types/raw/dm/Conversation';
+import { IInboxInitialResponse } from '../types/raw/dm/InboxInitial';
+import { IInboxTimelineResponse } from '../types/raw/dm/InboxTimeline';
 import { IListMemberAddResponse } from '../types/raw/list/AddMember';
 import { IListMembersResponse } from '../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../types/raw/list/RemoveMember';
@@ -65,6 +70,11 @@ export const Extractors = {
 	MEDIA_UPLOAD_FINALIZE: (): void => undefined,
 	MEDIA_UPLOAD_INITIALIZE: (response: IMediaInitializeUploadResponse): string =>
 		response.media_id_string ?? undefined,
+
+	DM_CONVERSATION: (response: IConversationTimelineResponse): Conversation | undefined =>
+		Conversation.fromConversationTimeline(response),
+	DM_INBOX_INITIAL_STATE: (response: IInboxInitialResponse): Inbox => new Inbox(response),
+	DM_INBOX_TIMELINE: (response: IInboxTimelineResponse): Inbox => new Inbox(response),
 
 	TWEET_BOOKMARK: (response: ITweetBookmarkResponse): boolean => response?.data?.tweet_bookmark_put === 'Done',
 	TWEET_DETAILS: (response: ITweetDetailsResponse, id: string): Tweet | undefined => Tweet.single(response, id),

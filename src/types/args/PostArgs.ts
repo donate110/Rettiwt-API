@@ -49,6 +49,14 @@ export interface IPostArgs {
 	 * - {@link ResourceType.LIST_MEMBER_REMOVE}
 	 */
 	userId?: string;
+
+	/**
+	 * The id of the conversation to delete.
+	 * 
+	 * @remarks
+	 * Required only when deleting a conversation using {@link ResourceType.DM_DELETE_CONVERSATION}
+	 */
+	conversationId?: string;
 }
 
 /**
