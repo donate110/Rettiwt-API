@@ -5,6 +5,7 @@
 ## ❓ Type of Change
 
 <!-- Select all that apply -->
+
 - [ ] 📖 Documentation (docs, README, or comments)
 - [ ] 🐞 Bug fix (non-breaking fix for an issue)
 - [ ] 👌 Enhancement (improvement to existing functionality)
