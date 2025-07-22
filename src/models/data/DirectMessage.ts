@@ -1,8 +1,8 @@
 import { IDirectMessage } from '../../types/data/DirectMessage';
+import { IMessage as IRawMessage } from '../../types/raw/base/Message';
 import { IConversationTimelineResponse } from '../../types/raw/dm/Conversation';
 import { IInboxInitialResponse } from '../../types/raw/dm/InboxInitial';
 import { IInboxTimelineResponse } from '../../types/raw/dm/InboxTimeline';
-import { IRawMessageBase } from '../../types/raw/dm/Message';
 
 /**
  * Type guard to check if the response is an IInboxInitialResponse
@@ -38,7 +38,7 @@ function isInboxTimelineResponse(
  */
 export class DirectMessage implements IDirectMessage {
 	/** The raw message details. */
-	private readonly _raw: IRawMessageBase;
+	private readonly _raw: IRawMessage;
 
 	public conversationId: string;
 	public createdAt: string;
@@ -54,7 +54,7 @@ export class DirectMessage implements IDirectMessage {
 	 * @param message - The raw message details from the API response.
 	 */
 	public constructor(message: unknown) {
-		this._raw = message as IRawMessageBase;
+		this._raw = message as IRawMessage;
 
 		const parsedData = this._parseMessageData(message);
 
@@ -70,7 +70,7 @@ export class DirectMessage implements IDirectMessage {
 	}
 
 	/** The raw message details. */
-	public get raw(): IRawMessageBase {
+	public get raw(): IRawMessage {
 		return this._raw;
 	}
 
