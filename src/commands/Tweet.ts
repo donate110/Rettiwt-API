@@ -14,7 +14,7 @@ import { ITweetFilter } from '../types/args/FetchArgs';
  */
 function createTweetCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'tweet' command
-	const tweet = createCommand('tweet').description('Access resources releated to tweets');
+	const tweet = createCommand('tweet').description('Access resources related to tweets');
 
 	// Bookmark
 	tweet

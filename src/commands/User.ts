@@ -12,7 +12,7 @@ import { Rettiwt } from '../Rettiwt';
  */
 function createUserCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'user' command
-	const user = createCommand('user').description('Access resources releated to users');
+	const user = createCommand('user').description('Access resources related to users');
 
 	// Affiliates
 	user.command('affiliates')

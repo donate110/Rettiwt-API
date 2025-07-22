@@ -11,7 +11,7 @@ import { Rettiwt } from '../Rettiwt';
  */
 function createListCommand(rettiwt: Rettiwt): Command {
 	// Creating the 'list' command
-	const list = createCommand('list').description('Access resources releated to lists');
+	const list = createCommand('list').description('Access resources related to lists');
 
 	// Add member
 	list.command('add-member')
