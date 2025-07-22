@@ -356,6 +356,10 @@ export class TweetService extends FetcherService {
 	/**
 	 * Get the list of replies to a tweet.
 	 *
+	 * If the target tweet is a thread,
+	 * the first batch always contains all the tweets in the thread,
+	 * if `sortBy` is set to {@link TweetRepliesSortType.RELEVANCE}.
+	 *
 	 * @param id - The ID of the target tweet.
 	 * @param cursor - The cursor to the batch of replies to fetch.
 	 * @param sortBy - The sorting order of the replies to fetch. Default is {@link TweetRepliesSortType.RECENT}.

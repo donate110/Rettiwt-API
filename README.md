@@ -445,9 +445,8 @@ So far, the following operations are supported:
 
 ### Direct Messages
 
-- [Getting the initial DM inbox state](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inbox)
+- [Getting the DM inbox](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inbox)
 - [Getting a specific conversation with full message history](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#conversation)
-- [Getting more conversations from inbox timeline (pagination)](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#inboxTimeline)
 - [Deleting a conversation](https://rishikant181.github.io/Rettiwt-API/classes/DirectMessageService.html#deleteConversation)
 
 ### List

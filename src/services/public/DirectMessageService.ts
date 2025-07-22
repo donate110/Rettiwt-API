@@ -29,7 +29,7 @@ export class DirectMessageService extends FetcherService {
 	 * Use this to load complete message history for a conversation identified from the inbox.
 	 *
 	 * @param conversationId - The ID of the conversation (e.g., "394028042-1712730991884689408").
-	 * @param cursor - The cursor for pagination (maxId from previous response).
+	 * @param cursor - The cursor for pagination.
 	 *
 	 * @returns The conversation with full message history, or undefined if not found.
 	 *
