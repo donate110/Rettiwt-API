@@ -42,23 +42,14 @@ function createDirectMessageCommand(rettiwt: Rettiwt): Command {
 
 	// Inbox
 	dm.command('inbox')
-		.description('Get the initial state of the DM inbox, including recent conversations and messages')
-		.action(async () => {
-			try {
-				const inbox = await rettiwt.dm.inbox();
-				output(inbox);
-			} catch (error) {
-				output(error);
-			}
-		});
-
-	// Inbox timeline
-	dm.command('inbox-timeline')
-		.description('Get more conversations from the inbox timeline (for pagination)')
-		.argument('[cursor]', 'The cursor to the batch of conversations to fetch (maxId from previous response)')
+		.description('Get your DM inbox')
+		.argument(
+			'[cursor]',
+			'The cursor to the batch of conversations to fetch. If not provided, initial inbox is fetched',
+		)
 		.action(async (cursor?: string) => {
 			try {
-				const inbox = await rettiwt.dm.inboxTimeline(cursor);
+				const inbox = await rettiwt.dm.inbox(cursor);
 				output(inbox);
 			} catch (error) {
 				output(error);
