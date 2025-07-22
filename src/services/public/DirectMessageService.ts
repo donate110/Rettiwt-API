@@ -103,10 +103,11 @@ export class DirectMessageService extends FetcherService {
 	}
 
 	/**
-	 * Get the initial state of the DM inbox, including recent conversations and messages.
-	 * This is the main entry point for the DM system following the "Inbox as Entry Point" pattern.
+	 * Get your inbox.
 	 *
-	 * @returns The initial DM inbox state with conversations containing preview messages.
+	 * @param cursor - The cursor to the inbox items to fetch. If not provided, intial inbox with most recent conversations is fetched.
+	 *
+	 * @returns The required inbox. Returns initial inbox if no cursor is provided.
 	 *
 	 * @example
 	 *
@@ -127,55 +128,32 @@ export class DirectMessageService extends FetcherService {
 	 * });
 	 * ```
 	 */
-	public async inbox(): Promise<Inbox> {
-		const resource = ResourceType.DM_INBOX_INITIAL_STATE;
+	public async inbox(cursor?: string): Promise<Inbox> {
+		// If cursor is provided, fetch initial inbox
+		if (cursor !== undefined) {
+			const resource = ResourceType.DM_INBOX_TIMELINE;
 
-		// Fetching raw inbox initial state
-		const response = await this.request<IInboxInitialResponse>(resource, {});
+			// Fetching raw inbox timeline
+			const response = await this.request<IInboxTimelineResponse>(resource, {
+				maxId: cursor,
+			});
 
-		// Deserializing response
-		const data = Extractors[resource](response);
+			// Deserializing response
+			const data = Extractors[resource](response);
 
-		return data;
-	}
+			return data;
+		}
+		// Else, fetch next inbox data
+		else {
+			const resource = ResourceType.DM_INBOX_INITIAL_STATE;
 
-	/**
-	 * Get more conversations from the inbox timeline (for pagination).
-	 * Use this to load older conversations beyond what's included in the initial inbox state.
-	 *
-	 * @param cursor - The cursor to the batch of conversations to fetch (maxId from previous response).
-	 *
-	 * @returns The inbox timeline with older conversations.
-	 *
-	 * @example
-	 *
-	 * ```ts
-	 * import { Rettiwt } from 'rettiwt-api';
-	 *
-	 * // Creating a new Rettiwt instance using the given 'API_KEY'
-	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
-	 *
-	 * // Fetching older conversations using pagination
-	 * rettiwt.dm.inboxTimeline('1803853649426133349')
-	 * .then(inbox => {
-	 * 	console.log(`Found ${inbox.conversations.length} additional conversations`);
-	 * })
-	 * .catch(err => {
-	 * 	console.log(err);
-	 * });
-	 * ```
-	 */
-	public async inboxTimeline(cursor?: string): Promise<Inbox> {
-		const resource = ResourceType.DM_INBOX_TIMELINE;
+			// Fetching raw inbox initial state
+			const response = await this.request<IInboxInitialResponse>(resource, {});
 
-		// Fetching raw inbox timeline
-		const response = await this.request<IInboxTimelineResponse>(resource, {
-			maxId: cursor,
-		});
+			// Deserializing response
+			const data = Extractors[resource](response);
 
-		// Deserializing response
-		const data = Extractors[resource](response);
-
-		return data;
+			return data;
+		}
 	}
 }
