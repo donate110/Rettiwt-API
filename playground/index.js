@@ -1,7 +1,5 @@
 import { Rettiwt } from 'rettiwt-api';
-import { config } from 'dotenv';
-
-config();
+import 'dotenv/config';
 
 const rettiwt = new Rettiwt({ apiKey: process.env.ACCESS_TOKEN });
 
