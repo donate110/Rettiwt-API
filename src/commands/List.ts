@@ -27,6 +27,19 @@ function createListCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Details
+	list.command('details')
+		.description('Fetch the details of a list')
+		.argument('<id>', 'The ID of the tweet list')
+		.action(async (id: string) => {
+			try {
+				const details = await rettiwt.list.details(id);
+				output(details);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Members
 	list.command('members')
 		.description('Fetch the list of members of the given tweet list')

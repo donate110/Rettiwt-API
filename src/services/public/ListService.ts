@@ -1,10 +1,12 @@
 import { Extractors } from '../../collections/Extractors';
 import { ResourceType } from '../../enums/Resource';
 import { CursoredData } from '../../models/data/CursoredData';
+import { List } from '../../models/data/List';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
 import { RettiwtConfig } from '../../models/RettiwtConfig';
 import { IListMemberAddResponse } from '../../types/raw/list/AddMember';
+import { IListDetailsResponse } from '../../types/raw/list/Details';
 import { IListMembersResponse } from '../../types/raw/list/Members';
 import { IListMemberRemoveResponse } from '../../types/raw/list/RemoveMember';
 import { IListTweetsResponse } from '../../types/raw/list/Tweets';
@@ -58,6 +60,47 @@ export class ListService extends FetcherService {
 
 		// Deserializing response
 		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the details of a list.
+	 *
+	 * @param id - The ID of the target list.
+	 *
+	 * @returns
+	 * The details of the target list.
+	 *
+	 * If list not found, returns undefined.
+	 *
+	 * @example
+	 *
+	 * #### Fetching the details of a list
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the details of the list with the id '1234567890'
+	 * rettiwt.list.details('1234567890')
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async details(id: string): Promise<List | undefined> {
+		const resource: ResourceType = ResourceType.LIST_DETAILS;
+
+		// Getting the details of the list
+		const response = await this.request<IListDetailsResponse>(resource, { id: id });
+
+		// Deserializing response
+		const data = Extractors[resource](response, id);
 
 		return data;
 	}
