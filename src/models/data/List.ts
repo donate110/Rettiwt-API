@@ -1,5 +1,6 @@
 import { IList } from '../../types/data/List';
 import { IList as IRawList } from '../../types/raw/base/List';
+import { IListDetailsResponse } from '../../types/raw/list/Details';
 
 import { User } from './User';
 
@@ -41,6 +42,25 @@ export class List implements IList {
 	/** The raw list details. */
 	public get raw(): IRawList {
 		return { ...this._raw };
+	}
+
+	/**
+	 * Extracts and deserializes a single target list from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 * @param id - The id of the target list.
+	 *
+	 * @returns The target deserialized list.
+	 */
+	public static single(response: IListDetailsResponse, id: string): List | undefined {
+		// If list found
+		if (response.data.list.id_str === id) {
+			return new List(response.data.list as unknown as IRawList);
+		}
+		// If not found
+		else {
+			return undefined;
+		}
 	}
 
 	/**

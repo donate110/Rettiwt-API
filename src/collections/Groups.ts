@@ -17,6 +17,7 @@ export const AllowGuestAuthenticationGroup = [
  * @internal
  */
 export const FetchResourcesGroup = [
+	ResourceType.LIST_DETAILS,
 	ResourceType.LIST_MEMBERS,
 	ResourceType.LIST_TWEETS,
 	ResourceType.DM_CONVERSATION,
