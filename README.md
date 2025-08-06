@@ -137,7 +137,7 @@ A new Rettiwt instance can be initialized using the following code snippets:
 The Rettiwt class has four members:
 
 - `dm` member, for accessing resources related to direct messages.
-- `list` memeber, for accessing resources related to lists.
+- `list` member, for accessing resources related to lists.
 - `tweet` member, for accessing resources related to tweets.
 - `user` member, for accessing resources related to users.
 
