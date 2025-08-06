@@ -189,6 +189,20 @@ function createUserCommand(rettiwt: Rettiwt): Command {
 			}
 		});
 
+	// Lists
+	user.command('lists')
+		.description('Fetch your lists')
+		.argument('[count]', 'The number of lists to fetch')
+		.argument('[cursor]', 'The cursor to the batch of lists to fetch')
+		.action(async (count?: string, cursor?: string) => {
+			try {
+				const lists = await rettiwt.user.lists(count ? parseInt(count) : undefined, cursor);
+				output(lists);
+			} catch (error) {
+				output(error);
+			}
+		});
+
 	// Media
 	user.command('media')
 		.description('Fetch the media timeline the given user')

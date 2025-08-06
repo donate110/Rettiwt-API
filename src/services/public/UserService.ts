@@ -3,6 +3,7 @@ import { RawAnalyticsGranularity, RawAnalyticsMetric } from '../../enums/raw/Ana
 import { ResourceType } from '../../enums/Resource';
 import { Analytics } from '../../models/data/Analytics';
 import { CursoredData } from '../../models/data/CursoredData';
+import { List } from '../../models/data/List';
 import { Notification } from '../../models/data/Notification';
 import { Tweet } from '../../models/data/Tweet';
 import { User } from '../../models/data/User';
@@ -18,6 +19,7 @@ import { IUserFollowersResponse } from '../../types/raw/user/Followers';
 import { IUserFollowingResponse } from '../../types/raw/user/Following';
 import { IUserHighlightsResponse } from '../../types/raw/user/Highlights';
 import { IUserLikesResponse } from '../../types/raw/user/Likes';
+import { IUserListsResponse } from '../../types/raw/user/Lists';
 import { IUserMediaResponse } from '../../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../../types/raw/user/Notifications';
 import { IUserRecommendedResponse } from '../../types/raw/user/Recommended';
@@ -565,6 +567,48 @@ export class UserService extends FetcherService {
 
 		// Fetching raw list of likes
 		const response = await this.request<IUserLikesResponse>(resource, {
+			id: this.config.userId,
+			count: count,
+			cursor: cursor,
+		});
+
+		// Deserializing response
+		const data = Extractors[resource](response);
+
+		return data;
+	}
+
+	/**
+	 * Get the list of of the the logged in user. Includes both followed and owned.
+	 *
+	 * @param count - The number of lists to fetch, must be \<= 100.
+	 * @param cursor - The cursor to the batch of likes to fetch.
+	 *
+	 * @returns The list of tweets liked by the target user.
+	 *
+	 * @example
+	 *
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * // Creating a new Rettiwt instance using the given 'API_KEY'
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Fetching the first 100 Lists of the logged in User
+	 * rettiwt.user.likes()
+	 * .then(res => {
+	 * 	console.log(res);
+	 * })
+	 * .catch(err => {
+	 * 	console.log(err);
+	 * });
+	 * ```
+	 */
+	public async lists(count?: number, cursor?: string): Promise<CursoredData<List>> {
+		const resource = ResourceType.USER_LISTS;
+
+		// Fetching raw list of lists
+		const response = await this.request<IUserListsResponse>(resource, {
 			id: this.config.userId,
 			count: count,
 			cursor: cursor,

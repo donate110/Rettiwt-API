@@ -73,6 +73,7 @@ export const Requests: { [key in keyof typeof ResourceType]: (args: IFetchArgs |
 	USER_FOLLOWERS: (args: IFetchArgs) => UserRequests.followers(args.id!, args.count, args.cursor),
 	USER_HIGHLIGHTS: (args: IFetchArgs) => UserRequests.highlights(args.id!, args.count, args.cursor),
 	USER_LIKES: (args: IFetchArgs) => UserRequests.likes(args.id!, args.count, args.cursor),
+	USER_LISTS: (args: IFetchArgs) => UserRequests.lists(args.id!, args.count, args.cursor),
 	USER_MEDIA: (args: IFetchArgs) => UserRequests.media(args.id!, args.count, args.cursor),
 	USER_NOTIFICATIONS: (args: IFetchArgs) => UserRequests.notifications(args.count, args.cursor),
 	USER_SUBSCRIPTIONS: (args: IFetchArgs) => UserRequests.subscriptions(args.id!, args.count, args.cursor),

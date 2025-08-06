@@ -1,8 +1,10 @@
+import { LogActions } from '../../enums/Logging';
+import { findByFilter } from '../../helper/JsonUtils';
+import { LogService } from '../../services/internal/LogService';
 import { IList } from '../../types/data/List';
 import { IList as IRawList } from '../../types/raw/base/List';
+import { ITimelineList } from '../../types/raw/composite/TimelineList';
 import { IListDetailsResponse } from '../../types/raw/list/Details';
-
-import { User } from './User';
 
 /**
  * The details of a single Twitter List.
@@ -14,7 +16,7 @@ export class List implements IList {
 	private readonly _raw: IRawList;
 
 	public createdAt: string;
-	public createdBy: User;
+	public createdBy: string;
 	public description?: string;
 	public id: string;
 	public isFollowing: boolean;
@@ -36,7 +38,7 @@ export class List implements IList {
 		this.isMember = list.is_member;
 		this.memberCount = list.member_count;
 		this.subscriberCount = list.subscriber_count;
-		this.createdBy = new User(list.user_results.result);
+		this.createdBy = list.user_results.result.rest_id;
 	}
 
 	/** The raw list details. */
@@ -61,6 +63,35 @@ export class List implements IList {
 		else {
 			return undefined;
 		}
+	}
+
+	/**
+	 * Extracts and deserializes the timeline of lists followed from the given raw response data.
+	 *
+	 * @param response - The raw response data.
+	 *
+	 * @returns The deserialized timeline of lists.
+	 */
+	public static timeline(response: NonNullable<unknown>): List[] {
+		const lists: List[] = [];
+
+		// Extracting the matching data
+		const extract = findByFilter<ITimelineList>(response, '__typename', 'TimelineTwitterList').map(
+			(item) => item.list,
+		);
+
+		// Deserializing valid data
+		for (const item of extract) {
+			// If valid list
+			if (item !== undefined && item.id !== undefined && item.following === true) {
+				// Logging
+				LogService.log(LogActions.DESERIALIZE, { id: item.id });
+
+				lists.push(new List(item));
+			}
+		}
+
+		return lists;
 	}
 
 	/**
