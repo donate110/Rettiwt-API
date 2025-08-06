@@ -1,5 +1,3 @@
-import { IUser } from './User';
-
 /**
  * The details of a single Twitter List.
  *
@@ -9,8 +7,8 @@ export interface IList {
 	/** The date and time of creation of the list, int UTC string format. */
 	createdAt: string;
 
-	/** The user who created the list. */
-	createdBy: IUser;
+	/** The ID of the user who created the list. */
+	createdBy: string;
 
 	/** The list description. */
 	description?: string;

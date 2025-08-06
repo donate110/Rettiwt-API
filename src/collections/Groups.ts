@@ -42,6 +42,7 @@ export const FetchResourcesGroup = [
 	ResourceType.USER_FOLLOWERS,
 	ResourceType.USER_HIGHLIGHTS,
 	ResourceType.USER_LIKES,
+	ResourceType.USER_LISTS,
 	ResourceType.USER_MEDIA,
 	ResourceType.USER_NOTIFICATIONS,
 	ResourceType.USER_SUBSCRIPTIONS,

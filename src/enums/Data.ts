@@ -8,4 +8,5 @@ export enum BaseType {
 	NOTIFICATION = 'NOTIFICATION',
 	TWEET = 'TWEET',
 	USER = 'USER',
+	LIST = 'LIST',
 }

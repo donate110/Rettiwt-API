@@ -43,6 +43,7 @@ import { IUserFollowersResponse } from '../types/raw/user/Followers';
 import { IUserFollowingResponse } from '../types/raw/user/Following';
 import { IUserHighlightsResponse } from '../types/raw/user/Highlights';
 import { IUserLikesResponse } from '../types/raw/user/Likes';
+import { IUserListsResponse } from '../types/raw/user/Lists';
 import { IUserMediaResponse } from '../types/raw/user/Media';
 import { IUserNotificationsResponse } from '../types/raw/user/Notifications';
 import { IUserRecommendedResponse } from '../types/raw/user/Recommended';
@@ -124,6 +125,7 @@ export const Extractors = {
 		new CursoredData<User>(response, BaseType.USER),
 	USER_HIGHLIGHTS: (response: IUserHighlightsResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
+	USER_LISTS: (response: IUserListsResponse): CursoredData<List> => new CursoredData<List>(response, BaseType.LIST),
 	USER_LIKES: (response: IUserLikesResponse): CursoredData<Tweet> =>
 		new CursoredData<Tweet>(response, BaseType.TWEET),
 	USER_MEDIA: (response: IUserMediaResponse): CursoredData<Tweet> =>
