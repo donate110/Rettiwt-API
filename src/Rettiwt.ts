@@ -89,4 +89,25 @@ export class Rettiwt {
 	public set proxyUrl(proxyUrl: URL) {
 		this._config.proxyUrl = proxyUrl;
 	}
+
+	/**
+	 * Destroys the Rettiwt instance and cleans up all resources.
+	 * Call this method when you're done using the instance to prevent memory leaks.
+	 *
+	 * @example
+	 * ```ts
+	 * import { Rettiwt } from 'rettiwt-api';
+	 *
+	 * const rettiwt = new Rettiwt({ apiKey: API_KEY });
+	 *
+	 * // Use the API
+	 * await rettiwt.tweet.search({ fromUsers: ['user1'] });
+	 *
+	 * // Clean up when done
+	 * rettiwt.destroy();
+	 * ```
+	 */
+	public destroy(): void {
+		this._config.destroy();
+	}
 }

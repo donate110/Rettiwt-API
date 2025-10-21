@@ -29,6 +29,9 @@ export class FetcherService {
 	/** The AuthService instance to use. */
 	private readonly _auth: AuthService;
 
+	/** Cache duration in milliseconds (5 minutes) */
+	private readonly _cacheDuration = 5 * 60 * 1000;
+
 	/** The delay/delay function to use (ms). */
 	private readonly _delay?: number | (() => number | Promise<number>);
 
@@ -37,6 +40,12 @@ export class FetcherService {
 
 	/** The max wait time for a response. */
 	private readonly _timeout: number;
+
+	/** Timestamp of when the document was cached */
+	private _cacheTimestamp = 0;
+
+	/** Cached X homepage document for transaction ID generation */
+	private _cachedDocument: Awaited<ReturnType<typeof handleXMigration>> | null = null;
 
 	/** The config object. */
 	protected readonly config: RettiwtConfig;
@@ -95,6 +104,7 @@ export class FetcherService {
 
 	/**
 	 * Generates the header for the transaction ID.
+	 * Uses caching to avoid repeated fetches of the X homepage document.
 	 *
 	 * @param method - The target method.
 	 * @param url - The target URL.
@@ -102,11 +112,17 @@ export class FetcherService {
 	 * @returns The header containing the transaction ID.
 	 */
 	private async _getTransactionHeader(method: string, url: string): Promise<ITransactionHeader> {
-		// Get the X homepage HTML document (using utility function)
-		const document = await handleXMigration();
+		const now = Date.now();
 
-		// Create and initialize ClientTransaction instance
-		const transaction = await ClientTransaction.create(document);
+		// Check if cache is invalid or expired
+		if (!this._cachedDocument || now - this._cacheTimestamp > this._cacheDuration) {
+			// Get the X homepage HTML document (using utility function)
+			this._cachedDocument = await handleXMigration();
+			this._cacheTimestamp = now;
+		}
+
+		// Create and initialize ClientTransaction instance using cached document
+		const transaction = await ClientTransaction.create(this._cachedDocument);
 
 		// Getting the URL path excluding all params
 		const path = new URL(url).pathname.split('?')[0].trim();

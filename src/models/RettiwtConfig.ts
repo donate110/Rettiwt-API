@@ -27,6 +27,18 @@ const DefaultHeaders = {
 };
 
 /**
+ * Agent options that prevent memory leaks by properly managing connections.
+ */
+const AgentOptions = {
+	keepAlive: true,
+	keepAliveMsecs: 1000,
+	maxSockets: 50,
+	maxFreeSockets: 10,
+	timeout: 60000,
+	freeSocketTimeout: 30000,
+};
+
+/**
  * The configuration for initializing a new Rettiwt instance.
  *
  * @public
@@ -50,7 +62,9 @@ export class RettiwtConfig implements IRettiwtConfig {
 	 */
 	public constructor(config?: IRettiwtConfig) {
 		this._apiKey = config?.apiKey;
-		this._httpsAgent = config?.proxyUrl ? new HttpsProxyAgent(config?.proxyUrl) : new Agent();
+		this._httpsAgent = config?.proxyUrl
+			? new HttpsProxyAgent(config.proxyUrl, AgentOptions)
+			: new Agent(AgentOptions);
 		this._userId = config?.apiKey ? AuthService.getUserId(config?.apiKey) : undefined;
 		this.delay = config?.delay ?? 0;
 		this.maxRetries = config?.maxRetries ?? 0;
@@ -95,7 +109,17 @@ export class RettiwtConfig implements IRettiwtConfig {
 	}
 
 	public set proxyUrl(proxyUrl: URL | undefined) {
-		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl) : new Agent();
+		// Destroy the existing agent to clean up connections
+		this._httpsAgent.destroy();
+		this._httpsAgent = proxyUrl ? new HttpsProxyAgent(proxyUrl, AgentOptions) : new Agent(AgentOptions);
+	}
+
+	/**
+	 * Destroys the HTTPS agent and cleans up all connections.
+	 * Call this when you're done using the Rettiwt instance.
+	 */
+	public destroy(): void {
+		this._httpsAgent.destroy();
 	}
 }
 
