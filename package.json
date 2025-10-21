@@ -1,9 +1,9 @@
 {
-	"name": "rettiwt-api",
-	"version": "6.0.5",
+	"name": "rettiwt-api-node",
+	"version": "7.0.1",
 	"main": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"description": "An API for fetching data from TwitterAPI, without any rate limits!",
+	"description": "An API for fetching data from TwitterAPI(50 requests per 15 mins)",
 	"bin": {
 		"rettiwt": "dist/cli.js"
 	},
@@ -19,17 +19,16 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/Rishikant181/twitter-api.git"
+		"url": "git+https://github.com/donate110/Rettiwt-API.git"
 	},
 	"author": {
-		"email": "rishikantsahu181@gmail.com",
-		"name": "Rishikant Sahu"
+		"email": "guesmia.dev@gmail.com",
+		"name": "Guesmia Abdelmadjid"
 	},
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/Rishikant181/Rettiwt-API/issues"
+		"url": "https://github.com/donate110/Rettiwt-API/issues"
 	},
-	"homepage": "https://rishikant181.github.io/Rettiwt-API/",
 	"engines": {
 		"node": "^22.13.1"
 	},
