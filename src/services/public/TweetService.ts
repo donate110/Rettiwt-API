@@ -80,7 +80,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -146,7 +146,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetRepliesResponse>(resource, { id: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -158,7 +158,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetDetailsBulkResponse>(resource, { ids: id });
 
 			// Deserializing response
-			const data = Extractors[resource](response, id);
+			const data = Extractors[resource](response.data, id);
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -170,7 +170,7 @@ export class TweetService extends FetcherService {
 			const response = await this.request<ITweetDetailsResponse>(resource, { id: String(id) });
 
 			// Deserializing response
-			const data = Extractors[resource](response, String(id));
+			const data = Extractors[resource](response.data, String(id));
 
 			return data as T extends string ? Tweet | undefined : Tweet[];
 		}
@@ -210,7 +210,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -253,7 +253,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -348,7 +348,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetPostResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -403,7 +403,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -440,7 +440,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetRetweetResponse>(resource, { id: id });
 
 		// Deserializing response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -483,7 +483,7 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -525,7 +525,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetScheduleResponse>(resource, { tweet: options });
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		return data;
 	}
@@ -538,7 +538,7 @@ export class TweetService extends FetcherService {
 	 * @param cursor - The cursor to the batch of tweets to fetch.
 	 * @param results - The type of search results to fetch. Default is {@link ESearchResultType.LATEST}.
 	 *
-	 * @returns The list of tweets that match the given filter.
+	 * @returns The list of tweets that match the given filter with rate limit information.
 	 *
 	 * @example
 	 *
@@ -551,7 +551,10 @@ export class TweetService extends FetcherService {
 	 * // Fetching the most recent 5 tweets from user 'user1'
 	 * rettiwt.tweet.search({ fromUsers: ['user1'] }, 5)
 	 * .then(res => {
-	 * 	console.log(res);
+	 * 	console.log(res.list); // The tweets
+	 * 	console.log(res.rateLimit); // Rate limit quota
+	 * 	console.log(res.rateLimitRemaining); // Remaining quota
+	 * 	console.log(res.rateLimitReset); // Reset timestamp
 	 * })
 	 * .catch(err => {
 	 * 	console.log(err);
@@ -573,10 +576,17 @@ export class TweetService extends FetcherService {
 		});
 
 		// Deserializing response
-		const data = Extractors[resource](response);
+		const data = Extractors[resource](response.data);
 
 		// Sorting the tweets by date, from recent to oldest
 		data.list.sort((a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf());
+
+		// Add rate limit information to the cursored data
+		if (response.rateLimit) {
+			data.rateLimit = response.rateLimit.limit;
+			data.rateLimitRemaining = response.rateLimit.remaining;
+			data.rateLimitReset = response.rateLimit.reset;
+		}
 
 		return data;
 	}
@@ -682,7 +692,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnbookmarkResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -719,7 +729,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnlikeResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -756,7 +766,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnpostResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -793,7 +803,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnretweetResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -830,7 +840,7 @@ export class TweetService extends FetcherService {
 		const response = await this.request<ITweetUnscheduleResponse>(resource, { id: id });
 
 		// Deserializing the response
-		const data = Extractors[resource](response) ?? false;
+		const data = Extractors[resource](response.data) ?? false;
 
 		return data;
 	}
@@ -873,7 +883,7 @@ export class TweetService extends FetcherService {
 			await this.request<IMediaInitializeUploadResponse>(ResourceType.MEDIA_UPLOAD_INITIALIZE, {
 				upload: { size: size },
 			})
-		).media_id_string;
+		).data.media_id_string;
 
 		// APPEND
 		await this.request<unknown>(ResourceType.MEDIA_UPLOAD_APPEND, { upload: { id: id, media: media } });

@@ -117,3 +117,5 @@ export { IConversationTimelineResponse as IRawConversationTimelineResponse } fro
 export { IInboxInitialResponse as IRawInboxInitialResponse } from './types/raw/dm/InboxInitial';
 export { IInboxTimelineResponse as IRawInboxTimelineResponse } from './types/raw/dm/InboxTimeline';
 export { IUserUpdatesResponse as IRawUserUpdatesResponse } from './types/raw/dm/UserUpdates';
+export type { IRateLimitInfo } from './types/RateLimitInfo';
+export type { IResponseWithRateLimit } from './types/ResponseWithRateLimit';

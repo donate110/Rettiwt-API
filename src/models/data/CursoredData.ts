@@ -21,6 +21,9 @@ import { User } from './User';
 export class CursoredData<T extends Notification | Tweet | User | List> implements ICursoredData<T> {
 	public list: T[];
 	public next: string;
+	public rateLimit?: number;
+	public rateLimitRemaining?: number;
+	public rateLimitReset?: number;
 
 	/**
 	 * @param response - The raw response.
@@ -53,6 +56,9 @@ export class CursoredData<T extends Notification | Tweet | User | List> implemen
 		return {
 			list: this.list.map((item) => item.toJSON() as T),
 			next: this.next,
+			rateLimit: this.rateLimit,
+			rateLimitRemaining: this.rateLimitRemaining,
+			rateLimitReset: this.rateLimitReset,
 		};
 	}
 }

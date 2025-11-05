@@ -18,4 +18,13 @@ export interface ICursoredData<T extends IDirectMessage | IConversation | INotif
 
 	/** The cursor to the next batch of data. */
 	next: string;
+
+	/** The rate limit quota */
+	rateLimit?: number;
+
+	/** The remaining rate limit quota */
+	rateLimitRemaining?: number;
+
+	/** The timestamp when the rate limit resets (Unix timestamp in seconds) */
+	rateLimitReset?: number;
 }

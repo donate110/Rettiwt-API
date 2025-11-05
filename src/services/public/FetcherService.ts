@@ -15,6 +15,8 @@ import { IFetchArgs } from '../../types/args/FetchArgs';
 import { IPostArgs } from '../../types/args/PostArgs';
 import { ITransactionHeader } from '../../types/auth/TransactionHeader';
 import { IErrorHandler } from '../../types/ErrorHandler';
+import { IRateLimitInfo } from '../../types/RateLimitInfo';
+import { IResponseWithRateLimit } from '../../types/ResponseWithRateLimit';
 
 import { AuthService } from '../internal/AuthService';
 import { ErrorService } from '../internal/ErrorService';
@@ -77,6 +79,30 @@ export class FetcherService {
 		if (!AllowGuestAuthenticationGroup.includes(resource) && this.config.userId == undefined) {
 			throw new Error(ApiErrors.RESOURCE_NOT_ALLOWED);
 		}
+	}
+
+	/**
+	 * Extracts rate limit information from response headers.
+	 *
+	 * @param headers - The response headers.
+	 *
+	 * @returns The rate limit information.
+	 */
+	private _extractRateLimitInfo(headers: Record<string, string | string[]>): IRateLimitInfo | undefined {
+		const limit = headers['x-rate-limit-limit'];
+		const remaining = headers['x-rate-limit-remaining'];
+		const reset = headers['x-rate-limit-reset'];
+
+		// Only return rate limit info if at least one header is present
+		if (!limit && !remaining && !reset) {
+			return undefined;
+		}
+
+		return {
+			limit: limit ? parseInt(Array.isArray(limit) ? limit[0] : limit, 10) : undefined,
+			remaining: remaining ? parseInt(Array.isArray(remaining) ? remaining[0] : remaining, 10) : undefined,
+			reset: reset ? parseInt(Array.isArray(reset) ? reset[0] : reset, 10) : undefined,
+		};
 	}
 
 	/**
@@ -190,7 +216,7 @@ export class FetcherService {
 	 *
 	 * @typeParam T - The type of the returned response data.
 	 *
-	 * @returns The raw data response received.
+	 * @returns The raw data response received with rate limit information.
 	 *
 	 * @example
 	 *
@@ -211,13 +237,11 @@ export class FetcherService {
 	 * });
 	 * ```
 	 */
-	public async request<T = unknown>(resource: ResourceType, args: IFetchArgs | IPostArgs): Promise<T> {
+	public async request<T = unknown>(
+		resource: ResourceType,
+		args: IFetchArgs | IPostArgs,
+	): Promise<IResponseWithRateLimit<T>> {
 		/** The current retry number. */
-		let retry = 0;
-
-		/** The error, if any. */
-		let error: unknown = undefined;
-
 		// Logging
 		LogService.log(LogActions.REQUEST, { resource: resource, args: args });
 
@@ -243,39 +267,50 @@ export class FetcherService {
 		config.httpsAgent = this.config.httpsAgent;
 		config.timeout = this._timeout;
 
-		// Using retries for error 404
-		do {
-			// Sending the request
-			try {
-				// Getting and appending transaction information
-				config.headers = {
-					...config.headers,
-					...(await this._getTransactionHeader(config.method ?? '', config.url ?? '')),
-				};
+		const baseHeaders = { ...config.headers };
+		const maxRetries = Math.max(1, this.config.maxRetries ?? 1);
+		let lastError: Error | undefined = undefined;
 
-				// Introducing a delay
+		for (let attempt = 0; attempt < maxRetries; attempt++) {
+			try {
+				const transactionHeader = await this._getTransactionHeader(config.method ?? '', config.url ?? '');
+
 				await this._wait();
 
-				// Returning the reponse body
-				return (await axios<T>(config)).data;
+				const response = await axios<T>({
+					...config,
+					headers: {
+						...baseHeaders,
+						...transactionHeader,
+					},
+				});
+
+				const rateLimit = this._extractRateLimitInfo(response.headers as Record<string, string | string[]>);
+
+				return {
+					data: response.data,
+					rateLimit,
+				};
 			} catch (err) {
-				// If it's an error 404, retry
-				if (isAxiosError(err) && err.status === 404) {
-					error = err;
+				const errorToThrow = err instanceof Error ? err : new Error(String(err));
+				lastError = errorToThrow;
+
+				if (isAxiosError(errorToThrow) && errorToThrow.response?.status === 404 && attempt + 1 < maxRetries) {
 					continue;
 				}
-				// Else, delegate error handling
-				else {
-					this._errorHandler.handle(err);
-					throw err;
-				}
-			} finally {
-				// Incrementing the number of retries done
-				retry++;
-			}
-		} while (retry < this.config.maxRetries);
 
-		/** If request not successful even after retries, throw the error */
-		throw error;
+				this._errorHandler.handle(errorToThrow);
+				throw errorToThrow;
+			}
+		}
+
+		if (lastError != undefined) {
+			this._errorHandler.handle(lastError);
+			throw lastError;
+		}
+
+		const fallbackError = new Error('Unknown error');
+		this._errorHandler.handle(fallbackError);
+		throw fallbackError;
 	}
 }
