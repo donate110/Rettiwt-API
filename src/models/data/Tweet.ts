@@ -8,7 +8,7 @@ import { LogService } from '../../services/internal/LogService';
 import { ITweet, ITweetEntities, ITweetMedia } from '../../types/data/Tweet';
 import { ILimitedVisibilityTweet } from '../../types/raw/base/LimitedVisibilityTweet';
 import { IExtendedMedia as IRawExtendedMedia } from '../../types/raw/base/Media';
-import { ITweet as IRawTweet, IEntities as IRawTweetEntities } from '../../types/raw/base/Tweet';
+import { IHashtag, ITweet as IRawTweet, IEntities as IRawTweetEntities, ISymbol } from '../../types/raw/base/Tweet';
 import { ITimelineTweet } from '../../types/raw/composite/TimelineTweet';
 
 import { User } from './User';
@@ -274,13 +274,13 @@ export class Tweet implements ITweet {
  */
 export class TweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
-	public hashtags: string[] = [];
+	public hashtags: IHashtag[] = [];
 
 	/** The list of IDs of users mentioned in the tweet. */
 	public mentionedUsers: string[] = [];
 
 	/** The list of symbols mentioned in the tweet. */
-	public symbols: string[] = [];
+	public symbols: ISymbol[] = [];
 
 	/** The list of urls mentioned in the tweet. */
 	public urls: string[] = [];
@@ -306,14 +306,14 @@ export class TweetEntities {
 		// Extracting hashtags
 		if (entities.hashtags) {
 			for (const hashtag of entities.hashtags) {
-				this.hashtags.push(hashtag.text);
+				this.hashtags.push(hashtag);
 			}
 		}
 
 		// Extracting symbols
 		if (entities.symbols) {
 			for (const symbol of entities.symbols) {
-				this.symbols.push(symbol.text);
+				this.symbols.push(symbol);
 			}
 		}
 	}

@@ -14,7 +14,7 @@ async function searchTweets() {
 			20,
 		);
 		console.log('Search successful!');
-		console.log(result.list[0]);
+		console.log(result.list[0].entities);
 		console.log('Tweets:', result.list.length);
 		console.log('Next cursor:', result.next);
 		console.log('Rate limit:', result.rateLimit);

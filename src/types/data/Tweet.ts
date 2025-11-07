@@ -1,4 +1,5 @@
 import { MediaType } from '../../enums/Media';
+import { IHashtag, ISymbol } from '../raw/base/Tweet';
 
 import { IUser } from './User';
 
@@ -70,7 +71,7 @@ export interface ITweet {
  */
 export interface ITweetEntities {
 	/** The list of hashtags mentioned in the tweet. */
-	hashtags: string[];
+	hashtags: IHashtag[];
 
 	/** The list of IDs of users mentioned in the tweet. */
 	mentionedUsers: string[];
@@ -79,7 +80,7 @@ export interface ITweetEntities {
 	urls: string[];
 
 	/** The list of symbols mentioned in the tweet. */
-	symbols: string[];
+	symbols: ISymbol[];
 }
 
 /**
