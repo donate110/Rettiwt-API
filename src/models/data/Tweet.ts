@@ -268,7 +268,7 @@ export class Tweet implements ITweet {
 }
 
 /**
- * The different types parsed entities like urls, media, mentions, hashtags, etc.
+ * The different types parsed entities like urls, media, mentions, hashtags, symbols etc.
  *
  * @public
  */
@@ -278,6 +278,9 @@ export class TweetEntities {
 
 	/** The list of IDs of users mentioned in the tweet. */
 	public mentionedUsers: string[] = [];
+
+	/** The list of symbols mentioned in the tweet. */
+	public symbols: string[] = [];
 
 	/** The list of urls mentioned in the tweet. */
 	public urls: string[] = [];
@@ -306,6 +309,13 @@ export class TweetEntities {
 				this.hashtags.push(hashtag.text);
 			}
 		}
+
+		// Extracting symbols
+		if (entities.symbols) {
+			for (const symbol of entities.symbols) {
+				this.symbols.push(symbol.text);
+			}
+		}
 	}
 
 	/**
@@ -316,6 +326,7 @@ export class TweetEntities {
 			hashtags: this.hashtags,
 			mentionedUsers: this.mentionedUsers,
 			urls: this.urls,
+			symbols: this.symbols,
 		};
 	}
 }

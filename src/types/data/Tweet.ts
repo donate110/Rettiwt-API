@@ -77,6 +77,9 @@ export interface ITweetEntities {
 
 	/** The list of urls mentioned in the tweet. */
 	urls: string[];
+
+	/** The list of symbols mentioned in the tweet. */
+	symbols: string[];
 }
 
 /**

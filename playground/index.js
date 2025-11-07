@@ -8,13 +8,14 @@ async function searchTweets() {
 		console.log('Starting search...');
 		const result = await rettiwt.tweet.search(
 			{
-				includeWords: ['x'],
+				includeWords: ['$BTC'],
 				onlyOriginal: true,
 			},
 			20,
 		);
 		console.log('Search successful!');
-		console.log('Tweets:', result.list);
+		console.log(result.list[0]);
+		console.log('Tweets:', result.list.length);
 		console.log('Next cursor:', result.next);
 		console.log('Rate limit:', result.rateLimit);
 		console.log('Rate limit remaining:', result.rateLimitRemaining);

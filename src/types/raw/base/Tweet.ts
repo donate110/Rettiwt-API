@@ -108,7 +108,7 @@ export interface IEntities {
 	user_mentions: IUserMention[];
 	urls: IUrl[];
 	hashtags: IHashtag[];
-	symbols: any[];
+	symbols: ISymbol[];
 }
 
 export interface IUserMention {
@@ -126,6 +126,11 @@ export interface IUrl {
 }
 
 export interface IHashtag {
+	indices: number[];
+	text: string;
+}
+
+export interface ISymbol {
 	indices: number[];
 	text: string;
 }
